@@ -3,397 +3,511 @@
     "type": "Models",
     "id": "Q1",
     "question": "What is one-hot encoding and what are its limitations?",
-    "answer": "One-hot encoding represents each word as a binary vector where only one dimension is 1 and all others are 0. While simple, it leads to very large sparse vectors and does not capture any semantic similarity between words (e.g., “king” and “queen” are as different as “king” and “apple”). Additionally, it’s computationally expensive for large vocabularies."
+    "answer": "One-hot encoding represents each word as a binary vector where only one dimension is 1 and all others are 0. While simple, it leads to very large sparse vectors and does not capture any semantic similarity between words (e.g., “king” and “queen” are as different as “king” and “apple”). Additionally, it’s computationally expensive for large vocabularies.\n\n---"
   },
   {
     "type": "Models",
     "id": "Q2",
     "question": "What is the Bag-of-Words (BoW) model?",
-    "answer": "BoW represents text by counting word occurrences without considering order or context. It’s useful for simple models but ignores syntax and semantics."
+    "answer": "BoW represents text by counting word occurrences without considering order or context. It’s useful for simple models but ignores syntax and semantics.\n\n---"
   },
   {
     "type": "Models",
     "id": "Q3",
     "question": "What does TF-IDF improve over BoW?",
-    "answer": "TF-IDF (Term Frequency–Inverse Document Frequency) downweights common words and highlights distinctive ones by assigning higher weights to rarer but informative words. It captures some notion of word importance across documents."
+    "answer": "TF-IDF (Term Frequency–Inverse Document Frequency) downweights common words and highlights distinctive ones by assigning higher weights to rarer but informative words. It captures some notion of word importance across documents.\n\n---"
   },
   {
     "type": "Models",
     "id": "Q4",
     "question": "How does Word2Vec learn word representations?",
-    "answer": "Word2Vec uses neural networks (CBOW or Skip-gram) to learn embeddings that capture semantic relationships by predicting words from their context. It encodes semantic regularities. E.g., ```king - man + woman = queen```.\n\n### Q5. How is GloVe different from Word2Vec?\n**A:**\n* GloVe (Global Vectors) uses global co-occurrence statistics of words rather than local context windows.\n* It provides embeddings that better capture global structure in the corpus.\n\n\n### Q6. What new idea did RNNs introduce?\n**A:** Recurrent Neural Networks introduced recurrence, allowing models to maintain a hidden state across time steps — enabling sequence modeling and use of past information.\n\n### Q7. How do LSTMs improve over RNNs? And how are GRUs different?\n**A:** \n* LSTMs introduced gates (input, forget, output) to selectively store or discard information, mitigating the vanishing gradient problem and improving long-term dependency learning.\n* GRUs simplify LSTMs by merging gates, offering similar performance with fewer parameters.\n\n### Q8. What is ByteNet?\n**A:** ByteNet is a NN which uses convolutional layers for sequence modeling, allowing parallelization and long receptive fields. It served as a bridge between CNNs and transformers.\n\n### Q9. What are some key language transformers?\n\n- Maybe make it like three types of transformer architectures- encode, decoder, and encoder-decoder.\n\n**A:** Major architectures include BERT, RoBERTa, T5, and GPT.\n\n* BERT: Bidirectional encoder, good for understanding tasks (classification, QA).\n* RoBERTa: Robustly optimized BERT with better training strategies (no NSP, larger batch sizes).\n* T5: Unifies all NLP tasks as text-to-text problems.\n* GPT: Decoder-only autoregressive model optimized for generation.\n\n### Q10. How does T5 unify multiple NLP tasks?\n**A:** T5 reframes every task (translation, summarization, classification) as text-to-text by adding a task prefix token (e.g., “summarize:” or “translate English to German:”). This unified approach made multitask learning and fine-tuning more generalizable.\n\n### Q11. Why do we need Vision Transformers (ViT)?\n**A:** Traditional CNNs rely on local receptive fields, limiting long-range dependencies. ViTs introduce self-attention for global context modeling across image patches, improving performance on large datasets.\n\n### Q12. What changes were introduced in ViT compared to traditional transformers?\n**A:**\n* ViTs take images as input by splitting them into fixed-size patches.\n* A [CLS] token is added to represent the entire image for classification.\n* Positional embeddings encode patch order since spatial structure is lost after flattening.\n\n### Q13. How is Swin Transformer different from ViT?\n**A:** Swin uses Shifted Window Attention, restricting attention to local windows for better efficiency while still enabling global interactions via window shifting.\n\n### Q14. What is CLIP? How is SigLIP different from CLIP?\n**A:**\n* CLIP (Contrastive Language-Image Pretraining) aligns text and image embeddings using a contrastive loss to learn cross-modal representations.\n* SigLIP modifies the loss to use sigmoid activation instead of softmax on similarity scores, allowing independent scoring.\n\n\n### Q15. What is RT-2 and why is it significant?\n**A:** RT-2 (Robotic Transformer 2) integrates language, vision, and action data, allowing robots to generalize from web-scale multimodal data to physical tasks. It builds on VLM pretraining principles.\n\n### Q16. What is OpenVLA?\n**A:** OpenVLA is an open-source Vision-Language-Action model inspired by RT-2, designed for robotic control tasks. It uses curriculum learning to first fine-tune VLMs on physical property understanding before action learning.\n\n### Q17. Why does OpenVLA use Huber loss instead of MSE for fine-tuning?\n**A:** Huber loss is quadratic for small errors and linear for large errors, offering robustness to outliers and improved training stability. This is crucial for robotics where noisy sensor readings are common.\n\n### Q18. How could one build their own OpenVLA-style model?\n**A:** Start with a pretrained Vision-Language Model (e.g., CLIP or SigLIP) and fine-tune it using a curriculum learning pipeline that progressively introduces physical reasoning and action tasks. Ensure stability via Huber loss and action discretization.\n\n\n### Q19. Why are standard transformers inefficient for long sequences?\n**A:** The self-attention mechanism scales as O(n²) with sequence length, making it memory and compute heavy.\n\n### Q20. What are the main innovations for long-context handling?\n\n- Add references so that we can go to the main paper as well.\n\n**A:**\n* Longformer: Uses sparse attention patterns (local + global) to scale linearly with sequence length.\n\n* BigBird: Combines global, random, and local attention, improving efficiency and theoretical expressivity.\n\n* Reformer: Uses LSH attention to reduce complexity from O(n²) to O(n log n).\n\n* Linformer: Projects key and value matrices to lower dimensions.\n\n* Hyena and Mamba: Explore state-space models as transformer alternatives for long-context retention.\n\n### Q21. How do BigBird and Longformer differ in attention and efficiency?\n**A:**\n* Longformer relies on fixed local + global attention windows.\n* BigBird adds random attention connections, which help achieve theoretical universality (can simulate full attention). Also, BigBird typically handles longer contexts with O(n) complexity.\n\n### Q22. What is FlashAttention and why is it faster?\n**A:** FlashAttention computes attention in a tiled and memory-efficient way, avoiding explicit storage of the large attention matrix. It fuses softmax computation and reduces I/O bottlenecks, achieving significant speedups on GPUs.\n\n### Q23. What’s new in FlashAttention 2 and 3?\n**A:**\n* FlashAttention 2: Improved kernel parallelism and supports multi-query attention.\n* FlashAttention 3: Adds support for FP8 precision and further pipeline optimizations for large-scale models."
+    "answer": "Word2Vec uses neural networks (CBOW or Skip-gram) to learn embeddings that capture semantic relationships by predicting words from their context. It encodes semantic regularities. E.g., ```king - man + woman = queen```."
+  },
+  {
+    "type": "Models",
+    "id": "Q5",
+    "question": "How is GloVe different from Word2Vec?",
+    "answer": "* GloVe (Global Vectors) uses global co-occurrence statistics of words rather than local context windows.\n* It provides embeddings that better capture global structure in the corpus."
+  },
+  {
+    "type": "Models",
+    "id": "Q6",
+    "question": "What new idea did RNNs introduce?",
+    "answer": "Recurrent Neural Networks introduced recurrence, allowing models to maintain a hidden state across time steps — enabling sequence modeling and use of past information."
+  },
+  {
+    "type": "Models",
+    "id": "Q7",
+    "question": "How do LSTMs improve over RNNs? And how are GRUs different?",
+    "answer": "* LSTMs introduced gates (input, forget, output) to selectively store or discard information, mitigating the vanishing gradient problem and improving long-term dependency learning.\n* GRUs simplify LSTMs by merging gates, offering similar performance with fewer parameters."
+  },
+  {
+    "type": "Models",
+    "id": "Q8",
+    "question": "What is ByteNet?",
+    "answer": "ByteNet is a NN which uses convolutional layers for sequence modeling, allowing parallelization and long receptive fields. It served as a bridge between CNNs and transformers."
+  },
+  {
+    "type": "Models",
+    "id": "Q9",
+    "question": "What are some key language transformers?\n\n- Maybe make it like three types of transformer architectures- encode, decoder, and encoder-decoder.",
+    "answer": "Major architectures include BERT, RoBERTa, T5, and GPT.\n\n* BERT: Bidirectional encoder, good for understanding tasks (classification, QA).\n* RoBERTa: Robustly optimized BERT with better training strategies (no NSP, larger batch sizes).\n* T5: Unifies all NLP tasks as text-to-text problems.\n* GPT: Decoder-only autoregressive model optimized for generation."
+  },
+  {
+    "type": "Models",
+    "id": "Q10",
+    "question": "How does T5 unify multiple NLP tasks?",
+    "answer": "T5 reframes every task (translation, summarization, classification) as text-to-text by adding a task prefix token (e.g., “summarize:” or “translate English to German:”). This unified approach made multitask learning and fine-tuning more generalizable."
+  },
+  {
+    "type": "Models",
+    "id": "Q11",
+    "question": "Why do we need Vision Transformers (ViT)?",
+    "answer": "Traditional CNNs rely on local receptive fields, limiting long-range dependencies. ViTs introduce self-attention for global context modeling across image patches, improving performance on large datasets."
+  },
+  {
+    "type": "Models",
+    "id": "Q12",
+    "question": "What changes were introduced in ViT compared to traditional transformers?",
+    "answer": "* ViTs take images as input by splitting them into fixed-size patches.\n* A [CLS] token is added to represent the entire image for classification.\n* Positional embeddings encode patch order since spatial structure is lost after flattening."
+  },
+  {
+    "type": "Models",
+    "id": "Q13",
+    "question": "How is Swin Transformer different from ViT?",
+    "answer": "Swin uses Shifted Window Attention, restricting attention to local windows for better efficiency while still enabling global interactions via window shifting."
+  },
+  {
+    "type": "Models",
+    "id": "Q14",
+    "question": "What is CLIP? How is SigLIP different from CLIP?",
+    "answer": "* CLIP (Contrastive Language-Image Pretraining) aligns text and image embeddings using a contrastive loss to learn cross-modal representations.\n* SigLIP modifies the loss to use sigmoid activation instead of softmax on similarity scores, allowing independent scoring."
+  },
+  {
+    "type": "Models",
+    "id": "Q15",
+    "question": "What is RT-2 and why is it significant?",
+    "answer": "RT-2 (Robotic Transformer 2) integrates language, vision, and action data, allowing robots to generalize from web-scale multimodal data to physical tasks. It builds on VLM pretraining principles."
+  },
+  {
+    "type": "Models",
+    "id": "Q16",
+    "question": "What is OpenVLA?",
+    "answer": "OpenVLA is an open-source Vision-Language-Action model inspired by RT-2, designed for robotic control tasks. It uses curriculum learning to first fine-tune VLMs on physical property understanding before action learning."
+  },
+  {
+    "type": "Models",
+    "id": "Q17",
+    "question": "Why does OpenVLA use Huber loss instead of MSE for fine-tuning?",
+    "answer": "Huber loss is quadratic for small errors and linear for large errors, offering robustness to outliers and improved training stability. This is crucial for robotics where noisy sensor readings are common."
+  },
+  {
+    "type": "Models",
+    "id": "Q18",
+    "question": "How could one build their own OpenVLA-style model?",
+    "answer": "Start with a pretrained Vision-Language Model (e.g., CLIP or SigLIP) and fine-tune it using a curriculum learning pipeline that progressively introduces physical reasoning and action tasks. Ensure stability via Huber loss and action discretization."
+  },
+  {
+    "type": "Models",
+    "id": "Q19",
+    "question": "Why are standard transformers inefficient for long sequences?",
+    "answer": "The self-attention mechanism scales as O(n²) with sequence length, making it memory and compute heavy."
+  },
+  {
+    "type": "Models",
+    "id": "Q20",
+    "question": "What are the main innovations for long-context handling?\n\n- Add references so that we can go to the main paper as well.",
+    "answer": "* Longformer: Uses sparse attention patterns (local + global) to scale linearly with sequence length.\n\n* BigBird: Combines global, random, and local attention, improving efficiency and theoretical expressivity.\n\n* Reformer: Uses LSH attention to reduce complexity from O(n²) to O(n log n).\n\n* Linformer: Projects key and value matrices to lower dimensions.\n\n* Hyena and Mamba: Explore state-space models as transformer alternatives for long-context retention."
+  },
+  {
+    "type": "Models",
+    "id": "Q21",
+    "question": "How do BigBird and Longformer differ in attention and efficiency?",
+    "answer": "* Longformer relies on fixed local + global attention windows.\n* BigBird adds random attention connections, which help achieve theoretical universality (can simulate full attention). Also, BigBird typically handles longer contexts with O(n) complexity."
+  },
+  {
+    "type": "Models",
+    "id": "Q22",
+    "question": "What is FlashAttention and why is it faster?",
+    "answer": "FlashAttention computes attention in a tiled and memory-efficient way, avoiding explicit storage of the large attention matrix. It fuses softmax computation and reduces I/O bottlenecks, achieving significant speedups on GPUs."
+  },
+  {
+    "type": "Models",
+    "id": "Q23",
+    "question": "What’s new in FlashAttention 2 and 3?",
+    "answer": "* FlashAttention 2: Improved kernel parallelism and supports multi-query attention.\n* FlashAttention 3: Adds support for FP8 precision and further pipeline optimizations for large-scale models.\n\n---"
   },
   {
     "type": "Theory",
     "id": "Q1",
     "question": "What is Attention?",
-    "answer": "Attention is a mechanism that enables a model to identify and emphasize the most relevant components of an input sequence when generating each output. Instead of compressing the entire sequence into a single fixed-length vector (as earlier recurrent models did), attention dynamically computes a **weighted combination** of all input tokens, assigning higher weights to those that are contextually more important for the current output.\n\nFormally, the attention operation takes as input a set of **queries** \\( Q \\), **keys** \\( K \\), and **values** \\( V \\), and computes:\n\n\n$$\n\\text{Attention}(Q, K, V) = \\mathrm{softmax}\\left(\\frac{QK^{\\top}}{\\sqrt{d_k}}\\right)V\n$$\n\nIn simple terms, each token in a sequence ``looks at'' other tokens and decides **how much attention to pay to each one**.  \nThis mechanism enables transformers to model **long-range dependencies** directly, without recurrence or convolution, making them highly effective for understanding complex patterns in language, vision, and other domains."
+    "answer": "Attention is a mechanism that enables a model to identify and emphasize the most relevant components of an input sequence when generating each output. Instead of compressing the entire sequence into a single fixed-length vector (as earlier recurrent models did), attention dynamically computes a **weighted combination** of all input tokens, assigning higher weights to those that are contextually more important for the current output.\n\nFormally, the attention operation takes as input a set of **queries** \\( Q \\), **keys** \\( K \\), and **values** \\( V \\), and computes:\n\n\n$$\n\\text{Attention}(Q, K, V) = \\mathrm{softmax}\\left(\\frac{QK^{\\top}}{\\sqrt{d_k}}\\right)V\n$$\n\nIn simple terms, each token in a sequence ``looks at'' other tokens and decides **how much attention to pay to each one**.  \nThis mechanism enables transformers to model **long-range dependencies** directly, without recurrence or convolution, making them highly effective for understanding complex patterns in language, vision, and other domains.\n\n\n---"
   },
   {
     "type": "Theory",
     "id": "Q2",
     "question": "What are Queries, Keys, and Values (Q, K, V)?",
-    "answer": "In the attention mechanism, each input token is transformed into three distinct representations, a **query**, a **key**, and a **value**.  \nThese are obtained through learned linear projections applied to the same input embeddings or hidden states:\n\n$$\nQ = XW_Q, \\qquad K = XW_K, \\qquad V = XW_V\n$$\n\nwhere:\n- $X \\in \\mathbb{R}^{n \\times d_{\\text{model}}}$ is the input matrix containing the token representations,  \n- $W_Q, W_K, W_V$ are trainable parameter matrices that project the input into the query, key, and value subspaces.\n\nEach of these serves a different role during attention computation:\n\n- **Query (Q):** Represents the current token’s request for contextual information - ``what am I looking for?''  \n- **Key (K):** Represents the available information for each token - ``what do I contain?''  \n- **Value (V):** Contains the actual content or representation to be retrieved - ``what should be returned if I’m relevant?''\n\nDuring attention computation, each query interacts with all keys to determine **relevance scores** through dot products $QK^{\\top}$.  \nThe resulting attention weights are then used to take a weighted sum over the value vectors \\( V \\), producing an output that integrates relevant context from other tokens."
+    "answer": "In the attention mechanism, each input token is transformed into three distinct representations, a **query**, a **key**, and a **value**.  \nThese are obtained through learned linear projections applied to the same input embeddings or hidden states:\n\n$$\nQ = XW_Q, \\qquad K = XW_K, \\qquad V = XW_V\n$$\n\nwhere:\n- $X \\in \\mathbb{R}^{n \\times d_{\\text{model}}}$ is the input matrix containing the token representations,  \n- $W_Q, W_K, W_V$ are trainable parameter matrices that project the input into the query, key, and value subspaces.\n\nEach of these serves a different role during attention computation:\n\n- **Query (Q):** Represents the current token’s request for contextual information - ``what am I looking for?''  \n- **Key (K):** Represents the available information for each token - ``what do I contain?''  \n- **Value (V):** Contains the actual content or representation to be retrieved - ``what should be returned if I’m relevant?''\n\nDuring attention computation, each query interacts with all keys to determine **relevance scores** through dot products $QK^{\\top}$.  \nThe resulting attention weights are then used to take a weighted sum over the value vectors \\( V \\), producing an output that integrates relevant context from other tokens.\n\n\n---"
   },
   {
     "type": "Theory",
     "id": "Q3",
     "question": "Why divide by $\\sqrt{d_k}$ in the attention formula?",
-    "answer": "The scaling factor $\\sqrt{d_k}$ stabilizes the magnitude of the dot products between Queries and Keys.  \nWithout this normalization, the variance of $QK^{\\top}$ increases with the dimensionality $d_k$, which can cause the softmax function to enter regions of very small gradient sensitivity, leading to unstable training.  \nDividing by $\\sqrt{d_k}$ ensures that the distribution of attention scores remains well-conditioned and gradients propagate effectively."
+    "answer": "The scaling factor $\\sqrt{d_k}$ stabilizes the magnitude of the dot products between Queries and Keys.  \nWithout this normalization, the variance of $QK^{\\top}$ increases with the dimensionality $d_k$, which can cause the softmax function to enter regions of very small gradient sensitivity, leading to unstable training.  \nDividing by $\\sqrt{d_k}$ ensures that the distribution of attention scores remains well-conditioned and gradients propagate effectively.\n\n---"
   },
   {
     "type": "Theory",
     "id": "Q4",
     "question": "Why is the Softmax function used in Attention?",
-    "answer": "The softmax function transforms raw similarity scores into a normalized probability distribution, enabling the model to interpret these scores as relative importances, by exponentiating the similarity scores, softmax amplifies larger scores and suppresses smaller ones. This produces sharp, interpretable attention distributions that focus on the most relevant tokens. Softmax is also smooth and differentiable, which allows efficient gradient-based optimization during training."
+    "answer": "The softmax function transforms raw similarity scores into a normalized probability distribution, enabling the model to interpret these scores as relative importances, by exponentiating the similarity scores, softmax amplifies larger scores and suppresses smaller ones. This produces sharp, interpretable attention distributions that focus on the most relevant tokens. Softmax is also smooth and differentiable, which allows efficient gradient-based optimization during training.\n\n\n---\n\n-why we need this Q5?"
   },
   {
     "type": "Theory",
     "id": "Q5",
     "question": "What is Multi-Head Attention?",
-    "answer": "Multi-head attention extends the standard attention mechanism by using multiple parallel attention layers, referred to as ``heads.''  \nEach head operates in a distinct learned subspace, allowing the model to capture diverse relational patterns (such as syntactic structure, semantic meaning, or positional context). The outputs of all heads are concatenated and projected back into the model dimension, resulting in richer and more expressive contextual representations.\n\nFormally, given an input matrix  $X \\in \\mathbb{R}^{n \\times d_{\\text{model}}}$, multi-head attention computes:\n\n$$\n\\mathrm{MultiHead}(X) = \\mathrm{Concat}(H_1, H_2, \\ldots, H_h) W_O\n$$\n\nwhere each head $H_i$ is defined as:\n\n$$\nH_i = \\operatorname{Attention}(X W_Q^{(i)},\\, X W_K^{(i)},\\, X W_V^{(i)})\n$$\n\nHere:\n-  $W_Q^{(i)}, W_K^{(i)}, W_V^{(i)} \\in \\mathbb{R}^{d_{\\text{model}} \\times d_k}$ are learned projection matrices specific to head $i$.  \n- $W_O \\in \\mathbb{R}^{h d_v \\times d_{\\text{model}}}$ projects the concatenated result back into the model dimension.  \n- $h$ denotes the number of attention heads."
+    "answer": "Multi-head attention extends the standard attention mechanism by using multiple parallel attention layers, referred to as ``heads.''  \nEach head operates in a distinct learned subspace, allowing the model to capture diverse relational patterns (such as syntactic structure, semantic meaning, or positional context). The outputs of all heads are concatenated and projected back into the model dimension, resulting in richer and more expressive contextual representations.\n\nFormally, given an input matrix  $X \\in \\mathbb{R}^{n \\times d_{\\text{model}}}$, multi-head attention computes:\n\n$$\n\\mathrm{MultiHead}(X) = \\mathrm{Concat}(H_1, H_2, \\ldots, H_h) W_O\n$$\n\nwhere each head $H_i$ is defined as:\n\n$$\nH_i = \\operatorname{Attention}(X W_Q^{(i)},\\, X W_K^{(i)},\\, X W_V^{(i)})\n$$\n\nHere:\n-  $W_Q^{(i)}, W_K^{(i)}, W_V^{(i)} \\in \\mathbb{R}^{d_{\\text{model}} \\times d_k}$ are learned projection matrices specific to head $i$.  \n- $W_O \\in \\mathbb{R}^{h d_v \\times d_{\\text{model}}}$ projects the concatenated result back into the model dimension.  \n- $h$ denotes the number of attention heads.\n\n---"
   },
   {
     "type": "Theory",
     "id": "Q6",
     "question": "What is Positional Encoding, and why is it necessary?",
-    "answer": "Transformers differ from recurrent (RNN) and convolutional (CNN) architectures in that they process all tokens in a sequence **in parallel** rather than sequentially. While this parallelism improves efficiency, it also means that the Transformer lacks any inherent notion of **token order**, every position is treated as identical unless we explicitly encode sequence order information.\n\nTo address this, **positional encodings** are added to the input embeddings to inject information about the position of each token in the sequence.  \nFormally, for an input sequence of token embeddings $X = [x_1, x_2, \\dots, x_n]$, each token representation is modified as:\n\n$$\nz_i = x_i + p_i\n$$\n\nwhere $p_i \\in \\mathbb{R}^{d_{\\text{model}}}$ is a positional encoding vector corresponding to position $i$.\n\nThis allows it to distinguish between sequences such as dog bites man and man bites dog, although they contain the same tokens."
+    "answer": "Transformers differ from recurrent (RNN) and convolutional (CNN) architectures in that they process all tokens in a sequence **in parallel** rather than sequentially. While this parallelism improves efficiency, it also means that the Transformer lacks any inherent notion of **token order**, every position is treated as identical unless we explicitly encode sequence order information.\n\nTo address this, **positional encodings** are added to the input embeddings to inject information about the position of each token in the sequence.  \nFormally, for an input sequence of token embeddings $X = [x_1, x_2, \\dots, x_n]$, each token representation is modified as:\n\n$$\nz_i = x_i + p_i\n$$\n\nwhere $p_i \\in \\mathbb{R}^{d_{\\text{model}}}$ is a positional encoding vector corresponding to position $i$.\n\nThis allows it to distinguish between sequences such as dog bites man and man bites dog, although they contain the same tokens.\n\n\n\n---"
   },
   {
     "type": "Theory",
     "id": "Q7",
     "question": "What are Sinusoidal Positional Encodings?",
-    "answer": "Sinusoidal positional encodings represent each position using deterministic sine and cosine functions of varying frequencies:\n\n$$\n\\mathrm{PE}_{(pos,\\,2i)} = \\sin\\left(\\frac{pos}{10000^{2i/d}}\\right), \n$$\n\n$$\n\\mathrm{PE}_{(pos,\\,2i+1)} = \\cos\\left(\\frac{pos}{10000^{2i/d}}\\right)\n$$\n\n\nThis continuous representation allows the model to infer both absolute and relative positional relationships, even for sequences longer than those encountered during training."
+    "answer": "Sinusoidal positional encodings represent each position using deterministic sine and cosine functions of varying frequencies:\n\n$$\n\\mathrm{PE}_{(pos,\\,2i)} = \\sin\\left(\\frac{pos}{10000^{2i/d}}\\right), \n$$\n\n$$\n\\mathrm{PE}_{(pos,\\,2i+1)} = \\cos\\left(\\frac{pos}{10000^{2i/d}}\\right)\n$$\n\n\nThis continuous representation allows the model to infer both absolute and relative positional relationships, even for sequences longer than those encountered during training.\n\n---"
   },
   {
     "type": "Theory",
     "id": "Q8",
     "question": "What are Learned and Rotary (RoPE) Positional Encodings?",
-    "answer": "Positional information can also be introduced through learned or rotary positional encodings:\n\n- **Learned Positional Encodings:** Each position in the input sequence is associated with a learnable vector that is optimized during training.  \n  These embeddings adapt to the data but may not extrapolate effectively to sequences longer than those seen during training.\n\n- **Rotary Positional Encodings (RoPE):** Instead of adding positional vectors, RoPE rotates the query and key representations in a complex plane by position-dependent angles.  \n  This operation encodes relative position information directly within the dot-product attention, enhancing the model’s ability to generalize to unseen sequence lengths."
+    "answer": "Positional information can also be introduced through learned or rotary positional encodings:\n\n- **Learned Positional Encodings:** Each position in the input sequence is associated with a learnable vector that is optimized during training.  \n  These embeddings adapt to the data but may not extrapolate effectively to sequences longer than those seen during training.\n\n- **Rotary Positional Encodings (RoPE):** Instead of adding positional vectors, RoPE rotates the query and key representations in a complex plane by position-dependent angles.  \n  This operation encodes relative position information directly within the dot-product attention, enhancing the model’s ability to generalize to unseen sequence lengths.\n\n---\n- why for all of them, give examples for each."
   },
   {
     "type": "Theory",
     "id": "Q9",
     "question": "What is the difference between Self-Attention, Cross-Attention, and Encoder–Decoder Attention?",
-    "answer": "- **Self-Attention:** The queries, keys, and values all originate from the same sequence, enabling tokens to attend to one another within that sequence.  \n  This mechanism is used in both the encoder and decoder blocks.\n\n- **Cross-Attention:** Queries come from the decoder, while keys and values are sourced from the encoder outputs.  \n  This allows the decoder to condition its generation on encoded input information.\n\n- **Encoder–Decoder Attention:** A broader term describing how the decoder interacts with the encoder representations, crucial for tasks such as translation and summarization."
+    "answer": "- **Self-Attention:** The queries, keys, and values all originate from the same sequence, enabling tokens to attend to one another within that sequence.  \n  This mechanism is used in both the encoder and decoder blocks.\n\n- **Cross-Attention:** Queries come from the decoder, while keys and values are sourced from the encoder outputs.  \n  This allows the decoder to condition its generation on encoded input information.\n\n- **Encoder–Decoder Attention:** A broader term describing how the decoder interacts with the encoder representations, crucial for tasks such as translation and summarization.\n\n---"
   },
   {
     "type": "Theory",
     "id": "Q10",
     "question": "Why do Transformers use Layer Normalization instead of Batch Normalization?",
-    "answer": "Batch Normalization normalizes across batch dimensions and relies on batch-level statistics, which can vary with batch size or sequence length.  \nThis dependence makes it unstable for autoregressive generation where batch sizes may be small (even one).  \nLayer Normalization, by contrast, normalizes across features within each individual token representation:\n\n$$\n\\text{LayerNorm}(x) = \\frac{x - \\mu}{\\sigma + \\epsilon} \\odot \\gamma + \\beta\n$$\n\nwhere $\\mu$ and $\\sigma$ are the mean and standard deviation computed over the feature dimension, and $\\gamma, \\beta$ are learnable parameters.  \nLayerNorm provides stable training dynamics independent of batch size."
+    "answer": "Batch Normalization normalizes across batch dimensions and relies on batch-level statistics, which can vary with batch size or sequence length.  \nThis dependence makes it unstable for autoregressive generation where batch sizes may be small (even one).  \nLayer Normalization, by contrast, normalizes across features within each individual token representation:\n\n$$\n\\text{LayerNorm}(x) = \\frac{x - \\mu}{\\sigma + \\epsilon} \\odot \\gamma + \\beta\n$$\n\nwhere $\\mu$ and $\\sigma$ are the mean and standard deviation computed over the feature dimension, and $\\gamma, \\beta$ are learnable parameters.  \nLayerNorm provides stable training dynamics independent of batch size.\n\n---"
   },
   {
     "type": "Theory",
     "id": "Q11",
     "question": "What are Residual Connections and why are they important?",
-    "answer": "Residual connections add the input of a layer directly to its output, allowing information to bypass nonlinear transformations:\n\n$$\nx_{\\text{out}} = x_{\\text{in}} + f(x_{\\text{in}})\n$$\n\nThey help mitigate the vanishing-gradient problem, improve optimization, and preserve low-level features across deep layers.  \nIn transformers, residuals are essential for stable convergence and effective gradient flow in very deep architectures."
+    "answer": "Residual connections add the input of a layer directly to its output, allowing information to bypass nonlinear transformations:\n\n$$\nx_{\\text{out}} = x_{\\text{in}} + f(x_{\\text{in}})\n$$\n\nThey help mitigate the vanishing-gradient problem, improve optimization, and preserve low-level features across deep layers.  \nIn transformers, residuals are essential for stable convergence and effective gradient flow in very deep architectures.\n\n---\n- why important"
   },
   {
     "type": "Theory",
     "id": "Q12",
     "question": "What is Masking in Attention?",
-    "answer": "Masking restricts which tokens are visible to a given position during attention computation:\n\n- **Causal Masking:** Ensures that when predicting token $t$, the model cannot attend to future tokens $t{+}1, t{+}2, \\dots$ — enforcing the autoregressive constraint.  \n- **Padding Masking:** Excludes padded tokens (used to equalize sequence lengths in batches) from the attention computation.  \n\nMasks are implemented by assigning large negative values (e.g., $-\\infty$) to the masked logits before applying softmax, effectively zeroing their influence."
+    "answer": "Masking restricts which tokens are visible to a given position during attention computation:\n\n- **Causal Masking:** Ensures that when predicting token $t$, the model cannot attend to future tokens $t{+}1, t{+}2, \\dots$ — enforcing the autoregressive constraint.  \n- **Padding Masking:** Excludes padded tokens (used to equalize sequence lengths in batches) from the attention computation.  \n\nMasks are implemented by assigning large negative values (e.g., $-\\infty$) to the masked logits before applying softmax, effectively zeroing their influence.\n\n---"
   },
   {
     "type": "Theory",
     "id": "Q13",
     "question": "What is the Computational Complexity of Attention?",
-    "answer": "For a sequence of length $n$ and hidden dimension $d$, standard self-attention has:\n\n$$\n\\text{Compute Complexity: } O(n^2 d), \\qquad\n\\text{Memory Complexity: } O(n^2)\n$$\n\nThe quadratic term arises from the pairwise similarity computation between all token pairs.  \nThis becomes a bottleneck for long sequences, motivating research into efficient variants such as **sparse**, **local**, or **linear** attention mechanisms."
+    "answer": "For a sequence of length $n$ and hidden dimension $d$, standard self-attention has:\n\n$$\n\\text{Compute Complexity: } O(n^2 d), \\qquad\n\\text{Memory Complexity: } O(n^2)\n$$\n\nThe quadratic term arises from the pairwise similarity computation between all token pairs.  \nThis becomes a bottleneck for long sequences, motivating research into efficient variants such as **sparse**, **local**, or **linear** attention mechanisms.\n\n---"
   },
   {
     "type": "Theory",
     "id": "Q14",
     "question": "How can we reduce Attention cost during inference?",
-    "answer": "During autoregressive inference, previously computed key and value matrices can be cached.  \nWhen generating a new token, only the query for the current position is computed and used with the stored keys and values:\n\n$$\n\\text{Attention}(Q_t, K_{\\leq t}, V_{\\leq t}) = \\mathrm{softmax}\\left(\\frac{Q_t K_{\\leq t}^{\\top}}{\\sqrt{d_k}}\\right) V_{\\leq t}\n$$\n\nThis **Key–Value caching** reduces computational cost per step from $O(n^2)$ to $O(n)$ and dramatically accelerates decoding speed."
+    "answer": "During autoregressive inference, previously computed key and value matrices can be cached.  \nWhen generating a new token, only the query for the current position is computed and used with the stored keys and values:\n\n$$\n\\text{Attention}(Q_t, K_{\\leq t}, V_{\\leq t}) = \\mathrm{softmax}\\left(\\frac{Q_t K_{\\leq t}^{\\top}}{\\sqrt{d_k}}\\right) V_{\\leq t}\n$$\n\nThis **Key–Value caching** reduces computational cost per step from $O(n^2)$ to $O(n)$ and dramatically accelerates decoding speed.\n\n---"
   },
   {
     "type": "Theory",
     "id": "Q15",
     "question": "What are the Kaplan and Chinchilla Scaling Laws?",
-    "answer": "Empirical studies on large language models reveal predictable relationships between model performance, parameter count, data volume, and compute:\n\n- **Kaplan et al. (2020):** Performance improves smoothly as model size, dataset size, and compute budget increase, following approximate power-law relationships.  \n- **Chinchilla (2022):** Demonstrated that many models were under-trained for their size; optimal training occurs when the number of training tokens scales proportionally with model parameters.  \n\nThese scaling laws guide efficient resource allocation when training large transformer models."
+    "answer": "Empirical studies on large language models reveal predictable relationships between model performance, parameter count, data volume, and compute:\n\n- **Kaplan et al. (2020):** Performance improves smoothly as model size, dataset size, and compute budget increase, following approximate power-law relationships.  \n- **Chinchilla (2022):** Demonstrated that many models were under-trained for their size; optimal training occurs when the number of training tokens scales proportionally with model parameters.  \n\nThese scaling laws guide efficient resource allocation when training large transformer models.\n\n---"
   },
   {
     "type": "Theory",
     "id": "Q16",
     "question": "What is a Learning Rate Scheduler and why is it used?",
-    "answer": "A learning rate scheduler controls how the learning rate evolves during training.  \nTransformers often employ a **warm-up phase**, where the learning rate increases linearly for the first few thousand steps, followed by a **decay phase** (linear or cosine) as training progresses.  \n\nThis scheduling prevents early training instability and encourages smooth convergence to optimal minima.  \nA common formulation from the original Transformer paper is:\n\n$$\n\\text{lr}(t) = d_{\\text{model}}^{-0.5} \\cdot \\min\\left(t^{-0.5},\\; t \\cdot \\text{warmup}^{-1.5}\\right)\n$$\n\nwhere $t$ is the current step and $\\text{warmup}$ is the number of warm-up steps."
+    "answer": "A learning rate scheduler controls how the learning rate evolves during training.  \nTransformers often employ a **warm-up phase**, where the learning rate increases linearly for the first few thousand steps, followed by a **decay phase** (linear or cosine) as training progresses.  \n\nThis scheduling prevents early training instability and encourages smooth convergence to optimal minima.  \nA common formulation from the original Transformer paper is:\n\n$$\n\\text{lr}(t) = d_{\\text{model}}^{-0.5} \\cdot \\min\\left(t^{-0.5},\\; t \\cdot \\text{warmup}^{-1.5}\\right)\n$$\n\nwhere $t$ is the current step and $\\text{warmup}$ is the number of warm-up steps.\n\n---"
   },
   {
     "type": "Theory",
     "id": "Q17",
     "question": "What is a Tokenizer and why is it needed?",
-    "answer": "Transformers operate on discrete tokens rather than raw text.  \nTokenization converts character sequences into integer indices suitable for model input. Common methods include:\n\n- **Byte Pair Encoding (BPE):** Iteratively merges the most frequent character pairs into subword units.  \n- **Unigram Language Model:** Represents text using a probabilistic model of subwords.  \n- **SentencePiece / Byte-Level Encoding:** Works directly on raw text without relying on whitespace.  \n- **Token-Free Models:** Operate directly on bytes or characters, eliminating explicit token boundaries."
+    "answer": "Transformers operate on discrete tokens rather than raw text.  \nTokenization converts character sequences into integer indices suitable for model input. Common methods include:\n\n- **Byte Pair Encoding (BPE):** Iteratively merges the most frequent character pairs into subword units.  \n- **Unigram Language Model:** Represents text using a probabilistic model of subwords.  \n- **SentencePiece / Byte-Level Encoding:** Works directly on raw text without relying on whitespace.  \n- **Token-Free Models:** Operate directly on bytes or characters, eliminating explicit token boundaries.\n\n\n---\n- give examples"
   },
   {
     "type": "Theory",
     "id": "Q18",
     "question": "What is Encoding and Decoding in Transformers?",
-    "answer": "The **encoder** maps input sequences into high-dimensional continuous representations capturing semantic and syntactic information.  \nThe **decoder** generates target sequences autoregressively, attending to both the previously generated tokens (via self-attention) and the encoder outputs (via cross-attention).  \nTogether, they form the encoder–decoder architecture used in sequence-to-sequence tasks such as translation and summarization."
+    "answer": "The **encoder** maps input sequences into high-dimensional continuous representations capturing semantic and syntactic information.  \nThe **decoder** generates target sequences autoregressively, attending to both the previously generated tokens (via self-attention) and the encoder outputs (via cross-attention).  \nTogether, they form the encoder–decoder architecture used in sequence-to-sequence tasks such as translation and summarization.\n\n---\n- add with 14"
   },
   {
     "type": "Theory",
     "id": "Q19",
     "question": "What is the difference between Training and Inference Attention?",
-    "answer": "During **training**, full sequences are processed simultaneously, allowing self-attention to consider all token pairs within each batch.  \nDuring **inference**, tokens are generated sequentially — each step reuses cached keys and values, avoiding redundant computation."
+    "answer": "During **training**, full sequences are processed simultaneously, allowing self-attention to consider all token pairs within each batch.  \nDuring **inference**, tokens are generated sequentially — each step reuses cached keys and values, avoiding redundant computation.  \n\n---"
   },
   {
     "type": "Deployment",
     "id": "Q1",
     "question": "How to deploy transformer models faster?",
-    "answer": "Deployment speed can be improved by combining several optimization strategies. Quantization decreases the precision of weights (FP32 → FP16/INT8/INT4) which reduces memory bandwidth and accelerates matrix multiplications. Pruning removes redundant neurons or attention heads to shrink model size. Knowledge distillation trains a smaller “student” model to imitate a larger “teacher,” preserving performance with lower cost. Model parallelism and tensor parallelism distribute computations across multiple GPUs to handle large models efficiently. Using optimized Transformer variants (FlashAttention, Reformer, MPT-style architectures) reduces compute bottlenecks. Batching increases throughput by processing many requests simultaneously, and specialized kernels (TensorRT, ONNX Runtime, vLLM) significantly reduce latency."
+    "answer": "Deployment speed can be improved by combining several optimization strategies. Quantization decreases the precision of weights (FP32 → FP16/INT8/INT4) which reduces memory bandwidth and accelerates matrix multiplications. Pruning removes redundant neurons or attention heads to shrink model size. Knowledge distillation trains a smaller “student” model to imitate a larger “teacher,” preserving performance with lower cost. Model parallelism and tensor parallelism distribute computations across multiple GPUs to handle large models efficiently. Using optimized Transformer variants (FlashAttention, Reformer, MPT-style architectures) reduces compute bottlenecks. Batching increases throughput by processing many requests simultaneously, and specialized kernels (TensorRT, ONNX Runtime, vLLM) significantly reduce latency.\n\n---"
   },
   {
     "type": "Deployment",
     "id": "Q2",
     "question": "What is batching?",
-    "answer": "Batching is the practice of processing multiple input sequences together in a single forward pass. GPUs excel at parallel computation, so combining requests improves throughput and amortizes kernel-launch overhead. For example, processing 32 prompts at once may be only slightly slower than processing a single prompt, yielding 20–30× higher throughput. However, larger batches can increase **tail latency**, meaning a single request may wait longer in the queue for the batch to fill. Therefore, systems need dynamic batching or adaptive batching to balance responsiveness and efficiency."
+    "answer": "Batching is the practice of processing multiple input sequences together in a single forward pass. GPUs excel at parallel computation, so combining requests improves throughput and amortizes kernel-launch overhead. For example, processing 32 prompts at once may be only slightly slower than processing a single prompt, yielding 20–30× higher throughput. However, larger batches can increase **tail latency**, meaning a single request may wait longer in the queue for the batch to fill. Therefore, systems need dynamic batching or adaptive batching to balance responsiveness and efficiency.\n\n---"
   },
   {
     "type": "Deployment",
     "id": "Q3",
     "question": "What is speculative decoding?",
-    "answer": "Speculative decoding is a two-model inference technique where a small, fast “draft” model predicts several future tokens at once. The larger, slower “target” model then verifies or corrects these proposed tokens in parallel. If the draft tokens are accepted, generation jumps ahead by multiple tokens per iteration. This method yields 2–4× speedup without retraining the main model. It is especially useful for autoregressive decoding, where the model would normally generate only one token per step. Modern frameworks like vLLM and HuggingFace Transformers integrate speculative decoding for large LLMs."
+    "answer": "Speculative decoding is a two-model inference technique where a small, fast “draft” model predicts several future tokens at once. The larger, slower “target” model then verifies or corrects these proposed tokens in parallel. If the draft tokens are accepted, generation jumps ahead by multiple tokens per iteration. This method yields 2–4× speedup without retraining the main model. It is especially useful for autoregressive decoding, where the model would normally generate only one token per step. Modern frameworks like vLLM and HuggingFace Transformers integrate speculative decoding for large LLMs.\n\n---"
   },
   {
     "type": "Deployment",
     "id": "Q4",
     "question": "How to ensure model scalability, How can it handle larger context?",
-    "answer": "Scalability requires separating storage, retrieval, and computation. Retrieval-Augmented Generation (RAG) offloads factual knowledge into vector databases or document stores, allowing the model to handle massive knowledge domains without increasing model size. Document chunking ensures retrieval remains efficient even with millions of documents. Horizontally scalable microservices, load balancing, multi-GPU inference servers, and sharded vector indexes enable handling high concurrency. Additionally, using cache layers, KV-cache reuse, and continuous batching supports both low-latency and high-throughput execution."
+    "answer": "Scalability requires separating storage, retrieval, and computation. Retrieval-Augmented Generation (RAG) offloads factual knowledge into vector databases or document stores, allowing the model to handle massive knowledge domains without increasing model size. Document chunking ensures retrieval remains efficient even with millions of documents. Horizontally scalable microservices, load balancing, multi-GPU inference servers, and sharded vector indexes enable handling high concurrency. Additionally, using cache layers, KV-cache reuse, and continuous batching supports both low-latency and high-throughput execution.\n\n---"
   },
   {
     "type": "Deployment",
     "id": "Q5",
     "question": "What are the main challenges in deploying LLMs?",
-    "answer": "Key challenges include:  \n1) **Latency:** Autoregressive generation is inherently sequential, leading to delays.  \n2) **GPU Memory Limits:** Models >10B parameters require multi-GPU inference or aggressive quantization.  \n3) **High Operational Cost:** Sustained GPU clusters are expensive to run, monitor, and scale.  \n4) **Concurrency:** Handling hundreds or thousands of simultaneous users demands batching, caching, and optimized schedulers.  \n5) **Alignment and Safety:** Ensuring policy compliance and preventing harmful outputs requires filters, red-teaming, and guardrails.  \n6) **Continuous Updating:** Updating weights, knowledge bases, or safety policies without downtime requires CI/CD pipelines designed for ML workloads."
+    "answer": "Key challenges include:  \n1) **Latency:** Autoregressive generation is inherently sequential, leading to delays.  \n2) **GPU Memory Limits:** Models >10B parameters require multi-GPU inference or aggressive quantization.  \n3) **High Operational Cost:** Sustained GPU clusters are expensive to run, monitor, and scale.  \n4) **Concurrency:** Handling hundreds or thousands of simultaneous users demands batching, caching, and optimized schedulers.  \n5) **Alignment and Safety:** Ensuring policy compliance and preventing harmful outputs requires filters, red-teaming, and guardrails.  \n6) **Continuous Updating:** Updating weights, knowledge bases, or safety policies without downtime requires CI/CD pipelines designed for ML workloads.\n\n---"
   },
   {
     "type": "Deployment",
     "id": "Q6",
     "question": "Why is RAG better than giving the entire context to the LLM?",
-    "answer": "Transformer attention scales quadratically with sequence length (O(n²)). As contexts grow beyond a few thousand tokens, inference becomes slow and memory-hungry. Providing massive prompts directly also increases token cost. RAG solves this by retrieving only the most relevant information from an external knowledge index (FAISS, Milvus, Chroma), enabling the model to operate on short, focused contexts. This reduces latency, eliminates the need for extremely long context windows, increases retrieval accuracy, and keeps inference cost predictable. Instead of brute-force context extension, RAG builds a hybrid system combining symbolic retrieval with neural reasoning."
+    "answer": "Transformer attention scales quadratically with sequence length (O(n²)). As contexts grow beyond a few thousand tokens, inference becomes slow and memory-hungry. Providing massive prompts directly also increases token cost. RAG solves this by retrieving only the most relevant information from an external knowledge index (FAISS, Milvus, Chroma), enabling the model to operate on short, focused contexts. This reduces latency, eliminates the need for extremely long context windows, increases retrieval accuracy, and keeps inference cost predictable. Instead of brute-force context extension, RAG builds a hybrid system combining symbolic retrieval with neural reasoning.\n\n---"
   },
   {
     "type": "Deployment",
     "id": "Q7",
     "question": "How to handle long outputs in LLMs?",
-    "answer": "Long outputs stress the KV-cache and can hit maximum context windows. Solutions include:  \n- **Sliding-window attention:** Only the previous K tokens attend to each new token.  \n- **Chunked generation:** Generate output in segments, summarize state, and continue in a controlled loop.  \n- **Memory-augmented transformers:** External memory (key-value stores) preserves long-range information without storing full token history.  \n- **Streaming:** Stream partial results to reduce perceived latency.  \nThese methods reduce RAM usage and keep inference efficient for long documents, transcripts, or code-generation tasks."
+    "answer": "Long outputs stress the KV-cache and can hit maximum context windows. Solutions include:  \n- **Sliding-window attention:** Only the previous K tokens attend to each new token.  \n- **Chunked generation:** Generate output in segments, summarize state, and continue in a controlled loop.  \n- **Memory-augmented transformers:** External memory (key-value stores) preserves long-range information without storing full token history.  \n- **Streaming:** Stream partial results to reduce perceived latency.  \nThese methods reduce RAM usage and keep inference efficient for long documents, transcripts, or code-generation tasks.\n\n---"
   },
   {
     "type": "Deployment",
     "id": "Q8",
     "question": "How to make an LLM safer?",
-    "answer": "Safety involves multilayer defenses. Prompt guardrails prevent dangerous user inputs from reaching the model. Output guardrails filter or block harmful completions. Policy models score outputs for toxicity, bias, hallucination, and policy violations. Constitutional AI or rule-based self-review can enforce high-level constraints. Additionally, red-teaming and human-in-the-loop evaluation allow continuous improvement. Enterprise systems often integrate safety monitoring, audit logs, RLHF fine-tuning, and domain-specific policy instruction datasets to reduce risk consistently."
+    "answer": "Safety involves multilayer defenses. Prompt guardrails prevent dangerous user inputs from reaching the model. Output guardrails filter or block harmful completions. Policy models score outputs for toxicity, bias, hallucination, and policy violations. Constitutional AI or rule-based self-review can enforce high-level constraints. Additionally, red-teaming and human-in-the-loop evaluation allow continuous improvement. Enterprise systems often integrate safety monitoring, audit logs, RLHF fine-tuning, and domain-specific policy instruction datasets to reduce risk consistently.\n\n---"
   },
   {
     "type": "Deployment",
     "id": "Q9",
     "question": "What is model quantization and why is it important?",
-    "answer": "Quantization converts model weights and activations from high-precision formats (FP32, FP16) to low-precision ones (INT8, INT4, NF4). Lower precision reduces GPU/CPU memory usage, decreases memory bandwidth requirements, and accelerates matrix multiplications. For example, an 8-bit quantized model can require 4× less RAM and run up to 2× faster. Modern quantization-aware training and post-training quantization methods preserve accuracy even at low bitwidth. This makes quantization essential for edge deployment, on-device inference, and scaling large models economically."
+    "answer": "Quantization converts model weights and activations from high-precision formats (FP32, FP16) to low-precision ones (INT8, INT4, NF4). Lower precision reduces GPU/CPU memory usage, decreases memory bandwidth requirements, and accelerates matrix multiplications. For example, an 8-bit quantized model can require 4× less RAM and run up to 2× faster. Modern quantization-aware training and post-training quantization methods preserve accuracy even at low bitwidth. This makes quantization essential for edge deployment, on-device inference, and scaling large models economically.\n\n---"
   },
   {
     "type": "Deployment",
     "id": "Q10",
     "question": "What is pruning in transformer models?",
-    "answer": "Pruning eliminates unnecessary weights, neurons, or entire attention heads that contribute minimally to model predictions. Structured pruning removes full blocks (e.g., entire heads or feed-forward channels), improving efficiency on modern hardware. Unstructured pruning zeros individual weights, making models sparse but harder to accelerate without specialized kernels. Pruning reduces FLOPs, speeds up inference, shrinks model size, and improves energy efficiency. When combined with retraining or distillation, pruning can shrink model footprint substantially with minimal accuracy loss."
+    "answer": "Pruning eliminates unnecessary weights, neurons, or entire attention heads that contribute minimally to model predictions. Structured pruning removes full blocks (e.g., entire heads or feed-forward channels), improving efficiency on modern hardware. Unstructured pruning zeros individual weights, making models sparse but harder to accelerate without specialized kernels. Pruning reduces FLOPs, speeds up inference, shrinks model size, and improves energy efficiency. When combined with retraining or distillation, pruning can shrink model footprint substantially with minimal accuracy loss.\n\n---"
   },
   {
     "type": "Deployment",
     "id": "Q11",
     "question": "What is tensor parallelism?",
-    "answer": "Tensor parallelism splits individual matrix multiplications of a transformer layer across multiple GPUs. Instead of assigning entire layers to different devices, tensor parallelism divides large weight matrices (e.g., QKV projections, feed-forward layers) into shards. Each GPU performs part of the computation, and partial results are synchronized through collective communication (all-reduce or all-gather). This allows extremely large models—too big for a single GPU—to run efficiently in parallel. Tensor parallelism is essential for massive LLMs (30B–400B parameters) and is used in frameworks such as Megatron-LM, DeepSpeed, and TensorRT-LLM."
+    "answer": "Tensor parallelism splits individual matrix multiplications of a transformer layer across multiple GPUs. Instead of assigning entire layers to different devices, tensor parallelism divides large weight matrices (e.g., QKV projections, feed-forward layers) into shards. Each GPU performs part of the computation, and partial results are synchronized through collective communication (all-reduce or all-gather). This allows extremely large models—too big for a single GPU—to run efficiently in parallel. Tensor parallelism is essential for massive LLMs (30B–400B parameters) and is used in frameworks such as Megatron-LM, DeepSpeed, and TensorRT-LLM.\n\n---"
   },
   {
     "type": "Deployment",
     "id": "Q12",
     "question": "What is pipeline parallelism?",
-    "answer": "Pipeline parallelism distributes sequential transformer layers across multiple GPUs. Instead of all GPUs running identical layers, each GPU holds a different segment of the model. Input sequences are split into micro-batches that flow through the pipeline stages concurrently. This minimizes idle time and increases throughput. Techniques like 1F1B (one-forward-one-backward) scheduling reduce pipeline bubbles. Pipeline parallelism is efficient when model depth is large, enabling scaling across many GPUs with minimal memory overhead compared to tensor parallelism."
+    "answer": "Pipeline parallelism distributes sequential transformer layers across multiple GPUs. Instead of all GPUs running identical layers, each GPU holds a different segment of the model. Input sequences are split into micro-batches that flow through the pipeline stages concurrently. This minimizes idle time and increases throughput. Techniques like 1F1B (one-forward-one-backward) scheduling reduce pipeline bubbles. Pipeline parallelism is efficient when model depth is large, enabling scaling across many GPUs with minimal memory overhead compared to tensor parallelism.\n\n---"
   },
   {
     "type": "Deployment",
     "id": "Q13",
     "question": "What is KV-cache optimization?",
-    "answer": "During autoregressive decoding, each new token requires attending to all previous tokens. KV-cache stores the key/value tensors for past tokens so the model does not recompute them at every step. This transforms the per-token attention cost from O(n) to O(1) for previously seen tokens. Optimizing the KV-cache (e.g., quantization, flash attention integration, paged memory layout) significantly improves throughput, reduces memory bandwidth usage, and enables high-concurrency inference in serving engines like vLLM, TGI, and TensorRT-LLM."
+    "answer": "During autoregressive decoding, each new token requires attending to all previous tokens. KV-cache stores the key/value tensors for past tokens so the model does not recompute them at every step. This transforms the per-token attention cost from O(n) to O(1) for previously seen tokens. Optimizing the KV-cache (e.g., quantization, flash attention integration, paged memory layout) significantly improves throughput, reduces memory bandwidth usage, and enables high-concurrency inference in serving engines like vLLM, TGI, and TensorRT-LLM.\n\n---"
   },
   {
     "type": "Deployment",
     "id": "Q14",
     "question": "What is FlashAttention?",
-    "answer": "FlashAttention is an IO-aware attention algorithm that minimizes high-cost GPU memory reads/writes. Traditional attention implementations repeatedly move Q, K, V, and intermediate matrices between GPU global memory and registers. FlashAttention keeps data in on-chip SRAM as much as possible, computing attention in fused kernels. This reduces memory traffic and improves speed by 2–3× while also allowing longer context windows without running out of memory. It is now the standard attention mechanism in modern LLMs."
+    "answer": "FlashAttention is an IO-aware attention algorithm that minimizes high-cost GPU memory reads/writes. Traditional attention implementations repeatedly move Q, K, V, and intermediate matrices between GPU global memory and registers. FlashAttention keeps data in on-chip SRAM as much as possible, computing attention in fused kernels. This reduces memory traffic and improves speed by 2–3× while also allowing longer context windows without running out of memory. It is now the standard attention mechanism in modern LLMs.\n\n---"
   },
   {
     "type": "Deployment",
     "id": "Q15",
     "question": "How do VLMs optimize image processing during inference?",
-    "answer": "Vision-Language Models (VLMs) optimize image-side computation through several techniques:  \n- **Image embedding caching:** If the same image is used across multiple prompts, reuse embeddings instead of recomputing the vision encoder.  \n- **Patch compression:** Reduce the number of visual tokens (e.g., pooling, token merging, learned adapters).  \n- **Low-resolution encoders:** Models use downsampled previews for rapid inference, only invoking high-res encoders when needed.  \n- **Multi-scale vision modules:** Gradually refine image features instead of processing at full resolution from the start.  \nThese optimizations significantly reduce compute cost and improve responsiveness."
+    "answer": "Vision-Language Models (VLMs) optimize image-side computation through several techniques:  \n- **Image embedding caching:** If the same image is used across multiple prompts, reuse embeddings instead of recomputing the vision encoder.  \n- **Patch compression:** Reduce the number of visual tokens (e.g., pooling, token merging, learned adapters).  \n- **Low-resolution encoders:** Models use downsampled previews for rapid inference, only invoking high-res encoders when needed.  \n- **Multi-scale vision modules:** Gradually refine image features instead of processing at full resolution from the start.  \nThese optimizations significantly reduce compute cost and improve responsiveness.\n\n---"
   },
   {
     "type": "Deployment",
     "id": "Q16",
     "question": "What is batching in VLMs?",
-    "answer": "Batching in VLMs involves simultaneously processing multiple image-text pairs or multiple images per request. Because vision encoders rely on convolutional or transformer-based feature extractors that parallelize well on GPUs, batching maximizes hardware utilization. Efficient batching reduces per-image latency and increases throughput, especially when many users upload images concurrently. Modern serving engines dynamically batch both image encodings and text decoding operations to reduce overhead."
+    "answer": "Batching in VLMs involves simultaneously processing multiple image-text pairs or multiple images per request. Because vision encoders rely on convolutional or transformer-based feature extractors that parallelize well on GPUs, batching maximizes hardware utilization. Efficient batching reduces per-image latency and increases throughput, especially when many users upload images concurrently. Modern serving engines dynamically batch both image encodings and text decoding operations to reduce overhead.\n\n---"
   },
   {
     "type": "Deployment",
     "id": "Q17",
     "question": "How to reduce latency for very long context windows?",
-    "answer": "For long-context models (100k–1M tokens), several architectural and algorithmic optimizations are used:  \n- **Sliding-window attention:** Each token attends only to the last K tokens, reducing compute to O(n·K).  \n- **Attention sparsification:** Techniques like BigBird, Longformer, and Mistral’s sliding window selectively reduce full attention patterns.  \n- **RoPE scaling / NTK scaling:** Extends rotary embeddings to handle long positions without retraining.  \n- **Hierarchical context compression:** Compress old tokens into summaries, cluster embeddings, or low-rank projections.  \nThese make ultra-long documents and conversation histories computationally feasible."
+    "answer": "For long-context models (100k–1M tokens), several architectural and algorithmic optimizations are used:  \n- **Sliding-window attention:** Each token attends only to the last K tokens, reducing compute to O(n·K).  \n- **Attention sparsification:** Techniques like BigBird, Longformer, and Mistral’s sliding window selectively reduce full attention patterns.  \n- **RoPE scaling / NTK scaling:** Extends rotary embeddings to handle long positions without retraining.  \n- **Hierarchical context compression:** Compress old tokens into summaries, cluster embeddings, or low-rank projections.  \nThese make ultra-long documents and conversation histories computationally feasible.\n\n---"
   },
   {
     "type": "Deployment",
     "id": "Q18",
     "question": "What is distillation for multimodal models?",
-    "answer": "Multimodal distillation trains a smaller Vision-Language Model to reproduce the behavior of a larger teacher model. It aligns:  \n- **Logits** (text and vision outputs),  \n- **Image embeddings** (from the vision tower),  \n- **Cross-modal attention maps**,  \n- **Intermediate hidden states**,  \nso that the student model learns both language and visual reasoning. Distillation reduces model size, memory usage, and latency while preserving performance, making VLMs deployable on edge devices and low-resource servers."
+    "answer": "Multimodal distillation trains a smaller Vision-Language Model to reproduce the behavior of a larger teacher model. It aligns:  \n- **Logits** (text and vision outputs),  \n- **Image embeddings** (from the vision tower),  \n- **Cross-modal attention maps**,  \n- **Intermediate hidden states**,  \nso that the student model learns both language and visual reasoning. Distillation reduces model size, memory usage, and latency while preserving performance, making VLMs deployable on edge devices and low-resource servers.\n\n---"
   },
   {
     "type": "Deployment",
     "id": "Q19",
     "question": "What is a serving engine (vLLM, TGI, TensorRT-LLM)?",
-    "answer": "A serving engine is a highly optimized runtime designed to execute LLMs efficiently in production. It manages GPU memory, batching, and scheduling while applying advanced kernel-level optimizations. Key features include:  \n- **Kernel fusion** for faster matrix operations  \n- **Paged attention and efficient KV-cache layouts**  \n- **Dynamic batching of concurrent requests**  \n- **Hardware-specific acceleration** (TensorRT kernels, CUDA graphs, CUTLASS optimizations)  \n- **Continuous batching** for maximizing throughput  \nServing engines ensure low-latency inference even under heavy load."
+    "answer": "A serving engine is a highly optimized runtime designed to execute LLMs efficiently in production. It manages GPU memory, batching, and scheduling while applying advanced kernel-level optimizations. Key features include:  \n- **Kernel fusion** for faster matrix operations  \n- **Paged attention and efficient KV-cache layouts**  \n- **Dynamic batching of concurrent requests**  \n- **Hardware-specific acceleration** (TensorRT kernels, CUDA graphs, CUTLASS optimizations)  \n- **Continuous batching** for maximizing throughput  \nServing engines ensure low-latency inference even under heavy load.\n\n---"
   },
   {
     "type": "Deployment",
     "id": "Q20",
     "question": "What is paged attention in vLLM?",
-    "answer": "Paged Attention organizes the KV-cache into fixed-size memory pages, similar to virtual memory in operating systems. Instead of allocating large contiguous blocks that fragment GPU memory, KV entries are stored in pages managed by a lightweight virtual memory layer. Benefits include:  \n- **Massive batching:** Thousands of concurrent requests share KV-cache efficiently.  \n- **No fragmentation:** Pages can be reused and recycled dynamically.  \n- **Low-latency scheduling:** Requests can be interleaved safely without copying memory.  \nPaged Attention is one of vLLM’s core innovations, enabling very high throughput compared to traditional serving methods."
+    "answer": "Paged Attention organizes the KV-cache into fixed-size memory pages, similar to virtual memory in operating systems. Instead of allocating large contiguous blocks that fragment GPU memory, KV entries are stored in pages managed by a lightweight virtual memory layer. Benefits include:  \n- **Massive batching:** Thousands of concurrent requests share KV-cache efficiently.  \n- **No fragmentation:** Pages can be reused and recycled dynamically.  \n- **Low-latency scheduling:** Requests can be interleaved safely without copying memory.  \nPaged Attention is one of vLLM’s core innovations, enabling very high throughput compared to traditional serving methods.\n\n---"
   },
   {
     "type": "Deployment",
     "id": "Q21",
     "question": "How do we deploy LLMs on edge devices?",
-    "answer": "Edge deployment requires aggressive size and compute optimization:  \n- **Quantization:** INT8/INT4/INT3 weight formats drastically reduce memory and make CPU/GPU inference feasible.  \n- **Structured pruning:** Remove non-critical heads and channels to reduce FLOPs.  \n- **Distillation:** Train compact models (1–7B) that mimic large models.  \n- **Hardware-specific compilation:** Export to ONNX, CoreML, TFLite, or EdgeTPU formats for optimized kernels.  \n- **Operator fusion and graph simplification:** Eliminate redundant operations and reduce runtime overhead.  \nThese techniques allow LLMs and VLMs to run on mobile devices, embedded boards, and low-power CPUs."
+    "answer": "Edge deployment requires aggressive size and compute optimization:  \n- **Quantization:** INT8/INT4/INT3 weight formats drastically reduce memory and make CPU/GPU inference feasible.  \n- **Structured pruning:** Remove non-critical heads and channels to reduce FLOPs.  \n- **Distillation:** Train compact models (1–7B) that mimic large models.  \n- **Hardware-specific compilation:** Export to ONNX, CoreML, TFLite, or EdgeTPU formats for optimized kernels.  \n- **Operator fusion and graph simplification:** Eliminate redundant operations and reduce runtime overhead.  \nThese techniques allow LLMs and VLMs to run on mobile devices, embedded boards, and low-power CPUs.\n\n---"
   },
   {
     "type": "Deployment",
     "id": "Q22",
     "question": "How to ensure fault tolerance in LLM deployment?",
-    "answer": "Fault tolerance is achieved via:  \n- **Replication:** Multiple model replicas across GPU nodes ensure redundancy.  \n- **Cross-zone deployment:** Distribute servers across availability zones to avoid regional failures.  \n- **Checkpointing:** Save model state and KV-cache snapshots to recover quickly.  \n- **Retries and routing layers:** Failed inference requests are automatically retried on healthy nodes.  \n- **Graceful degradation:** Models fall back to a smaller version if GPU resources fail.  \nThese mechanisms maintain uptime and service reliability for millions of users."
+    "answer": "Fault tolerance is achieved via:  \n- **Replication:** Multiple model replicas across GPU nodes ensure redundancy.  \n- **Cross-zone deployment:** Distribute servers across availability zones to avoid regional failures.  \n- **Checkpointing:** Save model state and KV-cache snapshots to recover quickly.  \n- **Retries and routing layers:** Failed inference requests are automatically retried on healthy nodes.  \n- **Graceful degradation:** Models fall back to a smaller version if GPU resources fail.  \nThese mechanisms maintain uptime and service reliability for millions of users.\n\n---"
   },
   {
     "type": "Deployment",
     "id": "Q23",
     "question": "How to monitor deployed LLMs in production?",
-    "answer": "Monitoring involves real-time tracking of:  \n- **Latency distributions (p50, p90, p99)**  \n- **Throughput and queue depth**  \n- **GPU utilization and memory fragmentation**  \n- **Token generation rate and batch size efficiency**  \n- **Hallucination rates and safety violations** via automated detectors  \n- **RAG quality metrics** such as retrieval recall, chunk relevance, and hit-rate  \n- **User satisfaction metrics** (fallback rate, retry rate, error messages)  \nEffective monitoring ensures performance, safety, and reliability under real-world conditions."
+    "answer": "Monitoring involves real-time tracking of:  \n- **Latency distributions (p50, p90, p99)**  \n- **Throughput and queue depth**  \n- **GPU utilization and memory fragmentation**  \n- **Token generation rate and batch size efficiency**  \n- **Hallucination rates and safety violations** via automated detectors  \n- **RAG quality metrics** such as retrieval recall, chunk relevance, and hit-rate  \n- **User satisfaction metrics** (fallback rate, retry rate, error messages)  \nEffective monitoring ensures performance, safety, and reliability under real-world conditions.\n\n---"
   },
   {
     "type": "Deployment",
     "id": "Q24",
     "question": "How to scale LLM APIs to millions of users?",
-    "answer": "Large-scale LLM services require:  \n- **Load balancing across multiple GPU clusters**  \n- **Autoscaling based on traffic patterns**  \n- **Continuous batching and KV-cache sharing** for high concurrency  \n- **Multi-tenant scheduling** to prevent heavy users from blocking others  \n- **Model sharding and caching layers** to reduce repeated work  \n- **Geographically distributed inference nodes** to minimize latency  \nThis architecture supports massive user bases (like OpenAI, Google, Anthropic) with predictable performance."
+    "answer": "Large-scale LLM services require:  \n- **Load balancing across multiple GPU clusters**  \n- **Autoscaling based on traffic patterns**  \n- **Continuous batching and KV-cache sharing** for high concurrency  \n- **Multi-tenant scheduling** to prevent heavy users from blocking others  \n- **Model sharding and caching layers** to reduce repeated work  \n- **Geographically distributed inference nodes** to minimize latency  \nThis architecture supports massive user bases (like OpenAI, Google, Anthropic) with predictable performance.\n\n---"
   },
   {
     "type": "Deployment",
     "id": "Q25",
     "question": "What is the main bottleneck in VLM deployment?",
-    "answer": "Vision processing—especially high-resolution image encoding—is typically the slowest component in VLM pipelines. The vision transformer or CNN must tokenize or embed every image patch, requiring significant compute compared to text generation. Bottlenecks can be mitigated by:  \n- **Pre-encoding and caching image embeddings**  \n- **Downsampling or compressing patches**  \n- **Using lightweight preview encoders** before invoking full-resolution processing  \n- **Sharing image encoder results across multiple user queries**  \nOptimizing the vision front-end significantly improves end-to-end performance."
+    "answer": "Vision processing—especially high-resolution image encoding—is typically the slowest component in VLM pipelines. The vision transformer or CNN must tokenize or embed every image patch, requiring significant compute compared to text generation. Bottlenecks can be mitigated by:  \n- **Pre-encoding and caching image embeddings**  \n- **Downsampling or compressing patches**  \n- **Using lightweight preview encoders** before invoking full-resolution processing  \n- **Sharing image encoder results across multiple user queries**  \nOptimizing the vision front-end significantly improves end-to-end performance.\n\n---"
   },
   {
     "type": "Deployment",
     "id": "Q26",
     "question": "What are the alternatives to LoRA for parameter-efficient fine-tuning (PEFT)?",
-    "answer": "Beyond LoRA, several PEFT methods reduce training cost while preserving performance:\n\n- **Prefix Tuning:** Learns a sequence of trainable “virtual tokens” prepended to the input. No modification to model weights.\n- **Prompt Tuning:** Similar to prefix tuning but uses learnable prompt vectors injected at the embedding layer.\n- **P-Tuning v2:** Optimizes continuous prompts throughout all transformer layers for better expressiveness.\n- **Adapter Modules:** Inserts small feed-forward networks inside transformer layers to learn task-specific transformations.\n- **BitFit:** Trains only bias terms of the model, achieving surprising performance with minimal parameter updates.\n- **IA3 (Input-Aware Activation Adjustment):** Scales activations via multiplicative vectors at attention/MLP layers.\n- **QLoRA:** A quantization-aware method enabling fine-tuning of 4-bit models using low-rank adapters.\n\nThese methods allow fine-tuning large models efficiently, often training <1% of parameters."
+    "answer": "Beyond LoRA, several PEFT methods reduce training cost while preserving performance:\n\n- **Prefix Tuning:** Learns a sequence of trainable “virtual tokens” prepended to the input. No modification to model weights.\n- **Prompt Tuning:** Similar to prefix tuning but uses learnable prompt vectors injected at the embedding layer.\n- **P-Tuning v2:** Optimizes continuous prompts throughout all transformer layers for better expressiveness.\n- **Adapter Modules:** Inserts small feed-forward networks inside transformer layers to learn task-specific transformations.\n- **BitFit:** Trains only bias terms of the model, achieving surprising performance with minimal parameter updates.\n- **IA3 (Input-Aware Activation Adjustment):** Scales activations via multiplicative vectors at attention/MLP layers.\n- **QLoRA:** A quantization-aware method enabling fine-tuning of 4-bit models using low-rank adapters.\n\nThese methods allow fine-tuning large models efficiently, often training <1% of parameters.\n\n---"
   },
   {
     "type": "Deployment",
     "id": "Q27",
     "question": "What is prefix tuning and how does it compare to LoRA?",
-    "answer": "Prefix tuning introduces a small set of learnable prefix vectors (pseudo tokens) attached to the beginning of each transformer layer’s key/value states. These prefixes steer the model toward the target task without modifying base model weights.\n\n**Comparison with LoRA:**\n- **Prefix Tuning:**  \n  - Injected as additional KV vectors  \n  - No model weights are modified  \n  - Works especially well for generative tasks  \n  - Very lightweight but sometimes less expressive\n\n- **LoRA:**  \n  - Adds low-rank matrices inside attention/MLP layers  \n  - Only a small number of weights are trained  \n  - Higher task accuracy and broader applicability  \n\nPrefix tuning is more memory-efficient, while LoRA typically achieves better performance."
+    "answer": "Prefix tuning introduces a small set of learnable prefix vectors (pseudo tokens) attached to the beginning of each transformer layer’s key/value states. These prefixes steer the model toward the target task without modifying base model weights.\n\n**Comparison with LoRA:**\n- **Prefix Tuning:**  \n  - Injected as additional KV vectors  \n  - No model weights are modified  \n  - Works especially well for generative tasks  \n  - Very lightweight but sometimes less expressive\n\n- **LoRA:**  \n  - Adds low-rank matrices inside attention/MLP layers  \n  - Only a small number of weights are trained  \n  - Higher task accuracy and broader applicability  \n\nPrefix tuning is more memory-efficient, while LoRA typically achieves better performance.\n\n---"
   },
   {
     "type": "Deployment",
     "id": "Q28",
     "question": "What is the difference between RAG and Graph RAG?",
-    "answer": "Both are retrieval-augmented approaches, but they differ in how they organize knowledge.\n\n- **RAG (Retrieval-Augmented Generation):**  \n  Retrieves semantically similar chunks from a vector database. Good for unstructured text, FAQs, documentation.\n\n- **Graph RAG:**  \n  Builds a knowledge graph (entities + relations + structured links) on top of the corpus.  \n  Retrieval happens through graph traversal rather than raw embeddings.\n\n**Graph RAG advantages:**\n- Captures relationships between concepts  \n- Avoids “semantic drift” from irrelevant but similar text  \n- Supports reasoning over structured data  \n- Provides multi-hop retrieval paths  \n\nGraph RAG is preferred when the domain has strong structure (research papers, biomedical datasets, enterprise documents)."
+    "answer": "Both are retrieval-augmented approaches, but they differ in how they organize knowledge.\n\n- **RAG (Retrieval-Augmented Generation):**  \n  Retrieves semantically similar chunks from a vector database. Good for unstructured text, FAQs, documentation.\n\n- **Graph RAG:**  \n  Builds a knowledge graph (entities + relations + structured links) on top of the corpus.  \n  Retrieval happens through graph traversal rather than raw embeddings.\n\n**Graph RAG advantages:**\n- Captures relationships between concepts  \n- Avoids “semantic drift” from irrelevant but similar text  \n- Supports reasoning over structured data  \n- Provides multi-hop retrieval paths  \n\nGraph RAG is preferred when the domain has strong structure (research papers, biomedical datasets, enterprise documents).\n\n---"
   },
   {
     "type": "Deployment",
     "id": "Q29",
     "question": "What personalization methods exist during deployment (online personalization)?",
-    "answer": "Online personalization adapts the model at inference time using user feedback or historical data without retraining the base model. Common techniques include:\n\n- **RAG-based personalization:** User-specific memory stored in a vector DB and retrieved dynamically.\n- **Soft prompting / prefix tuning per user:** Store a small personalized prefix vector for each user.\n- **Conditional routing:** Different user profiles route to different adapters or LoRA modules.\n- **Contextual learning:** Store user preferences and inject them into every prompt.\n- **Online RLHF-lite (feedback loops):** Update a reward model or preference score without touching the LLM weights.\n- **Session-level embeddings:** Compute a user embedding that conditions generations.\n\nThese methods support dynamic, immediate personalization without expensive fine-tuning."
+    "answer": "Online personalization adapts the model at inference time using user feedback or historical data without retraining the base model. Common techniques include:\n\n- **RAG-based personalization:** User-specific memory stored in a vector DB and retrieved dynamically.\n- **Soft prompting / prefix tuning per user:** Store a small personalized prefix vector for each user.\n- **Conditional routing:** Different user profiles route to different adapters or LoRA modules.\n- **Contextual learning:** Store user preferences and inject them into every prompt.\n- **Online RLHF-lite (feedback loops):** Update a reward model or preference score without touching the LLM weights.\n- **Session-level embeddings:** Compute a user embedding that conditions generations.\n\nThese methods support dynamic, immediate personalization without expensive fine-tuning.\n\n---"
   },
   {
     "type": "Deployment",
     "id": "Q30",
     "question": "What is the difference between RAG and fine-tuning?",
-    "answer": "- **RAG:**  \n  - Externalizes knowledge in a vector DB  \n  - Retrieval augments the prompt dynamically  \n  - No model weights changed  \n  - Cheaper, faster, easier to update  \n  - Best for factual updates, large corpora, and evolving knowledge\n\n- **Fine-tuning:**  \n  - Changes model parameters  \n  - The model internalizes the knowledge  \n  - More expensive and slower to update  \n  - Best for new reasoning styles, domain-specific language, or new behaviors\n\n**Rule of thumb:**  \nUse **RAG for knowledge**, **fine-tuning for behavior**."
+    "answer": "- **RAG:**  \n  - Externalizes knowledge in a vector DB  \n  - Retrieval augments the prompt dynamically  \n  - No model weights changed  \n  - Cheaper, faster, easier to update  \n  - Best for factual updates, large corpora, and evolving knowledge\n\n- **Fine-tuning:**  \n  - Changes model parameters  \n  - The model internalizes the knowledge  \n  - More expensive and slower to update  \n  - Best for new reasoning styles, domain-specific language, or new behaviors\n\n**Rule of thumb:**  \nUse **RAG for knowledge**, **fine-tuning for behavior**.\n\n---"
   },
   {
     "type": "Deployment",
     "id": "Q31",
     "question": "How do we evaluate personalization quality in LLMs?",
-    "answer": "Personalization should be measured with both quantitative and qualitative metrics:\n\n- **User-profile accuracy:** Does the model remember preferences correctly?  \n- **Relevance score:** Degree of alignment with user-specific goals.\n- **Consistency:** Stable personalization across long conversations.\n- **Error rate:** Wrong personalization (e.g., hallucinating preferences) is heavily penalized.\n- **Engagement metrics:** Response acceptance rate, user satisfaction signals, reduced corrections.\n- **Retrieval quality (for RAG-based personalization):**\n  - Embedding relevance\n  - Recall@K\n  - Hit-rate\n  - Semantic similarity to expected answers\n\nEvaluation combines LLM output scoring, user-feedback loops, and automatic metrics."
+    "answer": "Personalization should be measured with both quantitative and qualitative metrics:\n\n- **User-profile accuracy:** Does the model remember preferences correctly?  \n- **Relevance score:** Degree of alignment with user-specific goals.\n- **Consistency:** Stable personalization across long conversations.\n- **Error rate:** Wrong personalization (e.g., hallucinating preferences) is heavily penalized.\n- **Engagement metrics:** Response acceptance rate, user satisfaction signals, reduced corrections.\n- **Retrieval quality (for RAG-based personalization):**\n  - Embedding relevance\n  - Recall@K\n  - Hit-rate\n  - Semantic similarity to expected answers\n\nEvaluation combines LLM output scoring, user-feedback loops, and automatic metrics.\n\n---"
   },
   {
     "type": "Deployment",
     "id": "Q32",
     "question": "Where do we use LangChain and what problems does it solve?",
-    "answer": "LangChain is a framework for building LLM pipelines, especially production-grade RAG systems. It abstracts components such as:\n\n- **Retrievers:** Vector DBs (FAISS, Pinecone, Milvus)  \n- **Document loaders and chunkers**  \n- **Prompt orchestration and template management**  \n- **Agents & tools integration**  \n- **Memory modules (session memory, long-term memory)**  \n- **Workflow chaining** (multi-step reasoning, sequential pipelines)  \n- **Evaluation utilities**  \n\nEssentially, LangChain provides the ecosystem to build:  \n- RAG systems  \n- conversational agents  \n- tool-using LLMs  \n- multi-step pipelines  \n- retrieval + reasoning workflows  \n\nIt reduces engineering complexity and accelerates LLM application development."
+    "answer": "LangChain is a framework for building LLM pipelines, especially production-grade RAG systems. It abstracts components such as:\n\n- **Retrievers:** Vector DBs (FAISS, Pinecone, Milvus)  \n- **Document loaders and chunkers**  \n- **Prompt orchestration and template management**  \n- **Agents & tools integration**  \n- **Memory modules (session memory, long-term memory)**  \n- **Workflow chaining** (multi-step reasoning, sequential pipelines)  \n- **Evaluation utilities**  \n\nEssentially, LangChain provides the ecosystem to build:  \n- RAG systems  \n- conversational agents  \n- tool-using LLMs  \n- multi-step pipelines  \n- retrieval + reasoning workflows  \n\nIt reduces engineering complexity and accelerates LLM application development.\n\n---"
   },
   {
     "type": "Learning",
     "id": "Q1",
     "question": "What is AdamW, how it differ from Adam?",
-    "answer": "**AdamW** is a variant of the **Adam optimizer** that fixes how **weight decay** is applied.\n\nIn the original **Adam**, weight decay was implemented by adding an L2 penalty to the loss function. However, because Adam rescales gradients adaptively, this L2 regularization does **not behave like true weight decay**, it gets entangled with the gradient updates, often leading to suboptimal generalization.\n\n**AdamW** (proposed by Loshchilov & Hutter, 2017) decouples weight decay from the gradient-based update. Instead of adding L2 loss to the objective, it directly **decays the weights after each update step**, keeping the adaptive gradient behavior intact.\n\nAs a result, AdamW offers **better generalization** and **more stable training**, especially for large-scale models like transformers.\n\n**In short:**\n\n- **Adam:** mixes L2 regularization into the gradient, which interacts with adaptive updates.\n- **AdamW:** applies *true weight decay* separately from gradient updates.\n\nThis decoupling makes AdamW the **default optimizer** for most modern deep learning frameworks and transformer-based models."
+    "answer": "**AdamW** is a variant of the **Adam optimizer** that fixes how **weight decay** is applied.\n\nIn the original **Adam**, weight decay was implemented by adding an L2 penalty to the loss function. However, because Adam rescales gradients adaptively, this L2 regularization does **not behave like true weight decay**, it gets entangled with the gradient updates, often leading to suboptimal generalization.\n\n**AdamW** (proposed by Loshchilov & Hutter, 2017) decouples weight decay from the gradient-based update. Instead of adding L2 loss to the objective, it directly **decays the weights after each update step**, keeping the adaptive gradient behavior intact.\n\nAs a result, AdamW offers **better generalization** and **more stable training**, especially for large-scale models like transformers.\n\n**In short:**\n\n- **Adam:** mixes L2 regularization into the gradient, which interacts with adaptive updates.\n- **AdamW:** applies *true weight decay* separately from gradient updates.\n\nThis decoupling makes AdamW the **default optimizer** for most modern deep learning frameworks and transformer-based models.\n\n---"
   },
   {
     "type": "Learning",
     "id": "Q2",
     "question": "What tricks improve training stability and convergence?",
-    "answer": "- **Learning-rate warmup** and **cosine decay** for smoother optimization.\n- **Gradient clipping** to prevent exploding gradients.\n- **Layer normalization** and **residual connections** to stabilize deep architectures.\n- **Weight decay** or **dropout** for regularization.\n- **Mixed precision (FP16/BF16)** for speed and memory efficiency.\nwhy they helps intuitively"
+    "answer": "- **Learning-rate warmup** and **cosine decay** for smoother optimization.\n- **Gradient clipping** to prevent exploding gradients.\n- **Layer normalization** and **residual connections** to stabilize deep architectures.\n- **Weight decay** or **dropout** for regularization.\n- **Mixed precision (FP16/BF16)** for speed and memory efficiency.\nwhy they helps intuitively\n---"
   },
   {
     "type": "Learning",
     "id": "Q3",
     "question": "Why use *cosine decay* after warmup? Why cosine (not others)?\nframe the question better",
-    "answer": "- **Warmup:** Gradually increases the learning rate to stabilize initial training.\n- **Cosine decay:** Smoothly decreases the learning rate following a cosine curve:\n\n$$\n\\eta_t = \\eta_{\\text{min}} + \\frac{1}{2}(\\eta_{\\text{max}} - \\eta_{\\text{min}})(1 + \\cos(\\pi t / T))\n$$\n\n**Why cosine:**\n\n- Smooth and non-abrupt decay.\n- Avoids sudden jumps seen in step or exponential schedules.\n- Empirically stable and yields good generalization.\n\n**Alternatives:** linear decay, exponential decay, polynomial decay — but cosine offers a good trade-off between stability and convergence."
+    "answer": "- **Warmup:** Gradually increases the learning rate to stabilize initial training.\n- **Cosine decay:** Smoothly decreases the learning rate following a cosine curve:\n\n$$\n\\eta_t = \\eta_{\\text{min}} + \\frac{1}{2}(\\eta_{\\text{max}} - \\eta_{\\text{min}})(1 + \\cos(\\pi t / T))\n$$\n\n**Why cosine:**\n\n- Smooth and non-abrupt decay.\n- Avoids sudden jumps seen in step or exponential schedules.\n- Empirically stable and yields good generalization.\n\n**Alternatives:** linear decay, exponential decay, polynomial decay — but cosine offers a good trade-off between stability and convergence.\n\n---"
   },
   {
     "type": "Learning",
     "id": "Q4",
     "question": "What is *gradient clipping*, and why is it used?",
-    "answer": "**Gradient clipping** limits the magnitude of gradients during backpropagation.\n\n- **Purpose:** Prevent *gradient explosion*, which can destabilize or crash training.\n- **Common method:** Clip gradients by norm, e.g.\n\n$$\ng \\leftarrow c \\cdot \\frac{g}{\\|g\\|} \\quad \\text{if } \\|g\\| > \\text{c}\n$$\n\nwhere $c$ is a hyperparameter, $g$ is the gradient, and $\\|g\\|$ is the norm of $g$. Since $g/\\|g\\|$ is a unit vector, after rescaling the new $g$ will have norm $c$. Note that if $\\|g\\| < c$, then we don’t need to do anything.\n\n- **Effect:** Stabilizes updates, especially in RNNs, transformers, and reinforcement learning models."
+    "answer": "**Gradient clipping** limits the magnitude of gradients during backpropagation.\n\n- **Purpose:** Prevent *gradient explosion*, which can destabilize or crash training.\n- **Common method:** Clip gradients by norm, e.g.\n\n$$\ng \\leftarrow c \\cdot \\frac{g}{\\|g\\|} \\quad \\text{if } \\|g\\| > \\text{c}\n$$\n\nwhere $c$ is a hyperparameter, $g$ is the gradient, and $\\|g\\|$ is the norm of $g$. Since $g/\\|g\\|$ is a unit vector, after rescaling the new $g$ will have norm $c$. Note that if $\\|g\\| < c$, then we don’t need to do anything.\n\n- **Effect:** Stabilizes updates, especially in RNNs, transformers, and reinforcement learning models.\n\n---"
   },
   {
     "type": "Learning",
     "id": "Q5",
     "question": "What is *model parallelism* vs *pipeline parallelism*?",
-    "answer": "Both are strategies to train large models across multiple GPUs, but they differ in *how* the model is split.\n\n**Model parallelism** divides the **model’s parameters** across devices — for example, placing different layers or parts of a layer on different GPUs. Each GPU computes its part of the forward and backward pass. This approach is mainly used when the model is too large to fit in one GPU’s memory.\n\n**Pipeline parallelism** divides the **training process** into sequential stages across GPUs. The input batch is broken into *micro-batches* that move through the pipeline — while one GPU works on the next batch, another continues the previous one. This improves utilization and throughput.\n\n\n**In short:**\n\n- *Model parallelism* → splits **the model** to fit memory.\n- *Pipeline parallelism* → splits **the computation** to improve efficiency.\n  Large-scale systems (e.g., DeepSpeed, Megatron-LM) often combine both for optimal performance.\n\nThey are often **combined** for large-scale model training (e.g., Megatron-LM, DeepSpeed)."
+    "answer": "Both are strategies to train large models across multiple GPUs, but they differ in *how* the model is split.\n\n**Model parallelism** divides the **model’s parameters** across devices — for example, placing different layers or parts of a layer on different GPUs. Each GPU computes its part of the forward and backward pass. This approach is mainly used when the model is too large to fit in one GPU’s memory.\n\n**Pipeline parallelism** divides the **training process** into sequential stages across GPUs. The input batch is broken into *micro-batches* that move through the pipeline — while one GPU works on the next batch, another continues the previous one. This improves utilization and throughput.\n\n\n**In short:**\n\n- *Model parallelism* → splits **the model** to fit memory.\n- *Pipeline parallelism* → splits **the computation** to improve efficiency.\n  Large-scale systems (e.g., DeepSpeed, Megatron-LM) often combine both for optimal performance.\n\nThey are often **combined** for large-scale model training (e.g., Megatron-LM, DeepSpeed).\n\n---"
   },
   {
     "type": "Learning",
     "id": "Q6",
     "question": "What’s the difference between *LoRA* and *QLoRA*?",
-    "answer": "**LoRA**, short for *Low-Rank Adaptation*, is a fine-tuning technique that makes large language model training more efficient.\n Instead of updating all model parameters, LoRA inserts small, low-rank adapter matrices into the model’s weight layers. During fine-tuning, only these adapters are trained while the base model remains frozen. This drastically reduces the number of trainable parameters and speeds up training.\n\n**QLoRA**, or *Quantized LoRA*, takes this a step further. It allows fine-tuning on **quantized models**, typically using 4-bit quantization (like NF4). By representing the model weights in lower precision, QLoRA cuts down on memory usage even more — without significantly hurting performance. This makes it possible to fine-tune very large models (like 65B parameters) on a single high-end GPU or small cluster. add peerformance affect; accuracy/speed etc.\n\n**In short:**\n\n- LoRA makes fine-tuning efficient by training small adapter layers.\n- QLoRA makes it even more efficient by fine-tuning **quantized** models, enabling large-scale fine-tuning on modest hardware."
+    "answer": "**LoRA**, short for *Low-Rank Adaptation*, is a fine-tuning technique that makes large language model training more efficient.\n Instead of updating all model parameters, LoRA inserts small, low-rank adapter matrices into the model’s weight layers. During fine-tuning, only these adapters are trained while the base model remains frozen. This drastically reduces the number of trainable parameters and speeds up training.\n\n**QLoRA**, or *Quantized LoRA*, takes this a step further. It allows fine-tuning on **quantized models**, typically using 4-bit quantization (like NF4). By representing the model weights in lower precision, QLoRA cuts down on memory usage even more — without significantly hurting performance. This makes it possible to fine-tune very large models (like 65B parameters) on a single high-end GPU or small cluster. add peerformance affect; accuracy/speed etc.\n\n**In short:**\n\n- LoRA makes fine-tuning efficient by training small adapter layers.\n- QLoRA makes it even more efficient by fine-tuning **quantized** models, enabling large-scale fine-tuning on modest hardware.\n\n---"
   },
   {
     "type": "Learning",
     "id": "Q7",
     "question": "What are other adapter-based fine-tuning methods (e.g., DoRA)?",
-    "answer": "Beyond LoRA and QLoRA:\n\n- **DoRA (Weight-Decomposed LoRA)** — decomposes pretrained weights into direction and magnitude, updating only the direction for better stability.\n- **AdapterFusion / Prefix-Tuning / BitFit** — other parameter-efficient fine-tuning (PEFT) techniques targeting specific model components or embeddings.\n\nThese methods balance performance with memory efficiency in downstream fine-tuning.\ntext to lora"
+    "answer": "Beyond LoRA and QLoRA:\n\n- **DoRA (Weight-Decomposed LoRA)** — decomposes pretrained weights into direction and magnitude, updating only the direction for better stability.\n- **AdapterFusion / Prefix-Tuning / BitFit** — other parameter-efficient fine-tuning (PEFT) techniques targeting specific model components or embeddings.\n\nThese methods balance performance with memory efficiency in downstream fine-tuning.\ntext to lora\n---"
   },
   {
     "type": "Learning",
     "id": "Q8",
     "question": "What’s the difference between *SFT* and *RLHF*?",
-    "answer": "**SFT**, or *Supervised Fine-Tuning*, is the stage where a model learns to produce good answers by **imitating human-written examples**.\n It’s a straightforward supervised learning process: the model is trained on prompt–response pairs, minimizing cross-entropy loss to match the human responses. This step teaches the model to follow instructions and generate coherent, helpful outputs.\n\n**RLHF**, or *Reinforcement Learning from Human Feedback*, builds on top of SFT. Instead of directly imitating humans, the model now learns from **human preferences** — for example, which of two responses a human finds better.\n A separate *reward model* is trained using this preference data, and the main model is then optimized to maximize this learned reward signal using reinforcement learning (usually with PPO).\n\n**In short:**\n\n- SFT trains the model to **imitate good answers** using labeled data.\n- RLHF trains the model to **align with human preferences**, optimizing for what people *prefer*, not just what they *wrote*.\n\nTogether, SFT gives the model basic instruction-following ability, and RLHF refines that behavior to make it more aligned, safe, and human-like."
+    "answer": "**SFT**, or *Supervised Fine-Tuning*, is the stage where a model learns to produce good answers by **imitating human-written examples**.\n It’s a straightforward supervised learning process: the model is trained on prompt–response pairs, minimizing cross-entropy loss to match the human responses. This step teaches the model to follow instructions and generate coherent, helpful outputs.\n\n**RLHF**, or *Reinforcement Learning from Human Feedback*, builds on top of SFT. Instead of directly imitating humans, the model now learns from **human preferences** — for example, which of two responses a human finds better.\n A separate *reward model* is trained using this preference data, and the main model is then optimized to maximize this learned reward signal using reinforcement learning (usually with PPO).\n\n**In short:**\n\n- SFT trains the model to **imitate good answers** using labeled data.\n- RLHF trains the model to **align with human preferences**, optimizing for what people *prefer*, not just what they *wrote*.\n\nTogether, SFT gives the model basic instruction-following ability, and RLHF refines that behavior to make it more aligned, safe, and human-like.\n\n\n---"
   },
   {
     "type": "Learning",
     "id": "Q9",
     "question": "How do Direct Preference Optimization (DPO) and RLHF differ?",
-    "answer": "DPO simplifies RLHF by removing the reinforcement learning loop.\nInstead of training a separate reward model and using PPO, DPO directly optimizes the model parameters to prefer responses that humans liked more.\n\nIt minimizes a loss derived from the same Bradley–Terry preference model, without the instability or extra complexity of RL.\n\n**In short:**\n\n- RLHF → reward model + PPO optimization\n- DPO → direct, simpler preference learning (no reward model training)\n\nDPO achieves alignment comparable to that of that of RLHF wicomputation computation and fewer moving parts."
+    "answer": "DPO simplifies RLHF by removing the reinforcement learning loop.\nInstead of training a separate reward model and using PPO, DPO directly optimizes the model parameters to prefer responses that humans liked more.\n\nIt minimizes a loss derived from the same Bradley–Terry preference model, without the instability or extra complexity of RL.\n\n**In short:**\n\n- RLHF → reward model + PPO optimization\n- DPO → direct, simpler preference learning (no reward model training)\n\nDPO achieves alignment comparable to that of that of RLHF wicomputation computation and fewer moving parts.\n\n---"
   },
   {
     "type": "Learning",
     "id": "Q10",
     "question": "What is the Bradley–Terry model originally?",
-    "answer": "The **Bradley–Terry model** is a probabilistic model used to represent *pairwise comparisons* between items. \nIt assumes that each item $i$ has a latent \"ability\" parameter $\\beta_i$, and the probability that item $i$ is preferred over item $j$ is:\n$$\nP(i \\succ j) = \\frac{e^{\\beta_i}}{e^{\\beta_i} + e^{\\beta_j}}\n$$\n\nThis model is widely used for preference learning, ranking, and competition outcomes (e.g., sports or survey comparisons)."
+    "answer": "The **Bradley–Terry model** is a probabilistic model used to represent *pairwise comparisons* between items. \nIt assumes that each item $i$ has a latent \"ability\" parameter $\\beta_i$, and the probability that item $i$ is preferred over item $j$ is:\n$$\nP(i \\succ j) = \\frac{e^{\\beta_i}}{e^{\\beta_i} + e^{\\beta_j}}\n$$\n\nThis model is widely used for preference learning, ranking, and competition outcomes (e.g., sports or survey comparisons).\n\n---"
   },
   {
     "type": "Learning",
     "id": "Q11",
     "question": "Are there other ways besides pairwise preference to evaluate answers?",
-    "answer": "- **Score-based evaluation**\n  Assign a numerical score to each response (e.g., 1–5 or 0–100). \n  Useful for tasks where absolute quality can be graded.\n\n- **Ranking (listwise) evaluation** \n  Rank multiple responses simultaneously rather than pairwise. \n  Helps capture *relative* quality across several answers at once.\n\n- **Probabilistic modeling** \n  Estimate a probability distribution over responses — for example, the likelihood of each being the \"best\" answer. \n  See: [Biyik et al., *Learning from Comparisons and Choices*, 2022](https://iliad.stanford.edu/pdfs/publications/biyik2022learning.pdf)\n\n- **Direct preference prediction** \n  Train a model to directly predict preference scores or rankings without explicit pairwise data.\n\n- **Reward modeling (RLHF style)** \n  Learn a reward signal from human feedback to evaluate responses in a continuous way rather than discrete comparisons."
+    "answer": "- **Score-based evaluation**\n  Assign a numerical score to each response (e.g., 1–5 or 0–100). \n  Useful for tasks where absolute quality can be graded.\n\n- **Ranking (listwise) evaluation** \n  Rank multiple responses simultaneously rather than pairwise. \n  Helps capture *relative* quality across several answers at once.\n\n- **Probabilistic modeling** \n  Estimate a probability distribution over responses — for example, the likelihood of each being the \"best\" answer. \n  See: [Biyik et al., *Learning from Comparisons and Choices*, 2022](https://iliad.stanford.edu/pdfs/publications/biyik2022learning.pdf)\n\n- **Direct preference prediction** \n  Train a model to directly predict preference scores or rankings without explicit pairwise data.\n\n- **Reward modeling (RLHF style)** \n  Learn a reward signal from human feedback to evaluate responses in a continuous way rather than discrete comparisons.\n\n---"
   },
   {
     "type": "Learning",
