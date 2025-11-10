@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Q&A Practice</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <link rel="stylesheet" href="style.css">
+
+  <script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      displayMath: [['$$', '$$'], ['\\[', '\\]']],
+      processEscapes: true
+    },
+    svg: { fontCache: 'global' }
+  };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" async></script>
+</head>
+
+<body>
+  <h1>Q&A Practice</h1>
+  <br>
+  <div class="mode-switch">
+    <button id="all-btn" class="active">🧠 All Mode</button>
+    <button id="practice-btn">⚡ Practice Mode</button>
+  </div>
+
+  <div id="qa-container"></div>
+
+  <!-- <footer>Made with ❤️ for learning</footer> -->
+
+  <script>
+    let qaData = [];
+    let mode = "all";
+    let currentIndex = -1;
+    let order = [];
+    let visited = [];
+
+    function renderAllMode() {
+      const container = $("#qa-container");
+      container.empty();
+
+      qaData.forEach((q) => {
+        const card = $(`
+          <div class="qa-card">
+            <div class="type-label">${q.type}</div>
+            <div class="question">
+              ${q.id}. ${q.question}
+              <span class="toggle-icon">+</span>
+            </div>
+            <div class="answer">${q.answer}</div>
+          </div>
+        `);
+        container.append(card);
+      });
+
+      $(".answer").hide();
+      $(".toggle-icon").text("+");
+
+      $(".question").on("click", function () {
+        const ans = $(this).siblings(".answer");
+        const icon = $(this).find(".toggle-icon");
+        const isVisible = ans.is(":visible");
+        ans.slideToggle(200);
+        icon.text(isVisible ? "+" : "−");
+      });
+
+    if (window.MathJax) {
+        MathJax.typesetPromise();
+    }
+    }
+
+    function renderPracticeMode(index = null) {
+      const container = $("#qa-container");
+      container.empty();
+
+      // initialize order on first load
+      if (order.length === 0) {
+        order = [...Array(qaData.length).keys()];
+        for (let i = order.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [order[i], order[j]] = [order[j], order[i]];
+        }
+        visited = [];
+      }
+
+      if (index !== null) currentIndex = index;
+      else currentIndex = visited.length;
+
+      if (currentIndex >= order.length) {
+        container.html(`<p>🎉 You've completed all questions! Refresh to start again.</p>`);
+        return;
+      }
+
+      const qIndex = order[currentIndex];
+      visited.push(qIndex);
+      const q = qaData[qIndex];
+
+      const card = $(`
+        <div class="practice-card">
+          <div class="counter">Question ${currentIndex + 1} / ${qaData.length}</div>
+          <div class="type-label">${q.type}</div>
+          <div class="question">${q.id}. ${q.question}</div>
+          <textarea class="user-input" id="user-answer" placeholder="Type your answer here..."></textarea>
+          <div>
+            <button id="check-btn">Check Answer</button>
+            <button id="prev-btn">⬅️ Previous</button>
+            <button id="next-btn">➡️ Next</button>
+          </div>
+          <div id="correct-answer" class="answer-box">${q.answer}</div>
+        </div>
+      `);
+
+      container.append(card);
+
+      $("#check-btn").on("click", () => $("#correct-answer").slideDown(300));
+
+      $("#next-btn").on("click", () => {
+        if (currentIndex < order.length - 1) renderPracticeMode(currentIndex + 1);
+        else container.html(`<p>🎉 You've completed all questions!</p>`);
+      });
+
+      $("#prev-btn").on("click", () => {
+        if (currentIndex > 0) renderPracticeMode(currentIndex - 1);
+      });
+    }
+
+    function setMode(newMode) {
+      mode = newMode;
+      $("#all-btn").toggleClass("active", mode === "all");
+      $("#practice-btn").toggleClass("active", mode === "practice");
+
+      if (mode === "all") {
+        renderAllMode();
+      } else {
+        order = []; // reset sequence when switching to practice
+        renderPracticeMode();
+      }
+    }
+
+    $(document).ready(function () {
+      $.getJSON("QA.json", function (data) {
+        qaData = data;
+        setMode("all");
+      }).fail(() => {
+        $("#qa-container").html("<p>❌ Failed to load QA.json</p>");
+      });
+
+      $("#all-btn").on("click", () => setMode("all"));
+      $("#practice-btn").on("click", () => setMode("practice"));
+    });
+
+    
+  </script>
+</body>
+</html>
