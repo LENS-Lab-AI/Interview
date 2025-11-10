@@ -1,0 +1,192 @@
+/* === Base Layout === */
+body {
+  background: radial-gradient(circle at 20% 20%, #0f172a, #020617);
+  color: #e2e8f0;
+  font-family: "Inter", sans-serif;
+  margin: 0;
+  padding: 2rem 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+}
+
+h1 {
+  text-align: center;
+  font-size: 2.2rem;
+  color: #38bdf8;
+  margin-bottom: 1rem;
+}
+
+/* === Mode Buttons Row === */
+.mode-switch {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 0.8rem;
+}
+
+.mode-switch button {
+  background: #1e293b;
+  color: #e2e8f0;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  padding: 0.6rem 1.2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.mode-switch button:hover {
+  background: #38bdf8;
+  color: #0f172a;
+  border-color: #38bdf8;
+}
+
+.mode-switch button.active {
+  background: #38bdf8;
+  color: #0f172a;
+}
+
+/* === Topic Tabs Row === */
+.topic-tabs {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+}
+
+.topic-tab {
+  background: #1e293b;
+  color: #e2e8f0;
+  border: 1px solid #334155;
+  border-radius: 20px;
+  padding: 0.3rem 0.9rem;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.topic-tab:hover {
+  background: #38bdf8;
+  color: #0f172a;
+  border-color: #38bdf8;
+}
+
+.topic-tab.active {
+  background: #38bdf8;
+  color: #0f172a;
+  border-color: #38bdf8;
+}
+
+/* === Q&A and Practice Cards === */
+#qa-container {
+  max-width: 900px;
+  width: 100%;
+}
+
+.qa-card,
+.practice-card {
+  background: rgba(30, 41, 59, 0.9);
+  border: 1px solid #334155;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 4px 10px rgba(56, 189, 248, 0.05);
+  transition: transform 0.2s ease;
+}
+
+.practice-card button {
+  background: #1e293b;
+  color: #e2e8f0;
+  border: 1px solid #334155;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  margin-right: 0.5rem;
+}
+
+.practice-card button:hover {
+  background: #38bdf8;
+  color: #0f172a;
+  border-color: #38bdf8;
+}
+
+.qa-card:hover {
+  transform: translateY(-3px);
+}
+
+.type-label {
+  font-size: 0.8rem;
+  background: #334155;
+  color: #a5b4fc;
+  padding: 3px 8px;
+  border-radius: 6px;
+  margin-bottom: 8px;
+  display: inline-block;
+}
+
+.question {
+  font-weight: 600;
+  font-size: 1.15rem;
+  margin-bottom: 0.6rem;
+  cursor: pointer;
+}
+
+.toggle-icon {
+  float: right;
+  color: #38bdf8;
+  font-weight: bold;
+  font-size: 1.2rem;
+  transition: transform 0.2s ease;
+}
+
+.answer {
+  display: none;
+  line-height: 1.6;
+  color: #cbd5e1;
+  margin-top: 0.8rem;
+}
+
+/* === Practice Mode Extras === */
+.user-input {
+  width: 100%;
+  min-height: 80px;
+  border-radius: 6px;
+  border: 1px solid #475569;
+  padding: 10px;
+  font-size: 1rem;
+  background: #0f172a;
+  color: #e2e8f0;
+  margin-bottom: 1rem;
+  resize: vertical;
+}
+
+.answer-box {
+  margin-top: 1rem;
+  background: #1e293b;
+  border-left: 4px solid #38bdf8;
+  padding: 1rem;
+  border-radius: 8px;
+  display: none;
+}
+
+.counter {
+  text-align: right;
+  color: #94a3b8;
+  font-size: 0.95rem;
+  margin-bottom: 1rem;
+}
+
+/* === Footer === */
+footer {
+  margin-top: auto;
+  text-align: center;
+  color: #64748b;
+  font-size: 0.9rem;
+  padding-top: 2rem;
+}

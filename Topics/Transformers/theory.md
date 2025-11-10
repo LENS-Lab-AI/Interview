@@ -1,4 +1,4 @@
-# Theory — Som
+# Theory
 
 ---
 - 
