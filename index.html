@@ -75,9 +75,15 @@
       const filtered = getFilteredData();
 
       filtered.forEach((q) => {
+        const tagsHtml = q.tags && q.tags.length > 0 
+          ? `<div class="tags-container">${q.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}</div>`
+          : '';
         const card = $(`
           <div class="qa-card">
-            <div class="type-label">${q.type}</div>
+            <div class="type-tags-row">
+              <div class="type-label">${q.type}</div>
+              ${tagsHtml}
+            </div>
             <div class="question">${q.id}. ${q.question}<span class="toggle-icon">+</span></div>
             <div class="answer">${q.answer}</div>
           </div>
@@ -130,10 +136,16 @@
       visited.push(qIndex);
       const q = filteredData[qIndex];
 
+      const tagsHtml = q.tags && q.tags.length > 0 
+        ? `<div class="tags-container">${q.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}</div>`
+        : '';
       const card = $(`
         <div class="practice-card">
           <div class="counter">Question ${currentIndex + 1} / ${filteredData.length}</div>
-          <div class="type-label">${q.type}</div>
+          <div class="type-tags-row">
+            <div class="type-label">${q.type}</div>
+            ${tagsHtml}
+          </div>
           <div class="question">${q.id}. ${q.question}</div>
           <textarea class="user-input" id="user-answer" placeholder="Type your answer here..."></textarea>
           <div>
