@@ -69,19 +69,16 @@ ${correctAnswer}
 User's Answer:
 ${userAnswer}
 
-Please provide:
-1. A similarity score from 0-100 (where 100 means perfect match)
-2. A brief analysis of how well the user's answer matches the correct answer
-3. Key points that are correct or missing
-4. Overall feedback
-
-Format your response as JSON:
+Please provide your evaluation as a JSON object with the following structure:
 {
-  "score": <number 0-100>,
-  "analysis": "<brief analysis>",
-  "keyPoints": "<key points>",
-  "feedback": "<overall feedback>"
-}`;
+  "score": <number from 0-100>,
+  "analysis": "<brief analysis text>",
+  "keyPoints": "<key points text>",
+  "feedback": "<overall feedback text>"
+}
+
+IMPORTANT: Return ONLY valid JSON, no additional text before or after.`;
+
 
       try {
         const response = await fetch(OPENROUTER_API_URL, {
@@ -109,17 +106,54 @@ Format your response as JSON:
         }
 
         const data = await response.json();
-        const llmResponse = data.choices[0].message.content;
+        let llmResponse = data.choices[0].message.content.trim();
 
         // Try to parse JSON from the response
         try {
-          // Extract JSON from markdown code blocks if present
-          const jsonMatch = llmResponse.match(/```(?:json)?\s*(\{[\s\S]*\})\s*```/) || 
-                          llmResponse.match(/\{[\s\S]*\}/);
-          const parsed = JSON.parse(jsonMatch ? jsonMatch[1] : llmResponse);
-          return { success: true, ...parsed };
+          // Try to find JSON object in the response
+          let jsonStr = llmResponse;
+
+          // If response starts with {, try to parse directly
+          if (llmResponse.startsWith('{')) {
+            // Find the matching closing brace
+            let braceCount = 0;
+            let endIndex = -1;
+            for (let i = 0; i < llmResponse.length; i++) {
+              if (llmResponse[i] === '{') braceCount++;
+              if (llmResponse[i] === '}') {
+                braceCount--;
+                if (braceCount === 0) {
+                  endIndex = i + 1;
+                  break;
+                }
+              }
+            }
+            if (endIndex > 0) {
+              jsonStr = llmResponse.substring(0, endIndex);
+            }
+          } else {
+            // Try to extract JSON using regex
+            const jsonMatch = llmResponse.match(/\{[\s\S]*\}/);
+            if (jsonMatch) {
+              jsonStr = jsonMatch[0];
+            }
+          }
+
+          const parsed = JSON.parse(jsonStr);
+
+          // Ensure we have the expected fields - JSON.parse preserves whitespace in strings
+          return {
+            success: true,
+            score: typeof parsed.score === 'number' ? parsed.score : null,
+            analysis: parsed.analysis || '',
+            keyPoints: parsed.keyPoints || parsed.key_points || '',
+            feedback: parsed.feedback || ''
+          };
         } catch (parseError) {
-          // If JSON parsing fails, return the raw response
+          console.error("JSON parse error:", parseError);
+          console.error("LLM response:", llmResponse);
+
+          // If JSON parsing fails, try to extract information manually
           return {
             success: true,
             score: null,
@@ -271,22 +305,96 @@ Format your response as JSON:
             </div>
           `);
         } else {
-          const score = verification.score !== null ? verification.score : "N/A";
-          const scoreColor = verification.score >= 80 ? "#4CAF50" : verification.score >= 60 ? "#FF9800" : "#F44336";
+          // Handle score properly (0 is a valid score)
+          const score = (verification.score !== null && verification.score !== undefined) ? verification.score : "N/A";
+          let scoreColor = "#64748b"; // Default gray
 
-          resultDiv.html(`
+          if (typeof score === 'number') {
+            if (score >= 80) {
+              scoreColor = "#4CAF50"; // Green
+            } else if (score >= 60) {
+              scoreColor = "#FF9800"; // Orange
+            } else {
+              scoreColor = "#F44336"; // Red
+            }
+          }
+
+          // Build the HTML content
+          let htmlContent = `
             <div class="verification-content">
               <div class="score-display" style="background: ${scoreColor}; color: white; padding: 10px; border-radius: 5px; margin-bottom: 15px; text-align: center;">
-                <h3>Score: ${score}${verification.score !== null ? '/100' : ''}</h3>
+                <h3>Score: ${score}${typeof score === 'number' ? '/100' : ''}</h3>
               </div>
-              <div class="verification-details">
-                <p><strong>Analysis:</strong></p>
-                <p>${verification.analysis || verification.feedback}</p>
-                ${verification.keyPoints ? `<p><strong>Key Points:</strong></p><p>${verification.keyPoints}</p>` : ''}
-                ${verification.feedback && verification.analysis ? `<p><strong>Feedback:</strong></p><p>${verification.feedback}</p>` : ''}
+              <div class="verification-details">`;
+
+          // Add Analysis section
+          // Add Analysis section
+          if (verification.analysis && verification.analysis.trim()) {
+            // Check if analysis is JSON string, if so try to parse it
+            let analysisText = verification.analysis;
+            try {
+              if (analysisText.trim().startsWith('{')) {
+                const parsedAnalysis = JSON.parse(analysisText);
+                analysisText = parsedAnalysis.analysis || parsedAnalysis.feedback || analysisText;
+              }
+            } catch (e) {
+              // Not JSON, use as is
+            }
+            // Escape HTML and preserve whitespace
+            const escapedAnalysis = $('<div>').text(analysisText).html();
+            htmlContent += `
+                <div class="verification-section">
+                  <p class="section-title">📊 Analysis:</p>
+                  <p class="section-content">${escapedAnalysis.replace(/\n/g, '<br>')}</p>
+                </div>`;
+          }
+
+          // Add Key Points section
+          if (verification.keyPoints && verification.keyPoints.trim()) {
+            let keyPointsText = verification.keyPoints;
+            try {
+              if (keyPointsText.trim().startsWith('{')) {
+                const parsedKeyPoints = JSON.parse(keyPointsText);
+                keyPointsText = parsedKeyPoints.keyPoints || parsedKeyPoints.key_points || keyPointsText;
+              }
+            } catch (e) {
+              // Not JSON, use as is
+            }
+            // Escape HTML and preserve whitespace
+            const escapedKeyPoints = $('<div>').text(keyPointsText).html();
+            htmlContent += `
+                <div class="verification-section">
+                  <p class="section-title">🔑 Key Points:</p>
+                  <p class="section-content">${escapedKeyPoints.replace(/\n/g, '<br>')}</p>
+                </div>`;
+          }
+
+          // Add Feedback section (only if different from analysis)
+          if (verification.feedback && verification.feedback.trim() &&
+            verification.feedback !== verification.analysis) {
+            let feedbackText = verification.feedback;
+            try {
+              if (feedbackText.trim().startsWith('{')) {
+                const parsedFeedback = JSON.parse(feedbackText);
+                feedbackText = parsedFeedback.feedback || feedbackText;
+              }
+            } catch (e) {
+              // Not JSON, use as is
+            }
+            // Escape HTML and preserve whitespace
+            const escapedFeedback = $('<div>').text(feedbackText).html();
+            htmlContent += `
+                <div class="verification-section">
+                  <p class="section-title">💡 Feedback:</p>
+                  <p class="section-content">${escapedFeedback.replace(/\n/g, '<br>')}</p>
+                </div>`;
+          }
+
+          htmlContent += `
               </div>
-            </div>
-          `);
+            </div>`;
+
+          resultDiv.html(htmlContent);
         }
 
         $("#verify-btn").prop("disabled", false).text("🤖 Verify with LLM");
