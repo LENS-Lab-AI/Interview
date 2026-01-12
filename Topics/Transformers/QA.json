@@ -3,7 +3,7 @@
     "type": "Case Studies",
     "id": "Q1",
     "question": "Q1. You are building a student assistant that recommends future classes using past courses, likes/dislikes, and goals, with a focus on privacy. What architecture would you use and why?",
-    "answer": "Id use a local-first RAG setup: keep the student’s data encrypted on their device, cache the public course catalog locally, then retrieve candidates with a mix of keyword search and embedding search, apply hard filters (prereqs, schedule, credits), rerank the best matches, and use a small on-device LLM to generate short “why this course” notes. By default nothing leaves the device; if the student opts in, any cloud LLM call sends only public course text plus abstracted preferences (no Personal Information). Optional end-to-end-encrypted sync keeps multiple devices in step. \n\n---",
+    "answer": "Id use a local-first RAG setup: keep the student’s data encrypted on their device, cache the public course catalog locally, then retrieve candidates with a mix of keyword search and embedding search, apply hard filters (prereqs, schedule, credits), rerank the best matches, and use a small on-device LLM to generate short “why this course” notes. By default nothing leaves the device; if the student opts in, any cloud LLM call sends only public course text plus abstracted preferences (no Personal Information). Optional end-to-end-encrypted sync keeps multiple devices in step.",
     "tags": [
       "Hands-on"
     ]
@@ -12,7 +12,7 @@
     "type": "Case Studies",
     "id": "Q2",
     "question": "Q2. A photographer with Terra Bytes of images needs a private, fast system to browse everything for inspiration. What system will you build?",
-    "answer": "Use on-device image embeddings to turn each photo into a compact “meaning” vector, then a local search system that combines simple filters (date, camera, location, ratings) with semantic similarity so text like “moody blue hour portraits” or “like this photo” finds the right shots quickly; add a small semantic graph layer linking assets to shoots, people, places, styles, and color palettes so the user can say “like these, but at the beach” and hop to related looks, while deduping near-identical frames and diversifying results so the inspiration feed isn’t repetitiv\n\n---",
+    "answer": "Use on-device image embeddings to turn each photo into a compact “meaning” vector, then a local search system that combines simple filters (date, camera, location, ratings) with semantic similarity so text like “moody blue hour portraits” or “like this photo” finds the right shots quickly; add a small semantic graph layer linking assets to shoots, people, places, styles, and color palettes so the user can say “like these, but at the beach” and hop to related looks, while deduping near-identical frames and diversifying results so the inspiration feed isn’t repetitiv",
     "tags": [
       "Hands-on"
     ]
@@ -21,7 +21,7 @@
     "type": "Case Studies",
     "id": "Q3",
     "question": "Q3. Your enterprise RAG assistant still hallucinates even with strong retrieval metrics. What’s going wrong, and how do you fix it without swapping the base model?",
-    "answer": "RAG reduces but doesn’t eliminate hallucinations because LLMs treat retrieved text as suggestions, not binding truth; fix this with retrieval discipline and guardrails: use grounded prompts that require answering only from provided passages and allow abstention; gate outputs on retrieval coverage/confidence with a safe fallback instead of forcing an answer; prefer extractive or cite-then-summarize generation to anchor claims; run a quick post-validation (entailment/string-match) to catch unsupported sentences; improve retrieval (chunking/overlap, reranking, multi-hop, dedup) so the right evidence is present; and surface citations/confidence while closing the loop with human feedback. Hallucinations here are system design issues, not just prompt bugs.\n\n---",
+    "answer": "RAG reduces but doesn’t eliminate hallucinations because LLMs treat retrieved text as suggestions, not binding truth; fix this with retrieval discipline and guardrails: use grounded prompts that require answering only from provided passages and allow abstention; gate outputs on retrieval coverage/confidence with a safe fallback instead of forcing an answer; prefer extractive or cite-then-summarize generation to anchor claims; run a quick post-validation (entailment/string-match) to catch unsupported sentences; improve retrieval (chunking/overlap, reranking, multi-hop, dedup) so the right evidence is present; and surface citations/confidence while closing the loop with human feedback. Hallucinations here are system design issues, not just prompt bugs.",
     "tags": [
       "Hands-on"
     ]
@@ -30,7 +30,7 @@
     "type": "Case Studies",
     "id": "Q4",
     "question": "Q4. Your RAG pipeline produces accurate answers, but users complain it’s too slow. What do you do?",
-    "answer": "Start by profiling end-to-end latency (retrieval, rerank, LLM) and set a time budget (e.g., p95 < 3s with first token < 500ms). Then trade redundant context for useful context: cap retrieval to the fewest high-quality chunks that preserve accuracy (often 3–6), shrink chunk size (≈200–400 tokens) with light overlap, dedupe near-identical passages, and pull only the sentence window that supports the claim. Use result caching for recurring or semantically similar queries, and reserve re-ranking for complex questions (route simple ones directly). Add hierarchical retrieval/summary embeddings to compress long sources, and prefer structured/context-aware tools (function calls to fetch just a field) over pasting long documents. On the vector side, tune ANN parameters and embeddings for latency (pre-warm indexes, right nprobe/efSearch, smaller dims or quantization), and parallelize retrieval + chunk fetch while you stream the answer. Gate outputs on coverage/confidence so the model can ask for clarification instead of padding the prompt. You’ll know you’ve hit the sweet spot when p95 latency is under ~3s without a drop in user trust\n\n\n---",
+    "answer": "Start by profiling end-to-end latency (retrieval, rerank, LLM) and set a time budget (e.g., p95 < 3s with first token < 500ms). Then trade redundant context for useful context: cap retrieval to the fewest high-quality chunks that preserve accuracy (often 3–6), shrink chunk size (≈200–400 tokens) with light overlap, dedupe near-identical passages, and pull only the sentence window that supports the claim. Use result caching for recurring or semantically similar queries, and reserve re-ranking for complex questions (route simple ones directly). Add hierarchical retrieval/summary embeddings to compress long sources, and prefer structured/context-aware tools (function calls to fetch just a field) over pasting long documents. On the vector side, tune ANN parameters and embeddings for latency (pre-warm indexes, right nprobe/efSearch, smaller dims or quantization), and parallelize retrieval + chunk fetch while you stream the answer. Gate outputs on coverage/confidence so the model can ask for clarification instead of padding the prompt. You’ll know you’ve hit the sweet spot when p95 latency is under ~3s without a drop in user trust",
     "tags": [
       "Hands-on"
     ]
@@ -39,7 +39,7 @@
     "type": "Case Studies",
     "id": "Q5",
     "question": "Q5. What latency metrics should we track?",
-    "answer": "- End-to-end p50/p95/p99: pX is the time by which X\\% of requests finish\n- TTFT (time to first token): Time from send to the first streamed token; the main driver of perceived snappiness.\n- TTLT (time to last token): Time from send to the final token; the full wait to completion.\n- Tokens/sec (throughput): Average streaming speed after the first token; higher feels smoother for long answers.\n\n---",
+    "answer": "- End-to-end p50/p95/p99: pX is the time by which X\\% of requests finish\n- TTFT (time to first token): Time from send to the first streamed token; the main driver of perceived snappiness.\n- TTLT (time to last token): Time from send to the final token; the full wait to completion.\n- Tokens/sec (throughput): Average streaming speed after the first token; higher feels smoother for long answers.",
     "tags": [
       "Basic"
     ]
@@ -48,7 +48,7 @@
     "type": "Case Studies",
     "id": "Q6",
     "question": "Q6. What is FAISS and where can it be used?",
-    "answer": "FAISS (Facebook AI Similarity Search) is an open-source library from Meta for fast similarity search and clustering over dense vectors; it’s written in C++ with Python bindings, scales from millions to billions of vectors, and offers optional GPU acceleration.\nWhere it’s used:\n- Semantic search & RAG retrieval: find the most relevant passages or items via embedding similarity.\n- Recommendations & personalization: nearest-neighbor lookups in embedding space to surface similar products/content.\n- Multimedia search (images/audio/video): power reverse-image or “find similar” searches on large media libraries.\n- Clustering & large-scale indexing: k-means and ANN indexes for organizing huge vector collections efficiently.\n\n---",
+    "answer": "FAISS (Facebook AI Similarity Search) is an open-source library from Meta for fast similarity search and clustering over dense vectors; it’s written in C++ with Python bindings, scales from millions to billions of vectors, and offers optional GPU acceleration.\nWhere it’s used:\n- Semantic search & RAG retrieval: find the most relevant passages or items via embedding similarity.\n- Recommendations & personalization: nearest-neighbor lookups in embedding space to surface similar products/content.\n- Multimedia search (images/audio/video): power reverse-image or “find similar” searches on large media libraries.\n- Clustering & large-scale indexing: k-means and ANN indexes for organizing huge vector collections efficiently.",
     "tags": [
       "Basic"
     ]
@@ -57,7 +57,7 @@
     "type": "Case Studies",
     "id": "Q7",
     "question": "Q7.Imagine you were working on iPhone. Everytime users open their phones, you want to suggest one app they are most likely to open first. How would you do that?",
-    "answer": "This can be framed as a prediction problem per-unlock, with the goal of maximizing accuracy against a simple baseline such as suggesting each user’s most-used app, possibly conditioned on time-of-day. Using only on-device data for privacy, features would include personal history (per-app frequency, recency, usage streaks), temporal context (time of day, day of week, weekend vs weekday), and device context (location, battery and netwrok stats etc.).The task is modeled as ranking over a small candidate set (e.g., last N opened plus top frequent apps), using a lightweight model such as gradient-boosted trees or a compact neural network trained on historical “unlock to first app opened” sequences, with the highest-scoring app shown as the suggestion. Performance is validated offline and then via online A/B tests.\n\n---",
+    "answer": "This can be framed as a prediction problem per-unlock, with the goal of maximizing accuracy against a simple baseline such as suggesting each user’s most-used app, possibly conditioned on time-of-day. Using only on-device data for privacy, features would include personal history (per-app frequency, recency, usage streaks), temporal context (time of day, day of week, weekend vs weekday), and device context (location, battery and netwrok stats etc.).The task is modeled as ranking over a small candidate set (e.g., last N opened plus top frequent apps), using a lightweight model such as gradient-boosted trees or a compact neural network trained on historical “unlock to first app opened” sequences, with the highest-scoring app shown as the suggestion. Performance is validated offline and then via online A/B tests.",
     "tags": [
       "Deep"
     ]
@@ -66,7 +66,7 @@
     "type": "Case Studies",
     "id": "Q8",
     "question": "Q8.You run an e-commerce website. Sometimes, users want to buy an item that is no longer available. Build a recommendation system to suggest replacement items",
-    "answer": "The problem can be framed as recommending substitute products conditioned on a specific unavailable item and the current user’s context. First, define candidate space by filtering to in-stock items within the same category and similar price range. Then learn product–product similarity using a combination of content-based features (category, brand, attributes, specs, embeddings of titles/descriptions/images). For a given unavailable item, generate a candidate set of nearest neighbors in this product space and re-rank using a model that incorporates the current user’s history (past purchases, browsing, preferences), popularity and quality signals (conversion rate, rating, return rate), and real-time constraints (stock, shipping speed). Evaluate offline with historical substitution events and click/purchase data, and online through A/B tests\n\n---",
+    "answer": "The problem can be framed as recommending substitute products conditioned on a specific unavailable item and the current user’s context. First, define candidate space by filtering to in-stock items within the same category and similar price range. Then learn product–product similarity using a combination of content-based features (category, brand, attributes, specs, embeddings of titles/descriptions/images). For a given unavailable item, generate a candidate set of nearest neighbors in this product space and re-rank using a model that incorporates the current user’s history (past purchases, browsing, preferences), popularity and quality signals (conversion rate, rating, return rate), and real-time constraints (stock, shipping speed). Evaluate offline with historical substitution events and click/purchase data, and online through A/B tests",
     "tags": [
       "Deep"
     ]
@@ -75,7 +75,7 @@
     "type": "Case Studies",
     "id": "Q9",
     "question": "Q9. Each question on Quora often gets many different answers. How do you create a model that ranks all these answers? How computationally intensive is this model?",
-    "answer": "The task can be framed as a learning-to-rank problem where, for a given question, the model orders its candidate answers by predicted usefulness. Features would combine: (a) relevance signals between question and answer (semantic similarity from a transformer encoder over text, keyword overlap, topic match), (b) engagement and quality signals (upvotes, downvotes, comments, time spent, reports, answer length/structure), and (c) author features (historical answer quality, expertise in topic). A pairwise or listwise ranking model (e.g., gradient-boosted trees over features, or a neural ranking model on top of text embeddings) can be trained on historical data where user interactions indicate preference between answers. At serving time, answers for a question are embedded, their features computed or retrieved from caches, and scores produced and sorted; computation is roughly linear in the number of answers per question and can be kept modest by precomputing embeddings and heavy features offline. Overall, training (especially of text encoders) is computationally intensive and done offline on large corpora, but online inference per request is relatively lightweight and can meet latency constraints with proper indexing, caching, and batching.\n\n---",
+    "answer": "The task can be framed as a learning-to-rank problem where, for a given question, the model orders its candidate answers by predicted usefulness. Features would combine: (a) relevance signals between question and answer (semantic similarity from a transformer encoder over text, keyword overlap, topic match), (b) engagement and quality signals (upvotes, downvotes, comments, time spent, reports, answer length/structure), and (c) author features (historical answer quality, expertise in topic). A pairwise or listwise ranking model (e.g., gradient-boosted trees over features, or a neural ranking model on top of text embeddings) can be trained on historical data where user interactions indicate preference between answers. At serving time, answers for a question are embedded, their features computed or retrieved from caches, and scores produced and sorted; computation is roughly linear in the number of answers per question and can be kept modest by precomputing embeddings and heavy features offline. Overall, training (especially of text encoders) is computationally intensive and done offline on large corpora, but online inference per request is relatively lightweight and can meet latency constraints with proper indexing, caching, and batching.",
     "tags": [
       "Deep"
     ]
@@ -84,7 +84,97 @@
     "type": "Case Studies",
     "id": "Q10",
     "question": "Q10.  Given only CIFAR-10 dataset, how to build a model to recognize if an image is in the 10 classes of CIFAR-10 or not?",
-    "answer": "Train a strong classifier on CIFAR-10 (e.g., a CNN) and treat “in vs out of CIFAR-10” as an out-of-distribution detection problem using only in-distribution data. At test time, use the network’s penultimate-layer features or softmax outputs to compute a confidence/energy score for each image; images whose maximum softmax probability (or energy) falls below a chosen threshold are labeled “not in CIFAR-10.” The threshold is selected on a held-out CIFAR-10 validation set plus synthetically perturbed images (e.g., heavy noise, strong augmentations) used as proxy OOD examples.\n\n---",
+    "answer": "Train a strong classifier on CIFAR-10 (e.g., a CNN) and treat “in vs out of CIFAR-10” as an out-of-distribution detection problem using only in-distribution data. At test time, use the network’s penultimate-layer features or softmax outputs to compute a confidence/energy score for each image; images whose maximum softmax probability (or energy) falls below a chosen threshold are labeled “not in CIFAR-10.” The threshold is selected on a held-out CIFAR-10 validation set plus synthetically perturbed images (e.g., heavy noise, strong augmentations) used as proxy OOD examples.",
+    "tags": [
+      "Deep"
+    ]
+  },
+  {
+    "type": "Case Studies",
+    "id": "Q1.",
+    "question": "You are building a student assistant that recommends future classes using past courses, likes/dislikes, and goals, with a focus on privacy. What architecture would you use and why?",
+    "answer": "Id use a local-first RAG setup: keep the student’s data encrypted on their device, cache the public course catalog locally, then retrieve candidates with a mix of keyword search and embedding search, apply hard filters (prereqs, schedule, credits), rerank the best matches, and use a small on-device LLM to generate short “why this course” notes. By default nothing leaves the device; if the student opts in, any cloud LLM call sends only public course text plus abstracted preferences (no Personal Information). Optional end-to-end-encrypted sync keeps multiple devices in step.",
+    "tags": [
+      "Hands-on"
+    ]
+  },
+  {
+    "type": "Case Studies",
+    "id": "Q2.",
+    "question": "A photographer with Terra Bytes of images needs a private, fast system to browse everything for inspiration. What system will you build?",
+    "answer": "Use on-device image embeddings to turn each photo into a compact “meaning” vector, then a local search system that combines simple filters (date, camera, location, ratings) with semantic similarity so text like “moody blue hour portraits” or “like this photo” finds the right shots quickly; add a small semantic graph layer linking assets to shoots, people, places, styles, and color palettes so the user can say “like these, but at the beach” and hop to related looks, while deduping near-identical frames and diversifying results so the inspiration feed isn’t repetitiv",
+    "tags": [
+      "Hands-on"
+    ]
+  },
+  {
+    "type": "Case Studies",
+    "id": "Q3.",
+    "question": "Your enterprise RAG assistant still hallucinates even with strong retrieval metrics. What’s going wrong, and how do you fix it without swapping the base model?",
+    "answer": "RAG reduces but doesn’t eliminate hallucinations because LLMs treat retrieved text as suggestions, not binding truth; fix this with retrieval discipline and guardrails: use grounded prompts that require answering only from provided passages and allow abstention; gate outputs on retrieval coverage/confidence with a safe fallback instead of forcing an answer; prefer extractive or cite-then-summarize generation to anchor claims; run a quick post-validation (entailment/string-match) to catch unsupported sentences; improve retrieval (chunking/overlap, reranking, multi-hop, dedup) so the right evidence is present; and surface citations/confidence while closing the loop with human feedback. Hallucinations here are system design issues, not just prompt bugs.",
+    "tags": [
+      "Hands-on"
+    ]
+  },
+  {
+    "type": "Case Studies",
+    "id": "Q4.",
+    "question": "Your RAG pipeline produces accurate answers, but users complain it’s too slow. What do you do?",
+    "answer": "Start by profiling end-to-end latency (retrieval, rerank, LLM) and set a time budget (e.g., p95 < 3s with first token < 500ms). Then trade redundant context for useful context: cap retrieval to the fewest high-quality chunks that preserve accuracy (often 3–6), shrink chunk size (≈200–400 tokens) with light overlap, dedupe near-identical passages, and pull only the sentence window that supports the claim. Use result caching for recurring or semantically similar queries, and reserve re-ranking for complex questions (route simple ones directly). Add hierarchical retrieval/summary embeddings to compress long sources, and prefer structured/context-aware tools (function calls to fetch just a field) over pasting long documents. On the vector side, tune ANN parameters and embeddings for latency (pre-warm indexes, right nprobe/efSearch, smaller dims or quantization), and parallelize retrieval + chunk fetch while you stream the answer. Gate outputs on coverage/confidence so the model can ask for clarification instead of padding the prompt. You’ll know you’ve hit the sweet spot when p95 latency is under ~3s without a drop in user trust",
+    "tags": [
+      "Hands-on"
+    ]
+  },
+  {
+    "type": "Case Studies",
+    "id": "Q5.",
+    "question": "What latency metrics should we track?",
+    "answer": "- End-to-end p50/p95/p99: pX is the time by which X\\% of requests finish\n- TTFT (time to first token): Time from send to the first streamed token; the main driver of perceived snappiness.\n- TTLT (time to last token): Time from send to the final token; the full wait to completion.\n- Tokens/sec (throughput): Average streaming speed after the first token; higher feels smoother for long answers.",
+    "tags": [
+      "Basic"
+    ]
+  },
+  {
+    "type": "Case Studies",
+    "id": "Q6.",
+    "question": "What is FAISS and where can it be used?",
+    "answer": "FAISS (Facebook AI Similarity Search) is an open-source library from Meta for fast similarity search and clustering over dense vectors; it’s written in C++ with Python bindings, scales from millions to billions of vectors, and offers optional GPU acceleration.\nWhere it’s used:\n- Semantic search & RAG retrieval: find the most relevant passages or items via embedding similarity.\n- Recommendations & personalization: nearest-neighbor lookups in embedding space to surface similar products/content.\n- Multimedia search (images/audio/video): power reverse-image or “find similar” searches on large media libraries.\n- Clustering & large-scale indexing: k-means and ANN indexes for organizing huge vector collections efficiently.",
+    "tags": [
+      "Basic"
+    ]
+  },
+  {
+    "type": "Case Studies",
+    "id": "Q7.",
+    "question": "Imagine you were working on iPhone. Everytime users open their phones, you want to suggest one app they are most likely to open first. How would you do that?",
+    "answer": "This can be framed as a prediction problem per-unlock, with the goal of maximizing accuracy against a simple baseline such as suggesting each user’s most-used app, possibly conditioned on time-of-day. Using only on-device data for privacy, features would include personal history (per-app frequency, recency, usage streaks), temporal context (time of day, day of week, weekend vs weekday), and device context (location, battery and netwrok stats etc.).The task is modeled as ranking over a small candidate set (e.g., last N opened plus top frequent apps), using a lightweight model such as gradient-boosted trees or a compact neural network trained on historical “unlock to first app opened” sequences, with the highest-scoring app shown as the suggestion. Performance is validated offline and then via online A/B tests.",
+    "tags": [
+      "Deep"
+    ]
+  },
+  {
+    "type": "Case Studies",
+    "id": "Q8.",
+    "question": "You run an e-commerce website. Sometimes, users want to buy an item that is no longer available. Build a recommendation system to suggest replacement items",
+    "answer": "The problem can be framed as recommending substitute products conditioned on a specific unavailable item and the current user’s context. First, define candidate space by filtering to in-stock items within the same category and similar price range. Then learn product–product similarity using a combination of content-based features (category, brand, attributes, specs, embeddings of titles/descriptions/images). For a given unavailable item, generate a candidate set of nearest neighbors in this product space and re-rank using a model that incorporates the current user’s history (past purchases, browsing, preferences), popularity and quality signals (conversion rate, rating, return rate), and real-time constraints (stock, shipping speed). Evaluate offline with historical substitution events and click/purchase data, and online through A/B tests",
+    "tags": [
+      "Deep"
+    ]
+  },
+  {
+    "type": "Case Studies",
+    "id": "Q9.",
+    "question": "Each question on Quora often gets many different answers. How do you create a model that ranks all these answers? How computationally intensive is this model?",
+    "answer": "The task can be framed as a learning-to-rank problem where, for a given question, the model orders its candidate answers by predicted usefulness. Features would combine: (a) relevance signals between question and answer (semantic similarity from a transformer encoder over text, keyword overlap, topic match), (b) engagement and quality signals (upvotes, downvotes, comments, time spent, reports, answer length/structure), and (c) author features (historical answer quality, expertise in topic). A pairwise or listwise ranking model (e.g., gradient-boosted trees over features, or a neural ranking model on top of text embeddings) can be trained on historical data where user interactions indicate preference between answers. At serving time, answers for a question are embedded, their features computed or retrieved from caches, and scores produced and sorted; computation is roughly linear in the number of answers per question and can be kept modest by precomputing embeddings and heavy features offline. Overall, training (especially of text encoders) is computationally intensive and done offline on large corpora, but online inference per request is relatively lightweight and can meet latency constraints with proper indexing, caching, and batching.",
+    "tags": [
+      "Deep"
+    ]
+  },
+  {
+    "type": "Case Studies",
+    "id": "Q10.",
+    "question": "Given only CIFAR-10 dataset, how to build a model to recognize if an image is in the 10 classes of CIFAR-10 or not?",
+    "answer": "Train a strong classifier on CIFAR-10 (e.g., a CNN) and treat “in vs out of CIFAR-10” as an out-of-distribution detection problem using only in-distribution data. At test time, use the network’s penultimate-layer features or softmax outputs to compute a confidence/energy score for each image; images whose maximum softmax probability (or energy) falls below a chosen threshold are labeled “not in CIFAR-10.” The threshold is selected on a held-out CIFAR-10 validation set plus synthetically perturbed images (e.g., heavy noise, strong augmentations) used as proxy OOD examples.",
     "tags": [
       "Deep"
     ]
@@ -93,7 +183,7 @@
     "type": "Theory",
     "id": "Q1",
     "question": "What is Attention?",
-    "answer": "Attention is a mechanism that enables a model to identify and emphasize the most relevant components of an input sequence when generating each output. Instead of compressing the entire sequence into a single fixed-length vector (as earlier recurrent models did), attention dynamically computes a **weighted combination** of all input tokens, assigning higher weights to those that are contextually more important for the current output.\n\nFormally, the attention operation takes as input a set of **queries** \\( Q \\), **keys** \\( K \\), and **values** \\( V \\), and computes:\n\n\n$$\n\\text{Attention}(Q, K, V) = \\mathrm{softmax}\\left(\\frac{QK^{\\top}}{\\sqrt{d_k}}\\right)V\n$$\n\nIn simple terms, each token in a sequence ``looks at'' other tokens and decides **how much attention to pay to each one**.  \nThis mechanism enables transformers to model **long-range dependencies** directly, without recurrence or convolution, making them highly effective for understanding complex patterns in language, vision, and other domains.\n\n\n---",
+    "answer": "Attention is a mechanism that enables a model to identify and emphasize the most relevant components of an input sequence when generating each output. Instead of compressing the entire sequence into a single fixed-length vector (as earlier recurrent models did), attention dynamically computes a **weighted combination** of all input tokens, assigning higher weights to those that are contextually more important for the current output.\n\nFormally, the attention operation takes as input a set of **queries** \\( Q \\), **keys** \\( K \\), and **values** \\( V \\), and computes:\n\n\n$$\n\\text{Attention}(Q, K, V) = \\mathrm{softmax}\\left(\\frac{QK^{\\top}}{\\sqrt{d_k}}\\right)V\n$$\n\nIn simple terms, each token in a sequence ``looks at'' other tokens and decides **how much attention to pay to each one**.  \nThis mechanism enables transformers to model **long-range dependencies** directly, without recurrence or convolution, making them highly effective for understanding complex patterns in language, vision, and other domains.",
     "tags": [
       "Basic"
     ]
@@ -102,7 +192,7 @@
     "type": "Theory",
     "id": "Q2",
     "question": "What are Queries, Keys, and Values (Q, K, V)?",
-    "answer": "In the attention mechanism, each input token is transformed into three distinct representations, a **query**, a **key**, and a **value**.  \nThese are obtained through learned linear projections applied to the same input embeddings or hidden states:\n\n$$\nQ = XW_Q, \\qquad K = XW_K, \\qquad V = XW_V\n$$\n\nwhere:\n- $X \\in \\mathbb{R}^{n \\times d_{\\text{model}}}$ is the input matrix containing the token representations,  \n- $W_Q, W_K, W_V$ are trainable parameter matrices that project the input into the query, key, and value subspaces.\n\nEach of these serves a different role during attention computation:\n\n- **Query (Q):** Represents the current token’s request for contextual information - ``what am I looking for?''  \n- **Key (K):** Represents the available information for each token - ``what do I contain?''  \n- **Value (V):** Contains the actual content or representation to be retrieved - ``what should be returned if I’m relevant?''\n\nDuring attention computation, each query interacts with all keys to determine **relevance scores** through dot products $QK^{\\top}$.  \nThe resulting attention weights are then used to take a weighted sum over the value vectors \\( V \\), producing an output that integrates relevant context from other tokens.\n\n\n---",
+    "answer": "In the attention mechanism, each input token is transformed into three distinct representations, a **query**, a **key**, and a **value**.  \nThese are obtained through learned linear projections applied to the same input embeddings or hidden states:\n\n$$\nQ = XW_Q, \\qquad K = XW_K, \\qquad V = XW_V\n$$\n\nwhere:\n- $X \\in \\mathbb{R}^{n \\times d_{\\text{model}}}$ is the input matrix containing the token representations,  \n- $W_Q, W_K, W_V$ are trainable parameter matrices that project the input into the query, key, and value subspaces.\n\nEach of these serves a different role during attention computation:\n\n- **Query (Q):** Represents the current token’s request for contextual information - ``what am I looking for?''  \n- **Key (K):** Represents the available information for each token - ``what do I contain?''  \n- **Value (V):** Contains the actual content or representation to be retrieved - ``what should be returned if I’m relevant?''\n\nDuring attention computation, each query interacts with all keys to determine **relevance scores** through dot products $QK^{\\top}$.  \nThe resulting attention weights are then used to take a weighted sum over the value vectors \\( V \\), producing an output that integrates relevant context from other tokens.",
     "tags": [
       "Basic"
     ]
@@ -111,7 +201,7 @@
     "type": "Theory",
     "id": "Q3",
     "question": "Why divide by $\\sqrt{d_k}$ in the attention formula?",
-    "answer": "The scaling factor $\\sqrt{d_k}$ stabilizes the magnitude of the dot products between Queries and Keys.  \nWithout this normalization, the variance of $QK^{\\top}$ increases with the dimensionality $d_k$, which can cause the softmax function to enter regions of very small gradient sensitivity, leading to unstable training.  \nDividing by $\\sqrt{d_k}$ ensures that the distribution of attention scores remains well-conditioned and gradients propagate effectively.\n\n---",
+    "answer": "The scaling factor $\\sqrt{d_k}$ stabilizes the magnitude of the dot products between Queries and Keys.  \nWithout this normalization, the variance of $QK^{\\top}$ increases with the dimensionality $d_k$, which can cause the softmax function to enter regions of very small gradient sensitivity, leading to unstable training.  \nDividing by $\\sqrt{d_k}$ ensures that the distribution of attention scores remains well-conditioned and gradients propagate effectively.",
     "tags": [
       "Deep"
     ]
@@ -120,7 +210,7 @@
     "type": "Theory",
     "id": "Q4",
     "question": "Why is the Softmax function used in Attention?",
-    "answer": "The softmax function transforms raw similarity scores into a normalized probability distribution, enabling the model to interpret these scores as relative importances, by exponentiating the similarity scores, softmax amplifies larger scores and suppresses smaller ones. This produces sharp, interpretable attention distributions that focus on the most relevant tokens. Softmax is also smooth and differentiable, which allows efficient gradient-based optimization during training.\n\n\n---",
+    "answer": "The softmax function transforms raw similarity scores into a normalized probability distribution, enabling the model to interpret these scores as relative importances, by exponentiating the similarity scores, softmax amplifies larger scores and suppresses smaller ones. This produces sharp, interpretable attention distributions that focus on the most relevant tokens. Softmax is also smooth and differentiable, which allows efficient gradient-based optimization during training.",
     "tags": [
       "Deep"
     ]
@@ -129,7 +219,7 @@
     "type": "Theory",
     "id": "Q5",
     "question": "What is Multi-Head Attention?",
-    "answer": "Multi-head attention extends the standard attention mechanism by using multiple parallel attention layers, referred to as ``heads.''  \nEach head operates in a distinct learned subspace, allowing the model to capture diverse relational patterns (such as syntactic structure, semantic meaning, or positional context). The outputs of all heads are concatenated and projected back into the model dimension, resulting in richer and more expressive contextual representations.\n\nFormally, given an input matrix  $X \\in \\mathbb{R}^{n \\times d_{\\text{model}}}$, multi-head attention computes:\n\n$$\n\\mathrm{MultiHead}(X) = \\mathrm{Concat}(H_1, H_2, \\ldots, H_h) W_O\n$$\n\nwhere each head $H_i$ is defined as:\n\n$$\nH_i = \\operatorname{Attention}(X W_Q^{(i)},\\, X W_K^{(i)},\\, X W_V^{(i)})\n$$\n\nHere:\n-  $W_Q^{(i)}, W_K^{(i)}, W_V^{(i)} \\in \\mathbb{R}^{d_{\\text{model}} \\times d_k}$ are learned projection matrices specific to head $i$.  \n- $W_O \\in \\mathbb{R}^{h d_v \\times d_{\\text{model}}}$ projects the concatenated result back into the model dimension.  \n- $h$ denotes the number of attention heads.\n\n---",
+    "answer": "Multi-head attention extends the standard attention mechanism by using multiple parallel attention layers, referred to as ``heads.''  \nEach head operates in a distinct learned subspace, allowing the model to capture diverse relational patterns (such as syntactic structure, semantic meaning, or positional context). The outputs of all heads are concatenated and projected back into the model dimension, resulting in richer and more expressive contextual representations.\n\nFormally, given an input matrix  $X \\in \\mathbb{R}^{n \\times d_{\\text{model}}}$, multi-head attention computes:\n\n$$\n\\mathrm{MultiHead}(X) = \\mathrm{Concat}(H_1, H_2, \\ldots, H_h) W_O\n$$\n\nwhere each head $H_i$ is defined as:\n\n$$\nH_i = \\operatorname{Attention}(X W_Q^{(i)},\\, X W_K^{(i)},\\, X W_V^{(i)})\n$$\n\nHere:\n-  $W_Q^{(i)}, W_K^{(i)}, W_V^{(i)} \\in \\mathbb{R}^{d_{\\text{model}} \\times d_k}$ are learned projection matrices specific to head $i$.  \n- $W_O \\in \\mathbb{R}^{h d_v \\times d_{\\text{model}}}$ projects the concatenated result back into the model dimension.  \n- $h$ denotes the number of attention heads.",
     "tags": [
       "Basic"
     ]
@@ -138,16 +228,16 @@
     "type": "Theory",
     "id": "Q6",
     "question": "Q5.2. Why do we need Multi-Head Attention?",
-    "answer": "Transformers differ from recurrent (RNN) and convolutional (CNN) architectures in that they process all tokens in a sequence **in parallel** rather than sequentially. While this parallelism improves efficiency, it also means that the Transformer lacks any inherent notion of **token order**, every position is treated as identical unless we explicitly encode sequence order information.\n\nTo address this, **positional encodings** are added to the input embeddings to inject information about the position of each token in the sequence.  \nFormally, for an input sequence of token embeddings $X = [x_1, x_2, \\dots, x_n]$, each token representation is modified as:\n\n$$\nz_i = x_i + p_i\n$$\n\nwhere $p_i \\in \\mathbb{R}^{d_{\\text{model}}}$ is a positional encoding vector corresponding to position $i$.\n\nThis allows it to distinguish between sequences such as dog bites man and man bites dog, although they contain the same tokens.\n\n\n\n---",
+    "answer": "Single-head attention computes one similarity structure over the entire representation space. This limits the model to focusing on only one type of relationship at a time.\n\nMulti-head attention solves this by allowing the model to:\n- Attend to different aspects of the sequence in parallel\n- Learn multiple relational subspaces simultaneously\n\nEach head can specialize in capturing different patterns, such as:\n- Syntactic relations (e.g., subject–verb agreement)\n- Semantic similarity (e.g., coreference)\n- Positional or locality-based dependencies\n\nBy splitting the model dimension across multiple heads, attention becomes:\n- More expressive\n- More robust\n- Better at modeling complex structures\nWithout multi-head attention, Transformers show reduced performance and poorer generalization, even with larger hidden dimensions.",
     "tags": [
-      "Basic\n\n**:A** Single-head attention computes one similarity structure over the entire representation space. This limits the model to focusing on only one type of relationship at a time.\n\nMulti-head attention solves this by allowing the model to:\n- Attend to different aspects of the sequence in parallel\n- Learn multiple relational subspaces simultaneously\n\nEach head can specialize in capturing different patterns, such as:\n- Syntactic relations (e.g., subject–verb agreement)\n- Semantic similarity (e.g., coreference)\n- Positional or locality-based dependencies\n\nBy splitting the model dimension across multiple heads, attention becomes:\n- More expressive\n- More robust\n- Better at modeling complex structures\nWithout multi-head attention, Transformers show reduced performance and poorer generalization, even with larger hidden dimensions.\n\n---\n\n## What is Positional Encoding, and why is it necessary?\n**T:** Basic"
+      "Basic"
     ]
   },
   {
     "type": "Theory",
     "id": "Q7",
-    "question": "What are Sinusoidal Positional Encodings?",
-    "answer": "Sinusoidal positional encodings represent each position using deterministic sine and cosine functions of varying frequencies:\n\n$$\n\\mathrm{PE}_{(pos,\\,2i)} = \\sin\\left(\\frac{pos}{10000^{2i/d}}\\right), \n$$\n\n$$\n\\mathrm{PE}_{(pos,\\,2i+1)} = \\cos\\left(\\frac{pos}{10000^{2i/d}}\\right)\n$$\n\n\nThis continuous representation allows the model to infer both absolute and relative positional relationships, even for sequences longer than those encountered during training.\n\n---",
+    "question": "What is Positional Encoding, and why is it necessary?",
+    "answer": "Transformers differ from recurrent (RNN) and convolutional (CNN) architectures in that they process all tokens in a sequence **in parallel** rather than sequentially. While this parallelism improves efficiency, it also means that the Transformer lacks any inherent notion of **token order**, every position is treated as identical unless we explicitly encode sequence order information.\n\nTo address this, **positional encodings** are added to the input embeddings to inject information about the position of each token in the sequence.  \nFormally, for an input sequence of token embeddings $X = [x_1, x_2, \\dots, x_n]$, each token representation is modified as:\n\n$$\nz_i = x_i + p_i\n$$\n\nwhere $p_i \\in \\mathbb{R}^{d_{\\text{model}}}$ is a positional encoding vector corresponding to position $i$.\n\nThis allows it to distinguish between sequences such as dog bites man and man bites dog, although they contain the same tokens.",
     "tags": [
       "Basic"
     ]
@@ -155,8 +245,8 @@
   {
     "type": "Theory",
     "id": "Q8",
-    "question": "What are Learned and Rotary (RoPE) Positional Encodings?",
-    "answer": "Positional information can also be introduced through learned or rotary positional encodings:\n\n- **Learned Positional Encodings:** Each position in the input sequence is associated with a learnable vector that is optimized during training.\nThese embeddings adapt to the data but may not extrapolate effectively to sequences longer than those seen during training.\nExample: In BERT, the sentence “The lawyer questioned the witness because he was nervous” relies on attention between “he” and “lawyer”. If this sentence appears at positions 50-60 during training, the model learns to resolve this coreference using the learned positional embeddings for those positions. However, if the same sentence appears near position 1500 in a long document, the model has never learned embeddings for those positions, and the attention linking “he” to “lawyer” becomes unreliable.\n\n- **Rotary Positional Encodings (RoPE):** Instead of adding positional vectors, RoPE rotates the query and key representations by position-dependent angles before computing attention.\nThis operation encodes relative position information directly within the dot-product attention.\nExample: In models such as LLaMA, if a pronoun and its referent are separated by hundreds of tokens, the attention score between them depends on their relative distance rather than their absolute positions. As a result, the same attention behavior holds whether the sentence appears early or deep within a long document, enabling reliable long-context reasoning.\n\n---",
+    "question": "What are Sinusoidal Positional Encodings?",
+    "answer": "Sinusoidal positional encodings represent each position using deterministic sine and cosine functions of varying frequencies:\n\n$$\n\\mathrm{PE}_{(pos,\\,2i)} = \\sin\\left(\\frac{pos}{10000^{2i/d}}\\right), \n$$\n\n$$\n\\mathrm{PE}_{(pos,\\,2i+1)} = \\cos\\left(\\frac{pos}{10000^{2i/d}}\\right)\n$$\n\n\nThis continuous representation allows the model to infer both absolute and relative positional relationships, even for sequences longer than those encountered during training.",
     "tags": [
       "Basic"
     ]
@@ -164,8 +254,8 @@
   {
     "type": "Theory",
     "id": "Q9",
-    "question": "What is the difference between Self-Attention, Cross-Attention, and Encoder–Decoder Attention?",
-    "answer": "- **Self-Attention:** The queries, keys, and values all originate from the same sequence, enabling tokens to attend to one another within that sequence.  \n  This mechanism is used in both the encoder and decoder blocks.\n\n- **Cross-Attention:** Queries come from the decoder, while keys and values are sourced from the encoder outputs.  \n  This allows the decoder to condition its generation on encoded input information.\n\n- **Encoder–Decoder Attention:** A broader term describing how the decoder interacts with the encoder representations, crucial for tasks such as translation and summarization.\n\n---",
+    "question": "What are Learned and Rotary (RoPE) Positional Encodings?",
+    "answer": "Positional information can also be introduced through learned or rotary positional encodings:\n\n- **Learned Positional Encodings:** Each position in the input sequence is associated with a learnable vector that is optimized during training.\nThese embeddings adapt to the data but may not extrapolate effectively to sequences longer than those seen during training.\nExample: In BERT, the sentence “The lawyer questioned the witness because he was nervous” relies on attention between “he” and “lawyer”. If this sentence appears at positions 50-60 during training, the model learns to resolve this coreference using the learned positional embeddings for those positions. However, if the same sentence appears near position 1500 in a long document, the model has never learned embeddings for those positions, and the attention linking “he” to “lawyer” becomes unreliable.\n\n- **Rotary Positional Encodings (RoPE):** Instead of adding positional vectors, RoPE rotates the query and key representations by position-dependent angles before computing attention.\nThis operation encodes relative position information directly within the dot-product attention.\nExample: In models such as LLaMA, if a pronoun and its referent are separated by hundreds of tokens, the attention score between them depends on their relative distance rather than their absolute positions. As a result, the same attention behavior holds whether the sentence appears early or deep within a long document, enabling reliable long-context reasoning.",
     "tags": [
       "Basic"
     ]
@@ -173,26 +263,26 @@
   {
     "type": "Theory",
     "id": "Q10",
-    "question": "Why do Transformers use Layer Normalization instead of Batch Normalization?",
-    "answer": "Batch Normalization normalizes across batch dimensions and relies on batch-level statistics, which can vary with batch size or sequence length.  \nThis dependence makes it unstable for autoregressive generation where batch sizes may be small (even one).  \nLayer Normalization, by contrast, normalizes across features within each individual token representation:\n\n$$\n\\text{LayerNorm}(x) = \\frac{x - \\mu}{\\sigma + \\epsilon} \\odot \\gamma + \\beta\n$$\n\nwhere $\\mu$ and $\\sigma$ are the mean and standard deviation computed over the feature dimension, and $\\gamma, \\beta$ are learnable parameters.  \nLayerNorm provides stable training dynamics independent of batch size.\n\n---",
-    "tags": [
-      "Deep"
-    ]
-  },
-  {
-    "type": "Theory",
-    "id": "Q11",
-    "question": "What are Residual Connections and why are they important?",
-    "answer": "Residual connections add the input of a layer directly to its output, allowing information to bypass nonlinear transformations:\n\n$$\nx_{\\text{out}} = x_{\\text{in}} + f(x_{\\text{in}})\n$$\n\nThey are important because they allow gradients to flow directly through the network, mitigating the vanishing-gradient problem and making very deep transformer models trainable. Residual connections also preserve lower-level representations, enabling each layer to learn incremental refinements rather than entirely new transformations. In Transformers, residual connections stabilize optimization, accelerate convergence, and are essential for maintaining performance as depth increases.\n\n---",
+    "question": "What is the difference between Self-Attention, Cross-Attention, and Encoder–Decoder Attention?",
+    "answer": "- **Self-Attention:** The queries, keys, and values all originate from the same sequence, enabling tokens to attend to one another within that sequence.  \n  This mechanism is used in both the encoder and decoder blocks.\n\n- **Cross-Attention:** Queries come from the decoder, while keys and values are sourced from the encoder outputs.  \n  This allows the decoder to condition its generation on encoded input information.\n\n- **Encoder–Decoder Attention:** A broader term describing how the decoder interacts with the encoder representations, crucial for tasks such as translation and summarization.",
     "tags": [
       "Basic"
     ]
   },
   {
     "type": "Theory",
+    "id": "Q11",
+    "question": "Why do Transformers use Layer Normalization instead of Batch Normalization?",
+    "answer": "Batch Normalization normalizes across batch dimensions and relies on batch-level statistics, which can vary with batch size or sequence length.  \nThis dependence makes it unstable for autoregressive generation where batch sizes may be small (even one).  \nLayer Normalization, by contrast, normalizes across features within each individual token representation:\n\n$$\n\\text{LayerNorm}(x) = \\frac{x - \\mu}{\\sigma + \\epsilon} \\odot \\gamma + \\beta\n$$\n\nwhere $\\mu$ and $\\sigma$ are the mean and standard deviation computed over the feature dimension, and $\\gamma, \\beta$ are learnable parameters.  \nLayerNorm provides stable training dynamics independent of batch size.",
+    "tags": [
+      "Deep"
+    ]
+  },
+  {
+    "type": "Theory",
     "id": "Q12",
-    "question": "What is Masking in Attention?",
-    "answer": "Masking restricts which tokens are visible to a given position during attention computation:\n\n- **Causal Masking:** Ensures that when predicting token $t$, the model cannot attend to future tokens $t{+}1, t{+}2, \\dots$ — enforcing the autoregressive constraint.  \n- **Padding Masking:** Excludes padded tokens (used to equalize sequence lengths in batches) from the attention computation.  \n\nMasks are implemented by assigning large negative values (e.g., $-\\infty$) to the masked logits before applying softmax, effectively zeroing their influence.\n\n---",
+    "question": "What are Residual Connections and why are they important?",
+    "answer": "Residual connections add the input of a layer directly to its output, allowing information to bypass nonlinear transformations:\n\n$$\nx_{\\text{out}} = x_{\\text{in}} + f(x_{\\text{in}})\n$$\n\nThey are important because they allow gradients to flow directly through the network, mitigating the vanishing-gradient problem and making very deep transformer models trainable. Residual connections also preserve lower-level representations, enabling each layer to learn incremental refinements rather than entirely new transformations. In Transformers, residual connections stabilize optimization, accelerate convergence, and are essential for maintaining performance as depth increases.",
     "tags": [
       "Basic"
     ]
@@ -200,17 +290,17 @@
   {
     "type": "Theory",
     "id": "Q13",
-    "question": "What is the Computational Complexity of Attention?",
-    "answer": "For a sequence of length $n$ and hidden dimension $d$, standard self-attention has:\n\n$$\n\\text{Compute Complexity: } O(n^2 d), \\qquad\n\\text{Memory Complexity: } O(n^2)\n$$\n\nThe quadratic term arises from the pairwise similarity computation between all token pairs.  \nThis becomes a bottleneck for long sequences, motivating research into efficient variants such as **sparse**, **local**, or **linear** attention mechanisms.\n\n---",
+    "question": "What is Masking in Attention?",
+    "answer": "Masking restricts which tokens are visible to a given position during attention computation:\n\n- **Causal Masking:** Ensures that when predicting token $t$, the model cannot attend to future tokens $t{+}1, t{+}2, \\dots$ — enforcing the autoregressive constraint.  \n- **Padding Masking:** Excludes padded tokens (used to equalize sequence lengths in batches) from the attention computation.  \n\nMasks are implemented by assigning large negative values (e.g., $-\\infty$) to the masked logits before applying softmax, effectively zeroing their influence.",
     "tags": [
-      "Deep"
+      "Basic"
     ]
   },
   {
     "type": "Theory",
     "id": "Q14",
-    "question": "How can we reduce Attention cost during inference?",
-    "answer": "During autoregressive inference, previously computed key and value matrices can be cached.  \nWhen generating a new token, only the query for the current position is computed and used with the stored keys and values:\n\n$$\n\\text{Attention}(Q_t, K_{\\leq t}, V_{\\leq t}) = \\mathrm{softmax}\\left(\\frac{Q_t K_{\\leq t}^{\\top}}{\\sqrt{d_k}}\\right) V_{\\leq t}\n$$\n\nThis **Key–Value caching** reduces computational cost per step from $O(n^2)$ to $O(n)$ and dramatically accelerates decoding speed.\n\n---",
+    "question": "What is the Computational Complexity of Attention?",
+    "answer": "For a sequence of length $n$ and hidden dimension $d$, standard self-attention has:\n\n$$\n\\text{Compute Complexity: } O(n^2 d), \\qquad\n\\text{Memory Complexity: } O(n^2)\n$$\n\nThe quadratic term arises from the pairwise similarity computation between all token pairs.  \nThis becomes a bottleneck for long sequences, motivating research into efficient variants such as **sparse**, **local**, or **linear** attention mechanisms.",
     "tags": [
       "Deep"
     ]
@@ -218,17 +308,17 @@
   {
     "type": "Theory",
     "id": "Q15",
-    "question": "What are the Kaplan and Chinchilla Scaling Laws?",
-    "answer": "Empirical studies on large language models reveal predictable relationships between model performance, parameter count, data volume, and compute:\n\n- **Kaplan et al. (2020):** Performance improves smoothly as model size, dataset size, and compute budget increase, following approximate power-law relationships.  \n- **Chinchilla (2022):** Demonstrated that many models were under-trained for their size; optimal training occurs when the number of training tokens scales proportionally with model parameters.  \n\nThese scaling laws guide efficient resource allocation when training large transformer models.\n\n---",
+    "question": "How can we reduce Attention cost during inference?",
+    "answer": "During autoregressive inference, previously computed key and value matrices can be cached.  \nWhen generating a new token, only the query for the current position is computed and used with the stored keys and values:\n\n$$\n\\text{Attention}(Q_t, K_{\\leq t}, V_{\\leq t}) = \\mathrm{softmax}\\left(\\frac{Q_t K_{\\leq t}^{\\top}}{\\sqrt{d_k}}\\right) V_{\\leq t}\n$$\n\nThis **Key–Value caching** reduces computational cost per step from $O(n^2)$ to $O(n)$ and dramatically accelerates decoding speed.",
     "tags": [
-      "Basic"
+      "Deep"
     ]
   },
   {
     "type": "Theory",
     "id": "Q16",
-    "question": "What is a Learning Rate Scheduler and why is it used?",
-    "answer": "A learning rate scheduler controls how the learning rate evolves during training.  \nTransformers often employ a **warm-up phase**, where the learning rate increases linearly for the first few thousand steps, followed by a **decay phase** (linear or cosine) as training progresses.  \n\nThis scheduling prevents early training instability and encourages smooth convergence to optimal minima.  \nA common formulation from the original Transformer paper is:\n\n$$\n\\text{lr}(t) = d_{\\text{model}}^{-0.5} \\cdot \\min\\left(t^{-0.5},\\; t \\cdot \\text{warmup}^{-1.5}\\right)\n$$\n\nwhere $t$ is the current step and $\\text{warmup}$ is the number of warm-up steps.\n\n---",
+    "question": "What are the Kaplan and Chinchilla Scaling Laws?",
+    "answer": "Empirical studies on large language models reveal predictable relationships between model performance, parameter count, data volume, and compute:\n\n- **Kaplan et al. (2020):** Performance improves smoothly as model size, dataset size, and compute budget increase, following approximate power-law relationships.  \n- **Chinchilla (2022):** Demonstrated that many models were under-trained for their size; optimal training occurs when the number of training tokens scales proportionally with model parameters.  \n\nThese scaling laws guide efficient resource allocation when training large transformer models.",
     "tags": [
       "Basic"
     ]
@@ -236,8 +326,8 @@
   {
     "type": "Theory",
     "id": "Q17",
-    "question": "What is a Tokenizer and why is it needed?",
-    "answer": "Transformers operate on discrete tokens rather than raw text.  \nTokenization converts character sequences into integer indices suitable for model input. Common methods include:\n\n- **Byte Pair Encoding (BPE):** Iteratively merges the most frequent character pairs into subword units. Example: “playing” → “play” + “ing”  \n- **Unigram Language Model:** Represents text using a probabilistic model of subwords. Example: “unhappiness” may be split into multiple subwords such as “un”, “happi”, and “ness”, depending on corpus statistics.\n- **SentencePiece / Byte-Level Encoding:** Works directly on raw text without relying on whitespace. Example: “New York” may be tokenized as a single unit or multiple subwords even without spaces. \n- **Token-Free Models:** Operate directly on bytes or characters, eliminating explicit token boundaries. Example: The word “hello” is represented as individual bytes rather than a word token.\n\n\n---",
+    "question": "What is a Learning Rate Scheduler and why is it used?",
+    "answer": "A learning rate scheduler controls how the learning rate evolves during training.  \nTransformers often employ a **warm-up phase**, where the learning rate increases linearly for the first few thousand steps, followed by a **decay phase** (linear or cosine) as training progresses.  \n\nThis scheduling prevents early training instability and encourages smooth convergence to optimal minima.  \nA common formulation from the original Transformer paper is:\n\n$$\n\\text{lr}(t) = d_{\\text{model}}^{-0.5} \\cdot \\min\\left(t^{-0.5},\\; t \\cdot \\text{warmup}^{-1.5}\\right)\n$$\n\nwhere $t$ is the current step and $\\text{warmup}$ is the number of warm-up steps.",
     "tags": [
       "Basic"
     ]
@@ -245,8 +335,8 @@
   {
     "type": "Theory",
     "id": "Q18",
-    "question": "What is Encoding and Decoding in Transformers?",
-    "answer": "The **encoder** maps input sequences into high-dimensional continuous representations capturing semantic and syntactic information.  \nThe **decoder** generates target sequences autoregressively, attending to both the previously generated tokens (via self-attention) and the encoder outputs (via cross-attention).  \nTogether, they form the encoder–decoder architecture used in sequence-to-sequence tasks such as translation and summarization.\n\n---",
+    "question": "What is a Tokenizer and why is it needed?",
+    "answer": "Transformers operate on discrete tokens rather than raw text.  \nTokenization converts character sequences into integer indices suitable for model input. Common methods include:\n\n- **Byte Pair Encoding (BPE):** Iteratively merges the most frequent character pairs into subword units. Example: “playing” → “play” + “ing”  \n- **Unigram Language Model:** Represents text using a probabilistic model of subwords. Example: “unhappiness” may be split into multiple subwords such as “un”, “happi”, and “ness”, depending on corpus statistics.\n- **SentencePiece / Byte-Level Encoding:** Works directly on raw text without relying on whitespace. Example: “New York” may be tokenized as a single unit or multiple subwords even without spaces. \n- **Token-Free Models:** Operate directly on bytes or characters, eliminating explicit token boundaries. Example: The word “hello” is represented as individual bytes rather than a word token.",
     "tags": [
       "Basic"
     ]
@@ -254,17 +344,17 @@
   {
     "type": "Theory",
     "id": "Q19",
-    "question": "What is the difference between Training and Inference Attention?",
-    "answer": "During **training**, full sequences are processed simultaneously, allowing self-attention to consider all token pairs within each batch.  \nDuring **inference**, tokens are generated sequentially — each step reuses cached keys and values, avoiding redundant computation.  \n\n---",
+    "question": "What is Encoding and Decoding in Transformers?",
+    "answer": "The **encoder** maps input sequences into high-dimensional continuous representations capturing semantic and syntactic information.  \nThe **decoder** generates target sequences autoregressively, attending to both the previously generated tokens (via self-attention) and the encoder outputs (via cross-attention).  \nTogether, they form the encoder–decoder architecture used in sequence-to-sequence tasks such as translation and summarization.",
     "tags": [
-      "Deep"
+      "Basic"
     ]
   },
   {
     "type": "Theory",
     "id": "Q20",
-    "question": "wha'ts pre-mid-post- training in LLMs? Why do we need these stages?",
-    "answer": "Large language models are trained in multiple stages to progressively acquire general language understanding, specialized capabilities, and safe, useful behavior.\n\n- **Pre-training:** The model is trained on large-scale, diverse text corpora using a self-supervised objective (next-token prediction). This stage teaches general linguistic knowledge, grammar, factual information, and broad world understanding.\n\n- **Mid-training:** The pre-trained model is further trained on high-quality, curated datasets with a lower learning rate to inject specific capabilities without destroying general knowledge.\nThis stage is used to improve abilities such as reasoning, long-context understanding, code proficiency, tool use, and agentic behavior. Examples include training on reasoning traces, long-context documents, or task-specific corpora.\n\n- **Post-training:** After pre-training and mid-training, the model is further refined to align its outputs with human expectations of correctness, safety, and usefulness. This stage typically involves Supervised Fine-Tuning (SFT), where the model is trained on high quality human-written instruction–response pairs to improve instruction following and task formatting, and Reinforcement Learning from Human Feedback (RLHF), where human preferences are used to train a reward model that scores model outputs. Post-training does not primarily add new knowledge or reasoning ability; instead, it shapes how existing capabilities are expressed, improving controllability, adherence to instructions, refusal behavior, and overall interaction quality.\n\n----",
+    "question": "What is the difference between Training and Inference Attention?",
+    "answer": "During **training**, full sequences are processed simultaneously, allowing self-attention to consider all token pairs within each batch.  \nDuring **inference**, tokens are generated sequentially — each step reuses cached keys and values, avoiding redundant computation.",
     "tags": [
       "Deep"
     ]
@@ -272,6 +362,15 @@
   {
     "type": "Theory",
     "id": "Q21",
+    "question": "wha'ts pre-mid-post- training in LLMs? Why do we need these stages?",
+    "answer": "Large language models are trained in multiple stages to progressively acquire general language understanding, specialized capabilities, and safe, useful behavior.\n\n- **Pre-training:** The model is trained on large-scale, diverse text corpora using a self-supervised objective (next-token prediction). This stage teaches general linguistic knowledge, grammar, factual information, and broad world understanding.\n\n- **Mid-training:** The pre-trained model is further trained on high-quality, curated datasets with a lower learning rate to inject specific capabilities without destroying general knowledge.\nThis stage is used to improve abilities such as reasoning, long-context understanding, code proficiency, tool use, and agentic behavior. Examples include training on reasoning traces, long-context documents, or task-specific corpora.\n\n- **Post-training:** After pre-training and mid-training, the model is further refined to align its outputs with human expectations of correctness, safety, and usefulness. This stage typically involves Supervised Fine-Tuning (SFT), where the model is trained on high quality human-written instruction–response pairs to improve instruction following and task formatting, and Reinforcement Learning from Human Feedback (RLHF), where human preferences are used to train a reward model that scores model outputs. Post-training does not primarily add new knowledge or reasoning ability; instead, it shapes how existing capabilities are expressed, improving controllability, adherence to instructions, refusal behavior, and overall interaction quality.",
+    "tags": [
+      "Deep"
+    ]
+  },
+  {
+    "type": "Theory",
+    "id": "Q22",
     "question": "What's group query attention (GQA)?",
     "answer": "Grouped Query Attention (GQA) is a self-attention variant designed to reduce inference-time memory and computation by **sharing key and value projections across groups of query heads**, while keeping **separate query projections for each head**. In standard multi-head attention, each of the \\(h\\) heads has its own query, key, and value projections. In GQA, the model still uses \\(h\\) distinct query projections, but only \\(g < h\\) distinct key–value projections. The \\(h\\) query heads are partitioned into \\(g\\) groups, and all heads within the same group attend to the same keys and values.\n\nBy sharing keys and values across head groups, GQA significantly reduces the size of the key–value cache during autoregressive decoding. This lowers memory usage and improves decoding speed for long-context generation, while retaining more modeling expressiveness than Multi-Query Attention. As a result, GQA provides a practical trade-off between efficiency and performance and is widely used in modern decoder-only large language models such as LLaMA and Mistral.",
     "tags": [
@@ -279,251 +378,19 @@
     ]
   },
   {
-    "type": "Models",
-    "id": "Q1",
-    "question": "Word Embeddings in NLP\n\n### Q1. Why do we need word embeddings/encoding?",
-    "answer": "Neural models cannot directly operate on text. We need numerical representations that (1) are computationally feasible and (2) preserve semantic structure. The evolution from one-hot → dense embeddings reflects a shift from symbolic identity to distributed meaning.",
+    "type": "Theory",
+    "id": "Q5.2.",
+    "question": "Why do we need Multi-Head Attention?",
+    "answer": "Single-head attention computes one similarity structure over the entire representation space. This limits the model to focusing on only one type of relationship at a time.\n\nMulti-head attention solves this by allowing the model to:\n- Attend to different aspects of the sequence in parallel\n- Learn multiple relational subspaces simultaneously\n\nEach head can specialize in capturing different patterns, such as:\n- Syntactic relations (e.g., subject–verb agreement)\n- Semantic similarity (e.g., coreference)\n- Positional or locality-based dependencies\n\nBy splitting the model dimension across multiple heads, attention becomes:\n- More expressive\n- More robust\n- Better at modeling complex structures\nWithout multi-head attention, Transformers show reduced performance and poorer generalization, even with larger hidden dimensions.",
     "tags": [
       "Basic"
     ]
-  },
-  {
-    "type": "Models",
-    "id": "Q2",
-    "question": "Q2. What is one-hot encoding and what are its limitations?",
-    "answer": "One-hot encoding represents each word as a binary vector where only one dimension is 1 and all others are 0. While simple, it leads to very large sparse vectors and does not capture any semantic similarity between words (e.g., “king” and “queen” are as different as “king” and “apple”). Additionally, it’s computationally expensive for large vocabularies.",
-    "tags": [
-      "Basic"
-    ]
-  },
-  {
-    "type": "Models",
-    "id": "Q3",
-    "question": "Q3. What is the Bag-of-Words (BoW) model?",
-    "answer": "BoW represents a document as a vector of word counts. It is good at capturing:\n* Word presence and frequency, and\n* Simple topical information\n\nBut, it ignores word order (syntax), context and polysemy, and semantics. Thus, BoW improves over one-hot at the document level, but still treats words independently.",
-    "tags": [
-      "Basic"
-    ]
-  },
-  {
-    "type": "Models",
-    "id": "Q4",
-    "question": "Q4. What does TF-IDF improve over BoW?",
-    "answer": "TF-IDF (Term Frequency–Inverse Document Frequency) improves over BoW by downweights common words and highlights distinctive ones by assigning higher weights to rarer but informative words. It captures some notion of word importance across documents. \n\nLimitation of TF-IDF is, it is still sparse, context-free, and no semantic similarity is considered.",
-    "tags": [
-      "Basic"
-    ]
-  },
-  {
-    "type": "Models",
-    "id": "Q5",
-    "question": "Q5. How does Word2Vec learn word representations?",
-    "answer": "Word2Vec learns dense, low-dimensional embeddings by exploiting the distributional hypothesis:\n> Words that appear in similar contexts have similar meanings.\n\nIt uses neural networks (CBOW or Skip-gram) to learn embeddings that capture semantic relationships by predicting words from their context. It has two training objectives:\n* CBOW: predict a word from its context.\n* Skip-gram: predict context words from a target word.\n\nThis yields embeddings with linear semantic structure and it can encode semantic regularities. E.g., ```king - man + woman = queen```.",
-    "tags": [
-      "Deep"
-    ]
-  },
-  {
-    "type": "Models",
-    "id": "Q6",
-    "question": "Q6. How is GloVe different from Word2Vec?",
-    "answer": "* GloVe (Global Vectors) uses global co-occurrence statistics of words rather than local context windows.\n* It provides embeddings that better capture global structure in the corpus.",
-    "tags": [
-      "Basic"
-    ]
-  },
-  {
-    "type": "Models",
-    "id": "Q7",
-    "question": "Pre-Transformer Models\n\n<!-- **Motivation:**\nBag-based models ignore order. Sequence models aim to capture temporal structure. -->\n\n### Q7: What new idea did RNNs introduce?",
-    "answer": "Recurrent Neural Networks introduced recurrence, allowing models to maintain a hidden state across time steps — enabling sequence modeling and use of past information.",
-    "tags": [
-      "Basic"
-    ]
-  },
-  {
-    "type": "Models",
-    "id": "Q8",
-    "question": "Q8: How do LSTMs improve over RNNs? And how are GRUs different?",
-    "answer": "* LSTMs introduced gates (input, forget, output) to selectively store or discard information, mitigating the vanishing gradient problem and improving long-term dependency learning.\n* GRUs simplify LSTMs by merging gates, offering similar performance with fewer parameters.",
-    "tags": [
-      "Basic"
-    ]
-  },
-  {
-    "type": "Models",
-    "id": "Q9",
-    "question": "Q9: What is ByteNet?",
-    "answer": "ByteNet is a NN which uses convolutional layers for sequence modeling, allowing parallelization and long receptive fields. It served as a bridge between CNNs and transformers.",
-    "tags": [
-      "Deep"
-    ]
-  },
-  {
-    "type": "Models",
-    "id": "Q10",
-    "question": "Language Transformers\n\n### Q10. What are some key language transformers?\n\n<!-- - Maybe make it like three types of transformer architectures- encode, decoder, and encoder-decoder. -->",
-    "answer": "Major architectures include BERT, RoBERTa, T5, and GPT.\n\n* BERT: Bidirectional encoder, good for understanding tasks (classification, QA).\n* RoBERTa: Robustly optimized BERT with better training strategies (no NSP, larger batch sizes).\n* T5: Unifies all NLP tasks as text-to-text problems.\n* GPT: Decoder-only autoregressive model optimized for generation.",
-    "tags": [
-      "Basic"
-    ]
-  },
-  {
-    "type": "Models",
-    "id": "Q11",
-    "question": "Q11: How does T5 unify multiple NLP tasks?",
-    "answer": "T5 reframes every task (translation, summarization, classification) as text-to-text by adding a task prefix token (e.g., “summarize:” or “translate English to German:”). This unified approach made multitask learning and fine-tuning more generalizable.",
-    "tags": [
-      "Deep"
-    ]
-  },
-  {
-    "type": "Models",
-    "id": "Q12",
-    "question": "Multimodal and Action Transformers\n\n### Q12: Why do we need Vision Transformers (ViT)?",
-    "answer": "Traditional CNNs rely on local receptive fields, limiting long-range dependencies. ViTs introduce self-attention for global context modeling across image patches, improving performance on large datasets.",
-    "tags": [
-      "Deep"
-    ]
-  },
-  {
-    "type": "Models",
-    "id": "Q13",
-    "question": "Q13: What changes were introduced in ViT compared to traditional transformers?",
-    "answer": "* ViTs take images as input by splitting them into fixed-size patches.\n* A [CLS] token is added to represent the entire image for classification.\n* Positional embeddings encode patch order since spatial structure is lost after flattening.",
-    "tags": [
-      "Deep"
-    ]
-  },
-  {
-    "type": "Models",
-    "id": "Q14",
-    "question": "Q14: How is Swin Transformer different from ViT?",
-    "answer": "Swin uses Shifted Window Attention, restricting attention to local windows for better efficiency while still enabling global interactions via window shifting.",
-    "tags": [
-      "Basic"
-    ]
-  },
-  {
-    "type": "Models",
-    "id": "Q15",
-    "question": "Q15: What is CLIP? How is SigLIP different from CLIP?",
-    "answer": "* CLIP (Contrastive Language-Image Pretraining) aligns text and image embeddings using a contrastive loss to learn cross-modal representations.\n* SigLIP modifies the loss to use sigmoid activation instead of softmax on similarity scores, allowing independent scoring.\n    <!-- * Using SigLIP may introduce small inconsistencies due to non-normalized similarities. -->",
-    "tags": [
-      "Basic"
-    ]
-  },
-  {
-    "type": "Models",
-    "id": "Q16",
-    "question": "Q16: What is RT-2 and why is it significant?",
-    "answer": "RT-2 (Robotic Transformer 2) integrates language, vision, and action data, allowing robots to generalize from web-scale multimodal data to physical tasks. It builds on VLM pretraining principles.",
-    "tags": [
-      "Basic"
-    ]
-  },
-  {
-    "type": "Models",
-    "id": "Q17",
-    "question": "Q17: What is OpenVLA?",
-    "answer": "OpenVLA is an open-source Vision-Language-Action model inspired by RT-2, designed for robotic control tasks. It uses curriculum learning to first fine-tune VLMs on physical property understanding before action learning.",
-    "tags": [
-      "Deep"
-    ]
-  },
-  {
-    "type": "Models",
-    "id": "Q18",
-    "question": "Q18: Why does OpenVLA use Huber loss instead of MSE for fine-tuning?",
-    "answer": "Huber loss is quadratic for small errors and linear for large errors, offering robustness to outliers and improved training stability. This is crucial for robotics where noisy sensor readings are common.",
-    "tags": [
-      "Hands-On"
-    ]
-  },
-  {
-    "type": "Models",
-    "id": "Q19",
-    "question": "Q19: How could one build their own OpenVLA-style model?",
-    "answer": "Start with a pretrained Vision-Language Model (e.g., CLIP or SigLIP) and fine-tune it using a curriculum learning pipeline that progressively introduces physical reasoning and action tasks. Ensure stability via Huber loss and action discretization.",
-    "tags": [
-      "Hands-On"
-    ]
-  },
-  {
-    "type": "Models",
-    "id": "Q20",
-    "question": "Efficient and Long-Context Transformer Models\n\n### Q20: Why are standard transformers inefficient for long sequences?",
-    "answer": "The self-attention mechanism scales as O(n²) with sequence length, making it memory and compute heavy.",
-    "tags": [
-      "Basic"
-    ]
-  },
-  {
-    "type": "Models",
-    "id": "Q21",
-    "question": "Q21: What are the main innovations for long-context handling?",
-    "answer": "* Longformer: Uses sparse attention patterns (local + global) to scale linearly with sequence length.\n\n* BigBird: Combines global, random, and local attention, improving efficiency and theoretical expressivity.\n\n* Reformer: Uses LSH attention to reduce complexity from O(n²) to O(n log n).\n\n* Linformer: Projects key and value matrices to lower dimensions.\n\n* Hyena and Mamba: Explore state-space models as transformer alternatives for long-context retention.",
-    "tags": [
-      "Deep\n\n<!-- - Add references so that we can go to the main paper as well. -->"
-    ]
-  },
-  {
-    "type": "Models",
-    "id": "Q22",
-    "question": "Q22: What are Adaptive Base Frequency (ABF) methods in LLM for handling long context?",
-    "answer": "ABF methods are techniques used to extend the context window of models that use RoPE (Rotary Positional Embeddings).\n\n* **The Problem:** RoPE encodes position by rotating the embedding vector. If a model encounters a sequence longer than what it was trained on (extrapolation), the rotation angles go \"out of distribution,\" confusing the model.The\n* **Solution (ABF):** ABF modifies the base frequency ($\\theta$, typically 10,000) of the rotation. By increasing this base frequency (e.g., to 500k or 1M), the method \"stretches\" the wavelengths of the positional encodings.\n* **Result:** This maps the new, longer positions back into the range of values the model saw during training. It allows models (like CodeLlama or Llama 2 Long) to handle significantly longer contexts (e.g., 100k tokens) with minimal fine-tuning.",
-    "tags": [
-      "Deep"
-    ]
-  },
-  {
-    "type": "Models",
-    "id": "Q23",
-    "question": "Q23: How is a model trained or adapted using ABF?",
-    "answer": "ABF is rarely used zero-shot; it typically requires a Fine-Tuning (FT) phase to adapt the model to the new ``resolution'' of positions. This step is also referred to as mid-training. It is as follows:\n\n1. **Initialize:** You start with the pre-trained weights/model.\n2. **Scale Config:** Change the RoPE configuration (increase base $\\theta$ or set a scale factor $s$).\n3. **Fine-Tune:** Train on a small dataset of long sequences (e.g., 10k–100k tokens).\n    * This works because the model does not need to relearn language semantics or grammar. It only needs to adapt its attention mechanism to the new positional scale.\n    * Convergence happens very quickly (often just a few hundred steps) compared to training from scratch.\n\n**Data Mix:** We follow 30/70 rule.\n* ~30\\% Long Data: High-quality long documents (books, repositories) to teach the model to use the new long positions.\n* ~70\\% Short Data: The original pre-training data. This is crucial to anchor the model's semantics and prevent catastrophic forgetting of short-term reasoning.",
-    "tags": [
-      "Deep"
-    ]
-  },
-  {
-    "type": "Models",
-    "id": "Q24",
-    "question": "Q24: How do BigBird and Longformer differ in attention and efficiency?",
-    "answer": "* Longformer relies on fixed local + global attention windows.\n* BigBird adds random attention connections, which help achieve theoretical universality (can simulate full attention). Also, BigBird typically handles longer contexts with O(n) complexity.",
-    "tags": [
-      "Basic"
-    ]
-  },
-  {
-    "type": "Models",
-    "id": "Q25",
-    "question": "Q25: What is FlashAttention and why is it faster?",
-    "answer": "FlashAttention computes attention in a tiled and memory-efficient way, avoiding explicit storage of the large attention matrix. It fuses softmax computation and reduces I/O bottlenecks, achieving significant speedups on GPUs.",
-    "tags": [
-      "Deep"
-    ]
-  },
-  {
-    "type": "Models",
-    "id": "Q26",
-    "question": "Q26: What’s new in FlashAttention 2 and 3?",
-    "answer": "* FlashAttention 2: Improved kernel parallelism and supports multi-query attention.\n* FlashAttention 3: Adds support for FP8 precision and further pipeline optimizations for large-scale models.\n\n---",
-    "tags": [
-      "Basic"
-    ]
-  },
-  {
-    "type": "Models",
-    "id": "Q27",
-    "question": "Q27: How is the token budget calculate (theoretically and empirically) in an LLM?",
-    "answer": "",
-    "tags": []
   },
   {
     "type": "Learning",
     "id": "Q1",
     "question": "Q1. What is AdamW? How is it differ from Adam?",
-    "answer": "**AdamW** is a variant of the **Adam optimizer** that fixes how **weight decay** is applied. \n\nIn the original **Adam**, weight decay was implemented by adding an L2 penalty to the loss function. However, because Adam rescales gradients adaptively, this L2 regularization does **not behave like true weight decay**, it gets entangled with the gradient updates, often leading to suboptimal generalization.\n\n**AdamW** (proposed by Loshchilov & Hutter, 2017) decouples weight decay from the gradient-based update. Instead of adding L2 loss to the objective, it directly **decays the weights after each update step**, keeping the adaptive gradient behavior intact.\n\nAs a result, AdamW offers **better generalization** and **more stable training**, especially for large-scale models like transformers.\n\n**In short:**\n\n- **Adam:** mixes L2 regularization into the gradient, which interacts with adaptive updates.\n- **AdamW:** applies *true weight decay* separately from gradient updates.\n\nThis decoupling makes AdamW the **default optimizer** for most modern deep learning frameworks and transformer-based models.\n\n---",
+    "answer": "**AdamW** is a variant of the **Adam optimizer** that fixes how **weight decay** is applied. \n\nIn the original **Adam**, weight decay was implemented by adding an L2 penalty to the loss function. However, because Adam rescales gradients adaptively, this L2 regularization does **not behave like true weight decay**, it gets entangled with the gradient updates, often leading to suboptimal generalization.\n\n**AdamW** (proposed by Loshchilov & Hutter, 2017) decouples weight decay from the gradient-based update. Instead of adding L2 loss to the objective, it directly **decays the weights after each update step**, keeping the adaptive gradient behavior intact.\n\nAs a result, AdamW offers **better generalization** and **more stable training**, especially for large-scale models like transformers.\n\n**In short:**\n\n- **Adam:** mixes L2 regularization into the gradient, which interacts with adaptive updates.\n- **AdamW:** applies *true weight decay* separately from gradient updates.\n\nThis decoupling makes AdamW the **default optimizer** for most modern deep learning frameworks and transformer-based models.",
     "tags": [
       "Basic"
     ]
@@ -532,7 +399,7 @@
     "type": "Learning",
     "id": "Q2",
     "question": "Q2. What tricks improve training stability and convergence?",
-    "answer": "- **Learning-rate Warmup & Annealing:**\n    - Start with a small LR, ramp up linearly (Warmup), and then slowly decay it, often using cosine or linear schedules (Annealing).\n    - **Intuition:** At the very beginning, model parameters are random, so the gradients are massive and noisy. If taking a full step immediately, the model might be destabilized and have possible early divergence. Warmup lets the model find a reasonable starting direction safely. Later, annealing reduces the step size so the model can settle into a minima instead of bouncing around the edges.\n- **Batch Size Scaling:**\n    - Gradually increasing the batch size over time to maintain stability in SGD in LLM training.\n    - **Intuition:** Increasing batch size reduces the noise in the gradient estimation (lowering the variance). This mimics the effect of learning rate decay (increasing the “signal-to-noise” ratio of the updates) without slowing down the effective training speed, often helping the model escape sharp minima in favor of flatter, more robust ones.\n- **Gradient Clipping:**\n    - Cap the norm of the gradient vector (e.g., to 1.0) before the update to prevent exploding gradients.\n    - **Intuition:** Loss landscapes of deep networks (especially RNNs/Transformers) can have steep cliffs. Without clipping, a single massive gradient step can shoot parameters into a bad region (exploding gradients), undoing days of training.\n- **Weight Decay & Dropout**\n    - Weight Decay pushes weights towards zero (L2 penalty). Dropout randomly switches off neurons during training.\n    - **Intuition:** Against overfitting. Weight Decay keeps the weights small, preventing the model from relying too heavily on any single feature (which usually means it's memorizing noise). Dropout forces the network to be robust. By randomly breaking connections, the model can't rely on one specific path to get the answer; it has to learn redundant, distributed representations that generalize better.\n- **Layer normalization & Residual connections:**\n    - Add skip connections ($x + F(x)$) and normalize inputs across features per layer to stabilize deep architectures.\n    - **Intuition:** Residuals create a “gradient highway” for gradients to flow backward without vanishing. Layer Norm ensures the input to the next layer has a stable mean/variance, preventing covariate shift where layers have to constantly re-learn how to handle shifting scales from previous layers.\n- **Mixed precision (FP16/BF16):**\n    - Use lower precision for calculations and full precision for weight accumulation for speed and memory efficiency.\n    - **Intuition:** Reduces memory bandwidth pressure and allows larger batch sizes, which indirectly stabilizes training by improving gradient estimation quality.\n    \n**Note:** In LLMs, these stability tricks are mostly applied during the Pre-training and Supervised Fine-Tuning (SFT) stages. Later stages like RLHF usually require less aggressive regularization.\n\n**In short:**\n- **Warmup & Annealing** manage the **speed**: start cautious, end precise.\n- **Gradient Clipping & Batch Scaling** manage the **volatility**: prevent crashes and reduce noise.\n- **Residuals & Norms** fix the **signal flow**: allow gradients to survive deep networks.\n- **Decay & Dropout** improve **generalization**: force the model to learn robust patterns, not memorization.\n\n---",
+    "answer": "- **Learning-rate Warmup & Annealing:**\n    - Start with a small LR, ramp up linearly (Warmup), and then slowly decay it, often using cosine or linear schedules (Annealing).\n    - **Intuition:** At the very beginning, model parameters are random, so the gradients are massive and noisy. If taking a full step immediately, the model might be destabilized and have possible early divergence. Warmup lets the model find a reasonable starting direction safely. Later, annealing reduces the step size so the model can settle into a minima instead of bouncing around the edges.\n- **Batch Size Scaling:**\n    - Gradually increasing the batch size over time to maintain stability in SGD in LLM training.\n    - **Intuition:** Increasing batch size reduces the noise in the gradient estimation (lowering the variance). This mimics the effect of learning rate decay (increasing the “signal-to-noise” ratio of the updates) without slowing down the effective training speed, often helping the model escape sharp minima in favor of flatter, more robust ones.\n- **Gradient Clipping:**\n    - Cap the norm of the gradient vector (e.g., to 1.0) before the update to prevent exploding gradients.\n    - **Intuition:** Loss landscapes of deep networks (especially RNNs/Transformers) can have steep cliffs. Without clipping, a single massive gradient step can shoot parameters into a bad region (exploding gradients), undoing days of training.\n- **Weight Decay & Dropout**\n    - Weight Decay pushes weights towards zero (L2 penalty). Dropout randomly switches off neurons during training.\n    - **Intuition:** Against overfitting. Weight Decay keeps the weights small, preventing the model from relying too heavily on any single feature (which usually means it's memorizing noise). Dropout forces the network to be robust. By randomly breaking connections, the model can't rely on one specific path to get the answer; it has to learn redundant, distributed representations that generalize better.\n- **Layer normalization & Residual connections:**\n    - Add skip connections ($x + F(x)$) and normalize inputs across features per layer to stabilize deep architectures.\n    - **Intuition:** Residuals create a “gradient highway” for gradients to flow backward without vanishing. Layer Norm ensures the input to the next layer has a stable mean/variance, preventing covariate shift where layers have to constantly re-learn how to handle shifting scales from previous layers.\n- **Mixed precision (FP16/BF16):**\n    - Use lower precision for calculations and full precision for weight accumulation for speed and memory efficiency.\n    - **Intuition:** Reduces memory bandwidth pressure and allows larger batch sizes, which indirectly stabilizes training by improving gradient estimation quality.\n    \n**Note:** In LLMs, these stability tricks are mostly applied during the Pre-training and Supervised Fine-Tuning (SFT) stages. Later stages like RLHF usually require less aggressive regularization.\n\n**In short:**\n- **Warmup & Annealing** manage the **speed**: start cautious, end precise.\n- **Gradient Clipping & Batch Scaling** manage the **volatility**: prevent crashes and reduce noise.\n- **Residuals & Norms** fix the **signal flow**: allow gradients to survive deep networks.\n- **Decay & Dropout** improve **generalization**: force the model to learn robust patterns, not memorization.",
     "tags": [
       "Deep"
     ]
@@ -541,7 +408,7 @@
     "type": "Learning",
     "id": "Q3",
     "question": "Q3. Why is a cosine decay schedule (with warmup) typically preferred over linear or step-based schedules in LLM training??",
-    "answer": "The choice of scheduler defines the optimization trajectory. In LLM training, Cosine Decay with Warmup is the standard because it offers the best balance between stability, exploration, and ease of tuning.\n1. **Warmup Phase:** We initially ramp up the learning rate linearly from zero. At initialization, parameters are random and gradient variances are high. A full-strength step immediately can destabilize the model or cause early divergence. Warmup allows the optimizer to gather statistics and find a stable descent direction before accelerating.\n2. **Decay Phase (Why Cosine?):** After warmup, the learning rate must decrease to allow the model to converge into a local minimum. Cosine decay follows a cosine curve, slowly decreasing initially, accelerating in the middle, and slowing again at the end:\n\n$$\n\\eta_t = \\eta_{\\text{min}} + \\frac{1}{2}(\\eta_{\\text{max}} - \\eta_{\\text{min}})(1 + \\cos(\\pi t / T))\n$$\n\n- **Vs. Step Decay:** Step schedules drop the LR abruptly. These shocks can trap the model in a suboptimal basin before it has finished exploring the current loss landscape. Cosine is smooth and continuous, allowing the model to settle naturally without optimization shocks.\n- **Vs. Linear Decay:** A linear schedule decays too constantly. Cosine spends a longer time at a relatively high learning rate before dropping off. This extended period of high-energy updates encourages broader exploration, helping the model find flatter, more robust minima.\n\n3. **Modern Context: The Rise of WSD** While Cosine is the default, recent large-scale runs (like MiniCPM or Llama 3) often use WSD (Warmup-Stable-Decay).\n- Instead of constantly decaying, WSD keeps the learning rate constant (stable) for 80-90\\% of training, then decays rapidly at the end.\n- **Why?** It decouples training from a fixed end-step. Because the LR stays high, you can pause training, add more data, and continue easily—something that is mathematically difficult with Cosine once the LR has already decayed to near-zero.\n\n**In short:**\n- Warmup ensures stability during the volatile early phase.\n- Cosine is preferred for its smooth convergence and “set-and-forget” simplicity for fixed-budget runs.\n\n---",
+    "answer": "The choice of scheduler defines the optimization trajectory. In LLM training, Cosine Decay with Warmup is the standard because it offers the best balance between stability, exploration, and ease of tuning.\n1. **Warmup Phase:** We initially ramp up the learning rate linearly from zero. At initialization, parameters are random and gradient variances are high. A full-strength step immediately can destabilize the model or cause early divergence. Warmup allows the optimizer to gather statistics and find a stable descent direction before accelerating.\n2. **Decay Phase (Why Cosine?):** After warmup, the learning rate must decrease to allow the model to converge into a local minimum. Cosine decay follows a cosine curve, slowly decreasing initially, accelerating in the middle, and slowing again at the end:\n\n$$\n\\eta_t = \\eta_{\\text{min}} + \\frac{1}{2}(\\eta_{\\text{max}} - \\eta_{\\text{min}})(1 + \\cos(\\pi t / T))\n$$\n\n- **Vs. Step Decay:** Step schedules drop the LR abruptly. These shocks can trap the model in a suboptimal basin before it has finished exploring the current loss landscape. Cosine is smooth and continuous, allowing the model to settle naturally without optimization shocks.\n- **Vs. Linear Decay:** A linear schedule decays too constantly. Cosine spends a longer time at a relatively high learning rate before dropping off. This extended period of high-energy updates encourages broader exploration, helping the model find flatter, more robust minima.\n\n3. **Modern Context: The Rise of WSD** While Cosine is the default, recent large-scale runs (like MiniCPM or Llama 3) often use WSD (Warmup-Stable-Decay).\n- Instead of constantly decaying, WSD keeps the learning rate constant (stable) for 80-90\\% of training, then decays rapidly at the end.\n- **Why?** It decouples training from a fixed end-step. Because the LR stays high, you can pause training, add more data, and continue easily—something that is mathematically difficult with Cosine once the LR has already decayed to near-zero.\n\n**In short:**\n- Warmup ensures stability during the volatile early phase.\n- Cosine is preferred for its smooth convergence and “set-and-forget” simplicity for fixed-budget runs.",
     "tags": [
       "Deep"
     ]
@@ -550,7 +417,7 @@
     "type": "Learning",
     "id": "Q4",
     "question": "Q4. What is *gradient clipping*, and why is it used?",
-    "answer": "**Gradient clipping** limits the magnitude of gradients during backpropagation.\n\n- **Purpose:** Prevent *gradient explosion*, which can destabilize or crash training.\n- **Common method:** Clip gradients by norm, e.g.\n\n$$\ng \\leftarrow c \\cdot \\frac{g}{\\|g\\|} \\quad \\text{if } \\|g\\| > \\text{c}\n$$\n\nwhere $c$ is a hyperparameter, $g$ is the gradient, and $\\|g\\|$ is the norm of $g$. Since $g/\\|g\\|$ is a unit vector, after rescaling the new $g$ will have norm $c$. Note that if $\\|g\\| < c$, then we don’t need to do anything.\n\n- **Effect:** Stabilizes updates, especially in RNNs, transformers, and reinforcement learning models.\n\n---",
+    "answer": "**Gradient clipping** limits the magnitude of gradients during backpropagation.\n\n- **Purpose:** Prevent *gradient explosion*, which can destabilize or crash training.\n- **Common method:** Clip gradients by norm, e.g.\n\n$$\ng \\leftarrow c \\cdot \\frac{g}{\\|g\\|} \\quad \\text{if } \\|g\\| > \\text{c}\n$$\n\nwhere $c$ is a hyperparameter, $g$ is the gradient, and $\\|g\\|$ is the norm of $g$. Since $g/\\|g\\|$ is a unit vector, after rescaling the new $g$ will have norm $c$. Note that if $\\|g\\| < c$, then we don’t need to do anything.\n\n- **Effect:** Stabilizes updates, especially in RNNs, transformers, and reinforcement learning models.",
     "tags": [
       "Basic"
     ]
@@ -559,7 +426,7 @@
     "type": "Learning",
     "id": "Q5",
     "question": "Q5. What is *model parallelism* vs *pipeline parallelism*?",
-    "answer": "Both are strategies to train large models across multiple GPUs, but they differ in *how* the model is split.\n\n**Model parallelism** divides the **model’s parameters** across devices — for example, placing different layers or parts of a layer on different GPUs. Each GPU computes its part of the forward and backward pass. This approach is mainly used when the model is too large to fit in one GPU’s memory.\n\n**Pipeline parallelism** divides the **training process** into sequential stages across GPUs. The input batch is broken into *micro-batches* that move through the pipeline — while one GPU works on the next batch, another continues the previous one. This improves utilization and throughput.\n\n\n**In short:**\n\n- *Model parallelism* → splits **the model** to fit memory.\n- *Pipeline parallelism* → splits **the computation** to improve efficiency.\n  Large-scale systems (e.g., DeepSpeed, Megatron-LM) often combine both for optimal performance.\n\nThey are often **combined** for large-scale model training (e.g., Megatron-LM, DeepSpeed).\n\n---",
+    "answer": "Both are strategies to train large models across multiple GPUs, but they differ in *how* the model is split.\n\n**Model parallelism** divides the **model’s parameters** across devices — for example, placing different layers or parts of a layer on different GPUs. Each GPU computes its part of the forward and backward pass. This approach is mainly used when the model is too large to fit in one GPU’s memory.\n\n**Pipeline parallelism** divides the **training process** into sequential stages across GPUs. The input batch is broken into *micro-batches* that move through the pipeline — while one GPU works on the next batch, another continues the previous one. This improves utilization and throughput.\n\n\n**In short:**\n\n- *Model parallelism* → splits **the model** to fit memory.\n- *Pipeline parallelism* → splits **the computation** to improve efficiency.\n  Large-scale systems (e.g., DeepSpeed, Megatron-LM) often combine both for optimal performance.\n\nThey are often **combined** for large-scale model training (e.g., Megatron-LM, DeepSpeed).",
     "tags": [
       "Basic"
     ]
@@ -568,7 +435,7 @@
     "type": "Learning",
     "id": "Q6",
     "question": "Q6. What is the role of the FFN (Feed-Forward Network) in a Transformer?",
-    "answer": "While the **Self-Attention** mechanism mixes information *across* time steps (tokens), the **FFN** processes information *per token* individually.\n\n* **Rank Restoration:** Attention matrices are often low-rank (collapsing information). The FFN involves a projection to a higher dimension ($d_{model} \\to 4d_{model}$) and back, adding non-linearity (ReLU/GELU/SwiGLU). This restores the rank of the representations and increases model capacity.\n* **Key-Value Memory:** Research (e.g., Geva et al.) suggests FFNs act as **key-value memories**, where the first layer detects specific patterns (keys) in the input, and the second layer outputs the corresponding distribution over the vocabulary or features (values).\n\n**In short:**\n\n* **Attention:** Mixes information spatially (token-to-token).\n* **FFN:** Processes information deeply (state-to-state), acting as the model's static memory.\n\n---",
+    "answer": "While the **Self-Attention** mechanism mixes information *across* time steps (tokens), the **FFN** processes information *per token* individually.\n\n* **Rank Restoration:** Attention matrices are often low-rank (collapsing information). The FFN involves a projection to a higher dimension ($d_{model} \\to 4d_{model}$) and back, adding non-linearity (ReLU/GELU/SwiGLU). This restores the rank of the representations and increases model capacity.\n* **Key-Value Memory:** Research (e.g., Geva et al.) suggests FFNs act as **key-value memories**, where the first layer detects specific patterns (keys) in the input, and the second layer outputs the corresponding distribution over the vocabulary or features (values).\n\n**In short:**\n\n* **Attention:** Mixes information spatially (token-to-token).\n* **FFN:** Processes information deeply (state-to-state), acting as the model's static memory.",
     "tags": [
       "Basic"
     ]
@@ -577,7 +444,7 @@
     "type": "Learning",
     "id": "Q7",
     "question": "Q7. How does Mixture of Experts (MoE) work, and what are its advantages?",
-    "answer": "**MoE** replaces the dense FFN layers in a Transformer with a **sparse** layer containing multiple experts (independent FFNs) and a **router** (gate).\n\nFor every incoming token $x$, the router selects only the top-$k$ experts (usually $k=1$ or $2$) to process that token. The output is the weighted sum of the selected experts.\n\n**Advantages:**\n\n1. **Decouples Parameter Count from Compute:** You can increase the model size (parameters) massively (e.g., 100x) without increasing the inference cost (FLOPs), because only a fraction of parameters are active per token.\n2. **Huge Capacity:** Allows the model to memorize significantly more information (due to the memory nature of FFNs described above) compared to a dense model of the same compute budget.\n\n**In short:**\nMoE enables **sparse activation**. It scales the model's *knowledge* (parameters) without scaling the *compute cost* linearly.\n\n---",
+    "answer": "**MoE** replaces the dense FFN layers in a Transformer with a **sparse** layer containing multiple experts (independent FFNs) and a **router** (gate).\n\nFor every incoming token $x$, the router selects only the top-$k$ experts (usually $k=1$ or $2$) to process that token. The output is the weighted sum of the selected experts.\n\n**Advantages:**\n\n1. **Decouples Parameter Count from Compute:** You can increase the model size (parameters) massively (e.g., 100x) without increasing the inference cost (FLOPs), because only a fraction of parameters are active per token.\n2. **Huge Capacity:** Allows the model to memorize significantly more information (due to the memory nature of FFNs described above) compared to a dense model of the same compute budget.\n\n**In short:**\nMoE enables **sparse activation**. It scales the model's *knowledge* (parameters) without scaling the *compute cost* linearly.",
     "tags": [
       "Basic"
     ]
@@ -586,7 +453,7 @@
     "type": "Learning",
     "id": "Q8",
     "question": "Q8. How is the MoE Router trained?",
-    "answer": "The router is typically a learnable linear layer followed by a Softmax:\n$$G(x) = \\text{Softmax}(x \\cdot W_g)$$\nThe routing decision (selecting indices) is discrete and non-differentiable. To train this, we usually use the **weighted average** of the selected experts to allow gradients to flow back into the router weights.\n\nIf the router selects indices $i$ and $j$ for token $x$, the output is:$$y = P_i \\cdot E_i(x) + P_j \\cdot E_j(x)$$\nWhere $P$ represents the probability assigned by the gate.\nDuring backpropagation, gradients flow through $E(x)$ to train the experts, and through $P$ to train the router weights $W_g$ (teaching it which expert to pick).\n\n*Note: Some implementations use Gumbel-Softmax or noisy top-k gating to encourage exploration.*\n\n---",
+    "answer": "The router is typically a learnable linear layer followed by a Softmax:\n$$G(x) = \\text{Softmax}(x \\cdot W_g)$$\nThe routing decision (selecting indices) is discrete and non-differentiable. To train this, we usually use the **weighted average** of the selected experts to allow gradients to flow back into the router weights.\n\nIf the router selects indices $i$ and $j$ for token $x$, the output is:$$y = P_i \\cdot E_i(x) + P_j \\cdot E_j(x)$$\nWhere $P$ represents the probability assigned by the gate.\nDuring backpropagation, gradients flow through $E(x)$ to train the experts, and through $P$ to train the router weights $W_g$ (teaching it which expert to pick).\n\n*Note: Some implementations use Gumbel-Softmax or noisy top-k gating to encourage exploration.*",
     "tags": [
       "Deep"
     ]
@@ -604,7 +471,7 @@
     "type": "Learning",
     "id": "Q10",
     "question": "Q10. What’s the difference between *LoRA* and *QLoRA*?",
-    "answer": "Both are Parameter-Efficient Fine-Tuning (PEFT) methods, but they solve slightly different bottlenecks.\n**1. LoRA (Low-Rank Adaptation)** Instead of re-training the massive weight matrices of the model, LoRA freezes the pre-trained weights and injects trainable **rank decomposition matrices** into each layer.\n\n- If the weight update is $\\Delta W$, LoRA approximates it as $\\Delta W = B \\times A$, where $B$ and $A$ are tiny matrices. You only train $A$ and $B$.\n- **Performance:**\n    - **Accuracy:** Matches full fine-tuning results almost exactly.\n    - **Speed:** Training is faster (fewer gradients to calculate), and serving is efficient because you can merge the adapter weights back into the base model (zero inference latency).\n\n**2. QLoRA (Quantized LoRA)** QLoRA is essentially LoRA applied to a **4-bit quantized base model**. It uses a special data type (NormalFloat4 or NF4) and Double Quantization to squeeze the model size down as much as possible.\n- **Performance:**\n    - **Memory (The Big Win):** It drastically reduces VRAM usage. You can fine-tune a 65B/70B parameter model on a single 48GB GPU, which is impossible with standard LoRA.\n    - **Speed (The Cost):** QLoRA is actually slower to train than standard LoRA (roughly 30\\% slower). Because the weights are stored in 4-bit, but computations must happen in 16-bit (BF16). The system has to constantly de-quantize weights on the fly during the forward and backward passes, adding computational overhead.\n    - **Accuracy:** Surprisingly, it incurs negligible accuracy loss compared to 16-bit LoRA.\n\n**In short:**\n\n- LoRA makes fine-tuning efficient by training small adapter layers.\n- QLoRA makes it even more efficient by fine-tuning **quantized** models, enabling large-scale fine-tuning on modest hardware.\n\n---",
+    "answer": "Both are Parameter-Efficient Fine-Tuning (PEFT) methods, but they solve slightly different bottlenecks.\n**1. LoRA (Low-Rank Adaptation)** Instead of re-training the massive weight matrices of the model, LoRA freezes the pre-trained weights and injects trainable **rank decomposition matrices** into each layer.\n\n- If the weight update is $\\Delta W$, LoRA approximates it as $\\Delta W = B \\times A$, where $B$ and $A$ are tiny matrices. You only train $A$ and $B$.\n- **Performance:**\n    - **Accuracy:** Matches full fine-tuning results almost exactly.\n    - **Speed:** Training is faster (fewer gradients to calculate), and serving is efficient because you can merge the adapter weights back into the base model (zero inference latency).\n\n**2. QLoRA (Quantized LoRA)** QLoRA is essentially LoRA applied to a **4-bit quantized base model**. It uses a special data type (NormalFloat4 or NF4) and Double Quantization to squeeze the model size down as much as possible.\n- **Performance:**\n    - **Memory (The Big Win):** It drastically reduces VRAM usage. You can fine-tune a 65B/70B parameter model on a single 48GB GPU, which is impossible with standard LoRA.\n    - **Speed (The Cost):** QLoRA is actually slower to train than standard LoRA (roughly 30\\% slower). Because the weights are stored in 4-bit, but computations must happen in 16-bit (BF16). The system has to constantly de-quantize weights on the fly during the forward and backward passes, adding computational overhead.\n    - **Accuracy:** Surprisingly, it incurs negligible accuracy loss compared to 16-bit LoRA.\n\n**In short:**\n\n- LoRA makes fine-tuning efficient by training small adapter layers.\n- QLoRA makes it even more efficient by fine-tuning **quantized** models, enabling large-scale fine-tuning on modest hardware.",
     "tags": [
       "Basic"
     ]
@@ -613,7 +480,7 @@
     "type": "Learning",
     "id": "Q11",
     "question": "Q11. What are other adapter-based fine-tuning methods (e.g., DoRA)?",
-    "answer": "While LoRA is the default, newer methods try to fix its specific weaknesses.\n- **DoRA (Weight-Decomposed LoRA):** LoRA updates weights in a way that forces the direction and magnitude of the change to be coupled. In full fine-tuning, these often change independently. DoRA splits the weight matrix into two parts: **Magnitude** (how strong the weight is) and **Direction** (where it points).\n  $$W = m \\cdot \\frac{V}{\\|V\\|}$$\n  It applies LoRA only to the Direction ($V$) and trains the Magnitude ($m$) directly. It mimics full fine-tuning behavior much closer than LoRA, often yielding higher accuracy and better robustnes, with no extra inference cost.\n- **AdaLoRA (Adaptive LoRA):** Not all layers are equally important. Standard LoRA uses the same rank for every single layer. AdaLoRA figures out which layers need more capacity and which don't, dynamically allocating the rank budget to the most critical layers during training.\n- **Text-to-LoRA (Cutting Edge):** Instead of training an adapter on a dataset, can you just ask for one? This method uses a **Hypernetwork**—a small model trained to generate the LoRA weights ($A$ and $B$ matrices) directly from a text description of a task (e.g., “Make the model speak like a pirate”). It allows for instant, zero-shot adaptation without standard training.\n- **Llama-Adapter / Prefix Tuning:** Instead of adding weights inside the layers, these methods add “soft prompts” (learnable vectors) to the input or specific attention layers. They are generally less stable and perform worse than LoRA for complex reasoning, but are highly parameter-efficient.\n\n**In short:**\n- **DoRA** is the “better LoRA” (more accuracy, same inference speed).\n- **AdaLoRA** is the “efficient LoRA” (allocates parameters smartly).\n- **Text-to-LoRA** is the “instant LoRA” (generates adapters from prompts).\n\n\n---",
+    "answer": "While LoRA is the default, newer methods try to fix its specific weaknesses.\n- **DoRA (Weight-Decomposed LoRA):** LoRA updates weights in a way that forces the direction and magnitude of the change to be coupled. In full fine-tuning, these often change independently. DoRA splits the weight matrix into two parts: **Magnitude** (how strong the weight is) and **Direction** (where it points).\n  $$W = m \\cdot \\frac{V}{\\|V\\|}$$\n  It applies LoRA only to the Direction ($V$) and trains the Magnitude ($m$) directly. It mimics full fine-tuning behavior much closer than LoRA, often yielding higher accuracy and better robustnes, with no extra inference cost.\n- **AdaLoRA (Adaptive LoRA):** Not all layers are equally important. Standard LoRA uses the same rank for every single layer. AdaLoRA figures out which layers need more capacity and which don't, dynamically allocating the rank budget to the most critical layers during training.\n- **Text-to-LoRA (Cutting Edge):** Instead of training an adapter on a dataset, can you just ask for one? This method uses a **Hypernetwork**—a small model trained to generate the LoRA weights ($A$ and $B$ matrices) directly from a text description of a task (e.g., “Make the model speak like a pirate”). It allows for instant, zero-shot adaptation without standard training.\n- **Llama-Adapter / Prefix Tuning:** Instead of adding weights inside the layers, these methods add “soft prompts” (learnable vectors) to the input or specific attention layers. They are generally less stable and perform worse than LoRA for complex reasoning, but are highly parameter-efficient.\n\n**In short:**\n- **DoRA** is the “better LoRA” (more accuracy, same inference speed).\n- **AdaLoRA** is the “efficient LoRA” (allocates parameters smartly).\n- **Text-to-LoRA** is the “instant LoRA” (generates adapters from prompts).",
     "tags": [
       "Deep"
     ]
@@ -622,7 +489,7 @@
     "type": "Learning",
     "id": "Q12",
     "question": "Q12. What’s the difference between *SFT* and *RLHF*?",
-    "answer": "**SFT**, or *Supervised Fine-Tuning*, is the stage where a model learns to produce good answers by **imitating human-written examples**.\n It’s a straightforward supervised learning process: the model is trained on prompt–response pairs, minimizing cross-entropy loss to match the human responses. This step teaches the model to follow instructions and generate coherent, helpful outputs.\n\n**RLHF**, or *Reinforcement Learning from Human Feedback*, builds on top of SFT. Instead of directly imitating humans, the model now learns from **human preferences** — for example, which of two responses a human finds better.\n A separate *reward model* is trained using this preference data, and the main model is then optimized to maximize this learned reward signal using reinforcement learning (usually with PPO).\n\n**In short:**\n\n- SFT trains the model to **imitate good answers** using labeled data.\n- RLHF trains the model to **align with human preferences**, optimizing for what people *prefer*, not just what they *wrote*.\n\nTogether, SFT gives the model basic instruction-following ability, and RLHF refines that behavior to make it more aligned, safe, and human-like.\n\n\n---",
+    "answer": "**SFT**, or *Supervised Fine-Tuning*, is the stage where a model learns to produce good answers by **imitating human-written examples**.\n It’s a straightforward supervised learning process: the model is trained on prompt–response pairs, minimizing cross-entropy loss to match the human responses. This step teaches the model to follow instructions and generate coherent, helpful outputs.\n\n**RLHF**, or *Reinforcement Learning from Human Feedback*, builds on top of SFT. Instead of directly imitating humans, the model now learns from **human preferences** — for example, which of two responses a human finds better.\n A separate *reward model* is trained using this preference data, and the main model is then optimized to maximize this learned reward signal using reinforcement learning (usually with PPO).\n\n**In short:**\n\n- SFT trains the model to **imitate good answers** using labeled data.\n- RLHF trains the model to **align with human preferences**, optimizing for what people *prefer*, not just what they *wrote*.\n\nTogether, SFT gives the model basic instruction-following ability, and RLHF refines that behavior to make it more aligned, safe, and human-like.",
     "tags": [
       "Basic"
     ]
@@ -631,7 +498,7 @@
     "type": "Learning",
     "id": "Q13",
     "question": "Q13. How do Direct Preference Optimization (DPO) and RLHF differ?",
-    "answer": "DPO simplifies RLHF by removing the reinforcement learning loop.\nInstead of training a separate reward model and using PPO, DPO directly optimizes the model parameters to prefer responses that humans liked more.\n\nIt minimizes a loss derived from the same Bradley–Terry preference model, without the instability or extra complexity of RL.\n\n**In short:**\n\n- RLHF → reward model + PPO optimization\n- DPO → direct, simpler preference learning (no reward model training)\n\nDPO achieves alignment comparable to that of that of RLHF wicomputation computation and fewer moving parts.\n\n---",
+    "answer": "DPO simplifies RLHF by removing the reinforcement learning loop.\nInstead of training a separate reward model and using PPO, DPO directly optimizes the model parameters to prefer responses that humans liked more.\n\nIt minimizes a loss derived from the same Bradley–Terry preference model, without the instability or extra complexity of RL.\n\n**In short:**\n\n- RLHF → reward model + PPO optimization\n- DPO → direct, simpler preference learning (no reward model training)\n\nDPO achieves alignment comparable to that of that of RLHF wicomputation computation and fewer moving parts.",
     "tags": [
       "Deep"
     ]
@@ -640,7 +507,7 @@
     "type": "Learning",
     "id": "Q14",
     "question": "Q14. What is the Bradley–Terry model, and why is it the standard for Reward Modeling?",
-    "answer": "The **Bradley–Terry model** is the mathematical link between abstract scores and human choices.\n\nIn RLHF, humans don't give absolute scores. They give **pairwise comparisons** We need a way to translate those A-vs-B wins into a continuous reward score for the model to optimize.\n\n**The Math:** Bradley-Terry formalizes this. It assumes every item $i$ has a latent score $r_i$ (reward). The probability that $i$ beats $j$ is a sigmoid function of the difference in their scores:$$P(i \\succ j) = \\sigma(r_i - r_j) = \\frac{e^{r_i}}{e^{r_i} + e^{r_j}}$$\n\n**In LLM Training:** When we train a Reward Model, we feed it pairs of (Good Response, Bad Response). The model tries to predict a scalar score $r$ for each. We train it by minimizing the error so that $r_{\\text{good}} > r_{\\text{bad}}$ according to the probability formula above.\n\n**In short:** The Bradley-Terry model allows us to derive absolute reward scores from relative human rankings.\n\n---",
+    "answer": "The **Bradley–Terry model** is the mathematical link between abstract scores and human choices.\n\nIn RLHF, humans don't give absolute scores. They give **pairwise comparisons** We need a way to translate those A-vs-B wins into a continuous reward score for the model to optimize.\n\n**The Math:** Bradley-Terry formalizes this. It assumes every item $i$ has a latent score $r_i$ (reward). The probability that $i$ beats $j$ is a sigmoid function of the difference in their scores:$$P(i \\succ j) = \\sigma(r_i - r_j) = \\frac{e^{r_i}}{e^{r_i} + e^{r_j}}$$\n\n**In LLM Training:** When we train a Reward Model, we feed it pairs of (Good Response, Bad Response). The model tries to predict a scalar score $r$ for each. We train it by minimizing the error so that $r_{\\text{good}} > r_{\\text{bad}}$ according to the probability formula above.\n\n**In short:** The Bradley-Terry model allows us to derive absolute reward scores from relative human rankings.",
     "tags": [
       "Basic"
     ]
@@ -649,7 +516,7 @@
     "type": "Learning",
     "id": "Q15",
     "question": "Q15. Beyond pairwise comparison, what alternative methods exist for evaluating model responses, and what are their trade-offs?",
-    "answer": "**1. Pointwise Scoring (Absolute Grading)**\n  Assign a numerical score to each response (e.g., 1–5 or 0–100). Useful for tasks where absolute quality can be graded.\n  - **Pros:** **Simplicity and Direct Magnitude.** Capture absolute quality rather than the relative ordering.\n  - **Cons:** **Poor Calibration and drift.** Subject to heavy bias; one annotator's “7” is another's “9”, making data noisy.\n\n**2. Listwise Ranking** \n  Rank a set of $K$ responses (e.g., 4 or 5) from best to worst. Helps capture *relative* quality across several answers at once.\n  - **Pros: High Efficiency.** A single ranking induces $K(K-1)/2$ equivalent pairwise comparisons, maximizing signal per dollar.\n  - **Cons: High Cognitive Load.** Ranking multiple long responses causes annotator fatigue and errors.\n\n**3. Probabilistic modeling** \n  Estimate a probability distribution over responses (e.g., the likelihood of each being the best) rather than a fixed score.\n  - **Pros: Uncertainty Quantification.** It models ambiguity in human preferences rather than forcing a deterministic choice.\n  - **Cons: Complexity.** Requires more sophisticated inference methods than standard regression or classification.\n\n**4. Direct preference prediction** \n  Train a model to directly predict preference scores or rankings without explicit pairwise data.\n  - **Pros: Simplicity.** Bypasses the combinatorial explosion of generating pairs.\n  - **Cons: Data Scarcity.** Requires datasets that are already scored/ranked, which are harder to obtain than simple pairwise clicks.\n\n**5. Reward modeling (RLHF style)** \n  Use a trained Reward Model to evaluate responses continuously during generation or testing.\n  - **Pros: Automation.** Allows for scalable evaluation without humans in the loop.\n  - **Cons: Proxy Bias.** The model optimizes for the reward score, not necessarily true quality (Goodhart’s Law), leading to reward hacking.\n\n**In short:**\n- **Score-based** measures **absolute** quality (but is noisy).\n- **Ranking** measures **relative** quality (and is efficient).\n- **Probabilistic/Direct** methods are emerging research areas to handle **uncertainty** and **efficiency**.\n  \n---",
+    "answer": "**1. Pointwise Scoring (Absolute Grading)**\n  Assign a numerical score to each response (e.g., 1–5 or 0–100). Useful for tasks where absolute quality can be graded.\n  - **Pros:** **Simplicity and Direct Magnitude.** Capture absolute quality rather than the relative ordering.\n  - **Cons:** **Poor Calibration and drift.** Subject to heavy bias; one annotator's “7” is another's “9”, making data noisy.\n\n**2. Listwise Ranking** \n  Rank a set of $K$ responses (e.g., 4 or 5) from best to worst. Helps capture *relative* quality across several answers at once.\n  - **Pros: High Efficiency.** A single ranking induces $K(K-1)/2$ equivalent pairwise comparisons, maximizing signal per dollar.\n  - **Cons: High Cognitive Load.** Ranking multiple long responses causes annotator fatigue and errors.\n\n**3. Probabilistic modeling** \n  Estimate a probability distribution over responses (e.g., the likelihood of each being the best) rather than a fixed score.\n  - **Pros: Uncertainty Quantification.** It models ambiguity in human preferences rather than forcing a deterministic choice.\n  - **Cons: Complexity.** Requires more sophisticated inference methods than standard regression or classification.\n\n**4. Direct preference prediction** \n  Train a model to directly predict preference scores or rankings without explicit pairwise data.\n  - **Pros: Simplicity.** Bypasses the combinatorial explosion of generating pairs.\n  - **Cons: Data Scarcity.** Requires datasets that are already scored/ranked, which are harder to obtain than simple pairwise clicks.\n\n**5. Reward modeling (RLHF style)** \n  Use a trained Reward Model to evaluate responses continuously during generation or testing.\n  - **Pros: Automation.** Allows for scalable evaluation without humans in the loop.\n  - **Cons: Proxy Bias.** The model optimizes for the reward score, not necessarily true quality (Goodhart’s Law), leading to reward hacking.\n\n**In short:**\n- **Score-based** measures **absolute** quality (but is noisy).\n- **Ranking** measures **relative** quality (and is efficient).\n- **Probabilistic/Direct** methods are emerging research areas to handle **uncertainty** and **efficiency**.",
     "tags": [
       "Deep"
     ]
@@ -664,10 +531,154 @@
     ]
   },
   {
+    "type": "Learning",
+    "id": "Q1.",
+    "question": "What is AdamW? How is it differ from Adam?",
+    "answer": "**AdamW** is a variant of the **Adam optimizer** that fixes how **weight decay** is applied. \n\nIn the original **Adam**, weight decay was implemented by adding an L2 penalty to the loss function. However, because Adam rescales gradients adaptively, this L2 regularization does **not behave like true weight decay**, it gets entangled with the gradient updates, often leading to suboptimal generalization.\n\n**AdamW** (proposed by Loshchilov & Hutter, 2017) decouples weight decay from the gradient-based update. Instead of adding L2 loss to the objective, it directly **decays the weights after each update step**, keeping the adaptive gradient behavior intact.\n\nAs a result, AdamW offers **better generalization** and **more stable training**, especially for large-scale models like transformers.\n\n**In short:**\n\n- **Adam:** mixes L2 regularization into the gradient, which interacts with adaptive updates.\n- **AdamW:** applies *true weight decay* separately from gradient updates.\n\nThis decoupling makes AdamW the **default optimizer** for most modern deep learning frameworks and transformer-based models.",
+    "tags": [
+      "Basic"
+    ]
+  },
+  {
+    "type": "Learning",
+    "id": "Q2.",
+    "question": "What tricks improve training stability and convergence?",
+    "answer": "- **Learning-rate Warmup & Annealing:**\n    - Start with a small LR, ramp up linearly (Warmup), and then slowly decay it, often using cosine or linear schedules (Annealing).\n    - **Intuition:** At the very beginning, model parameters are random, so the gradients are massive and noisy. If taking a full step immediately, the model might be destabilized and have possible early divergence. Warmup lets the model find a reasonable starting direction safely. Later, annealing reduces the step size so the model can settle into a minima instead of bouncing around the edges.\n- **Batch Size Scaling:**\n    - Gradually increasing the batch size over time to maintain stability in SGD in LLM training.\n    - **Intuition:** Increasing batch size reduces the noise in the gradient estimation (lowering the variance). This mimics the effect of learning rate decay (increasing the “signal-to-noise” ratio of the updates) without slowing down the effective training speed, often helping the model escape sharp minima in favor of flatter, more robust ones.\n- **Gradient Clipping:**\n    - Cap the norm of the gradient vector (e.g., to 1.0) before the update to prevent exploding gradients.\n    - **Intuition:** Loss landscapes of deep networks (especially RNNs/Transformers) can have steep cliffs. Without clipping, a single massive gradient step can shoot parameters into a bad region (exploding gradients), undoing days of training.\n- **Weight Decay & Dropout**\n    - Weight Decay pushes weights towards zero (L2 penalty). Dropout randomly switches off neurons during training.\n    - **Intuition:** Against overfitting. Weight Decay keeps the weights small, preventing the model from relying too heavily on any single feature (which usually means it's memorizing noise). Dropout forces the network to be robust. By randomly breaking connections, the model can't rely on one specific path to get the answer; it has to learn redundant, distributed representations that generalize better.\n- **Layer normalization & Residual connections:**\n    - Add skip connections ($x + F(x)$) and normalize inputs across features per layer to stabilize deep architectures.\n    - **Intuition:** Residuals create a “gradient highway” for gradients to flow backward without vanishing. Layer Norm ensures the input to the next layer has a stable mean/variance, preventing covariate shift where layers have to constantly re-learn how to handle shifting scales from previous layers.\n- **Mixed precision (FP16/BF16):**\n    - Use lower precision for calculations and full precision for weight accumulation for speed and memory efficiency.\n    - **Intuition:** Reduces memory bandwidth pressure and allows larger batch sizes, which indirectly stabilizes training by improving gradient estimation quality.\n    \n**Note:** In LLMs, these stability tricks are mostly applied during the Pre-training and Supervised Fine-Tuning (SFT) stages. Later stages like RLHF usually require less aggressive regularization.\n\n**In short:**\n- **Warmup & Annealing** manage the **speed**: start cautious, end precise.\n- **Gradient Clipping & Batch Scaling** manage the **volatility**: prevent crashes and reduce noise.\n- **Residuals & Norms** fix the **signal flow**: allow gradients to survive deep networks.\n- **Decay & Dropout** improve **generalization**: force the model to learn robust patterns, not memorization.",
+    "tags": [
+      "Deep"
+    ]
+  },
+  {
+    "type": "Learning",
+    "id": "Q3.",
+    "question": "Why is a cosine decay schedule (with warmup) typically preferred over linear or step-based schedules in LLM training??",
+    "answer": "The choice of scheduler defines the optimization trajectory. In LLM training, Cosine Decay with Warmup is the standard because it offers the best balance between stability, exploration, and ease of tuning.\n1. **Warmup Phase:** We initially ramp up the learning rate linearly from zero. At initialization, parameters are random and gradient variances are high. A full-strength step immediately can destabilize the model or cause early divergence. Warmup allows the optimizer to gather statistics and find a stable descent direction before accelerating.\n2. **Decay Phase (Why Cosine?):** After warmup, the learning rate must decrease to allow the model to converge into a local minimum. Cosine decay follows a cosine curve, slowly decreasing initially, accelerating in the middle, and slowing again at the end:\n\n$$\n\\eta_t = \\eta_{\\text{min}} + \\frac{1}{2}(\\eta_{\\text{max}} - \\eta_{\\text{min}})(1 + \\cos(\\pi t / T))\n$$\n\n- **Vs. Step Decay:** Step schedules drop the LR abruptly. These shocks can trap the model in a suboptimal basin before it has finished exploring the current loss landscape. Cosine is smooth and continuous, allowing the model to settle naturally without optimization shocks.\n- **Vs. Linear Decay:** A linear schedule decays too constantly. Cosine spends a longer time at a relatively high learning rate before dropping off. This extended period of high-energy updates encourages broader exploration, helping the model find flatter, more robust minima.\n\n3. **Modern Context: The Rise of WSD** While Cosine is the default, recent large-scale runs (like MiniCPM or Llama 3) often use WSD (Warmup-Stable-Decay).\n- Instead of constantly decaying, WSD keeps the learning rate constant (stable) for 80-90\\% of training, then decays rapidly at the end.\n- **Why?** It decouples training from a fixed end-step. Because the LR stays high, you can pause training, add more data, and continue easily—something that is mathematically difficult with Cosine once the LR has already decayed to near-zero.\n\n**In short:**\n- Warmup ensures stability during the volatile early phase.\n- Cosine is preferred for its smooth convergence and “set-and-forget” simplicity for fixed-budget runs.",
+    "tags": [
+      "Deep"
+    ]
+  },
+  {
+    "type": "Learning",
+    "id": "Q4.",
+    "question": "What is *gradient clipping*, and why is it used?",
+    "answer": "**Gradient clipping** limits the magnitude of gradients during backpropagation.\n\n- **Purpose:** Prevent *gradient explosion*, which can destabilize or crash training.\n- **Common method:** Clip gradients by norm, e.g.\n\n$$\ng \\leftarrow c \\cdot \\frac{g}{\\|g\\|} \\quad \\text{if } \\|g\\| > \\text{c}\n$$\n\nwhere $c$ is a hyperparameter, $g$ is the gradient, and $\\|g\\|$ is the norm of $g$. Since $g/\\|g\\|$ is a unit vector, after rescaling the new $g$ will have norm $c$. Note that if $\\|g\\| < c$, then we don’t need to do anything.\n\n- **Effect:** Stabilizes updates, especially in RNNs, transformers, and reinforcement learning models.",
+    "tags": [
+      "Basic"
+    ]
+  },
+  {
+    "type": "Learning",
+    "id": "Q5.",
+    "question": "What is *model parallelism* vs *pipeline parallelism*?",
+    "answer": "Both are strategies to train large models across multiple GPUs, but they differ in *how* the model is split.\n\n**Model parallelism** divides the **model’s parameters** across devices — for example, placing different layers or parts of a layer on different GPUs. Each GPU computes its part of the forward and backward pass. This approach is mainly used when the model is too large to fit in one GPU’s memory.\n\n**Pipeline parallelism** divides the **training process** into sequential stages across GPUs. The input batch is broken into *micro-batches* that move through the pipeline — while one GPU works on the next batch, another continues the previous one. This improves utilization and throughput.\n\n\n**In short:**\n\n- *Model parallelism* → splits **the model** to fit memory.\n- *Pipeline parallelism* → splits **the computation** to improve efficiency.\n  Large-scale systems (e.g., DeepSpeed, Megatron-LM) often combine both for optimal performance.\n\nThey are often **combined** for large-scale model training (e.g., Megatron-LM, DeepSpeed).",
+    "tags": [
+      "Basic"
+    ]
+  },
+  {
+    "type": "Learning",
+    "id": "Q6.",
+    "question": "What is the role of the FFN (Feed-Forward Network) in a Transformer?",
+    "answer": "While the **Self-Attention** mechanism mixes information *across* time steps (tokens), the **FFN** processes information *per token* individually.\n\n* **Rank Restoration:** Attention matrices are often low-rank (collapsing information). The FFN involves a projection to a higher dimension ($d_{model} \\to 4d_{model}$) and back, adding non-linearity (ReLU/GELU/SwiGLU). This restores the rank of the representations and increases model capacity.\n* **Key-Value Memory:** Research (e.g., Geva et al.) suggests FFNs act as **key-value memories**, where the first layer detects specific patterns (keys) in the input, and the second layer outputs the corresponding distribution over the vocabulary or features (values).\n\n**In short:**\n\n* **Attention:** Mixes information spatially (token-to-token).\n* **FFN:** Processes information deeply (state-to-state), acting as the model's static memory.",
+    "tags": [
+      "Basic"
+    ]
+  },
+  {
+    "type": "Learning",
+    "id": "Q7.",
+    "question": "How does Mixture of Experts (MoE) work, and what are its advantages?",
+    "answer": "**MoE** replaces the dense FFN layers in a Transformer with a **sparse** layer containing multiple experts (independent FFNs) and a **router** (gate).\n\nFor every incoming token $x$, the router selects only the top-$k$ experts (usually $k=1$ or $2$) to process that token. The output is the weighted sum of the selected experts.\n\n**Advantages:**\n\n1. **Decouples Parameter Count from Compute:** You can increase the model size (parameters) massively (e.g., 100x) without increasing the inference cost (FLOPs), because only a fraction of parameters are active per token.\n2. **Huge Capacity:** Allows the model to memorize significantly more information (due to the memory nature of FFNs described above) compared to a dense model of the same compute budget.\n\n**In short:**\nMoE enables **sparse activation**. It scales the model's *knowledge* (parameters) without scaling the *compute cost* linearly.",
+    "tags": [
+      "Basic"
+    ]
+  },
+  {
+    "type": "Learning",
+    "id": "Q8.",
+    "question": "How is the MoE Router trained?",
+    "answer": "The router is typically a learnable linear layer followed by a Softmax:\n$$G(x) = \\text{Softmax}(x \\cdot W_g)$$\nThe routing decision (selecting indices) is discrete and non-differentiable. To train this, we usually use the **weighted average** of the selected experts to allow gradients to flow back into the router weights.\n\nIf the router selects indices $i$ and $j$ for token $x$, the output is:$$y = P_i \\cdot E_i(x) + P_j \\cdot E_j(x)$$\nWhere $P$ represents the probability assigned by the gate.\nDuring backpropagation, gradients flow through $E(x)$ to train the experts, and through $P$ to train the router weights $W_g$ (teaching it which expert to pick).\n\n*Note: Some implementations use Gumbel-Softmax or noisy top-k gating to encourage exploration.*",
+    "tags": [
+      "Deep"
+    ]
+  },
+  {
+    "type": "Learning",
+    "id": "Q9.",
+    "question": "What are *load balancing losses* in LLMs?",
+    "answer": "Without intervention, an MoE router often converges to a degenerate solution where it sends **all tokens to a single expert** (Expert Collapse). This maximizes early rewards but wastes the capacity of other experts and causes memory OOM on the favored expert's GPU.\n\n**Load Balancing Loss ($L_{aux}$)** is an auxiliary loss added to the objective to force uniform usage of experts. It usually minimizes the coefficient of variation of the dispatching.\n\nA common formulation (e.g., in Switch Transformer) minimizes the dot product of:\n\n1. $f_i$: The fraction of tokens dispatched to expert $i$.\n2. $P_i$: The average probability assigned to expert $i$ across the batch.\n   $$L_{aux} = N \\sum_{i=1}^{N} f_i \\cdot P_i$$\n\n**In short:**\nThis loss penalizes the model if it routes too many tokens to specific experts, ensuring all experts are trained equally and computational load is balanced across devices.",
+    "tags": [
+      "Deep"
+    ]
+  },
+  {
+    "type": "Learning",
+    "id": "Q10.",
+    "question": "What’s the difference between *LoRA* and *QLoRA*?",
+    "answer": "Both are Parameter-Efficient Fine-Tuning (PEFT) methods, but they solve slightly different bottlenecks.\n**1. LoRA (Low-Rank Adaptation)** Instead of re-training the massive weight matrices of the model, LoRA freezes the pre-trained weights and injects trainable **rank decomposition matrices** into each layer.\n\n- If the weight update is $\\Delta W$, LoRA approximates it as $\\Delta W = B \\times A$, where $B$ and $A$ are tiny matrices. You only train $A$ and $B$.\n- **Performance:**\n    - **Accuracy:** Matches full fine-tuning results almost exactly.\n    - **Speed:** Training is faster (fewer gradients to calculate), and serving is efficient because you can merge the adapter weights back into the base model (zero inference latency).\n\n**2. QLoRA (Quantized LoRA)** QLoRA is essentially LoRA applied to a **4-bit quantized base model**. It uses a special data type (NormalFloat4 or NF4) and Double Quantization to squeeze the model size down as much as possible.\n- **Performance:**\n    - **Memory (The Big Win):** It drastically reduces VRAM usage. You can fine-tune a 65B/70B parameter model on a single 48GB GPU, which is impossible with standard LoRA.\n    - **Speed (The Cost):** QLoRA is actually slower to train than standard LoRA (roughly 30\\% slower). Because the weights are stored in 4-bit, but computations must happen in 16-bit (BF16). The system has to constantly de-quantize weights on the fly during the forward and backward passes, adding computational overhead.\n    - **Accuracy:** Surprisingly, it incurs negligible accuracy loss compared to 16-bit LoRA.\n\n**In short:**\n\n- LoRA makes fine-tuning efficient by training small adapter layers.\n- QLoRA makes it even more efficient by fine-tuning **quantized** models, enabling large-scale fine-tuning on modest hardware.",
+    "tags": [
+      "Basic"
+    ]
+  },
+  {
+    "type": "Learning",
+    "id": "Q11.",
+    "question": "What are other adapter-based fine-tuning methods (e.g., DoRA)?",
+    "answer": "While LoRA is the default, newer methods try to fix its specific weaknesses.\n- **DoRA (Weight-Decomposed LoRA):** LoRA updates weights in a way that forces the direction and magnitude of the change to be coupled. In full fine-tuning, these often change independently. DoRA splits the weight matrix into two parts: **Magnitude** (how strong the weight is) and **Direction** (where it points).\n  $$W = m \\cdot \\frac{V}{\\|V\\|}$$\n  It applies LoRA only to the Direction ($V$) and trains the Magnitude ($m$) directly. It mimics full fine-tuning behavior much closer than LoRA, often yielding higher accuracy and better robustnes, with no extra inference cost.\n- **AdaLoRA (Adaptive LoRA):** Not all layers are equally important. Standard LoRA uses the same rank for every single layer. AdaLoRA figures out which layers need more capacity and which don't, dynamically allocating the rank budget to the most critical layers during training.\n- **Text-to-LoRA (Cutting Edge):** Instead of training an adapter on a dataset, can you just ask for one? This method uses a **Hypernetwork**—a small model trained to generate the LoRA weights ($A$ and $B$ matrices) directly from a text description of a task (e.g., “Make the model speak like a pirate”). It allows for instant, zero-shot adaptation without standard training.\n- **Llama-Adapter / Prefix Tuning:** Instead of adding weights inside the layers, these methods add “soft prompts” (learnable vectors) to the input or specific attention layers. They are generally less stable and perform worse than LoRA for complex reasoning, but are highly parameter-efficient.\n\n**In short:**\n- **DoRA** is the “better LoRA” (more accuracy, same inference speed).\n- **AdaLoRA** is the “efficient LoRA” (allocates parameters smartly).\n- **Text-to-LoRA** is the “instant LoRA” (generates adapters from prompts).",
+    "tags": [
+      "Deep"
+    ]
+  },
+  {
+    "type": "Learning",
+    "id": "Q12.",
+    "question": "What’s the difference between *SFT* and *RLHF*?",
+    "answer": "**SFT**, or *Supervised Fine-Tuning*, is the stage where a model learns to produce good answers by **imitating human-written examples**.\n It’s a straightforward supervised learning process: the model is trained on prompt–response pairs, minimizing cross-entropy loss to match the human responses. This step teaches the model to follow instructions and generate coherent, helpful outputs.\n\n**RLHF**, or *Reinforcement Learning from Human Feedback*, builds on top of SFT. Instead of directly imitating humans, the model now learns from **human preferences** — for example, which of two responses a human finds better.\n A separate *reward model* is trained using this preference data, and the main model is then optimized to maximize this learned reward signal using reinforcement learning (usually with PPO).\n\n**In short:**\n\n- SFT trains the model to **imitate good answers** using labeled data.\n- RLHF trains the model to **align with human preferences**, optimizing for what people *prefer*, not just what they *wrote*.\n\nTogether, SFT gives the model basic instruction-following ability, and RLHF refines that behavior to make it more aligned, safe, and human-like.",
+    "tags": [
+      "Basic"
+    ]
+  },
+  {
+    "type": "Learning",
+    "id": "Q13.",
+    "question": "How do Direct Preference Optimization (DPO) and RLHF differ?",
+    "answer": "DPO simplifies RLHF by removing the reinforcement learning loop.\nInstead of training a separate reward model and using PPO, DPO directly optimizes the model parameters to prefer responses that humans liked more.\n\nIt minimizes a loss derived from the same Bradley–Terry preference model, without the instability or extra complexity of RL.\n\n**In short:**\n\n- RLHF → reward model + PPO optimization\n- DPO → direct, simpler preference learning (no reward model training)\n\nDPO achieves alignment comparable to that of that of RLHF wicomputation computation and fewer moving parts.",
+    "tags": [
+      "Deep"
+    ]
+  },
+  {
+    "type": "Learning",
+    "id": "Q14.",
+    "question": "What is the Bradley–Terry model, and why is it the standard for Reward Modeling?",
+    "answer": "The **Bradley–Terry model** is the mathematical link between abstract scores and human choices.\n\nIn RLHF, humans don't give absolute scores. They give **pairwise comparisons** We need a way to translate those A-vs-B wins into a continuous reward score for the model to optimize.\n\n**The Math:** Bradley-Terry formalizes this. It assumes every item $i$ has a latent score $r_i$ (reward). The probability that $i$ beats $j$ is a sigmoid function of the difference in their scores:$$P(i \\succ j) = \\sigma(r_i - r_j) = \\frac{e^{r_i}}{e^{r_i} + e^{r_j}}$$\n\n**In LLM Training:** When we train a Reward Model, we feed it pairs of (Good Response, Bad Response). The model tries to predict a scalar score $r$ for each. We train it by minimizing the error so that $r_{\\text{good}} > r_{\\text{bad}}$ according to the probability formula above.\n\n**In short:** The Bradley-Terry model allows us to derive absolute reward scores from relative human rankings.",
+    "tags": [
+      "Basic"
+    ]
+  },
+  {
+    "type": "Learning",
+    "id": "Q15.",
+    "question": "Beyond pairwise comparison, what alternative methods exist for evaluating model responses, and what are their trade-offs?",
+    "answer": "**1. Pointwise Scoring (Absolute Grading)**\n  Assign a numerical score to each response (e.g., 1–5 or 0–100). Useful for tasks where absolute quality can be graded.\n  - **Pros:** **Simplicity and Direct Magnitude.** Capture absolute quality rather than the relative ordering.\n  - **Cons:** **Poor Calibration and drift.** Subject to heavy bias; one annotator's “7” is another's “9”, making data noisy.\n\n**2. Listwise Ranking** \n  Rank a set of $K$ responses (e.g., 4 or 5) from best to worst. Helps capture *relative* quality across several answers at once.\n  - **Pros: High Efficiency.** A single ranking induces $K(K-1)/2$ equivalent pairwise comparisons, maximizing signal per dollar.\n  - **Cons: High Cognitive Load.** Ranking multiple long responses causes annotator fatigue and errors.\n\n**3. Probabilistic modeling** \n  Estimate a probability distribution over responses (e.g., the likelihood of each being the best) rather than a fixed score.\n  - **Pros: Uncertainty Quantification.** It models ambiguity in human preferences rather than forcing a deterministic choice.\n  - **Cons: Complexity.** Requires more sophisticated inference methods than standard regression or classification.\n\n**4. Direct preference prediction** \n  Train a model to directly predict preference scores or rankings without explicit pairwise data.\n  - **Pros: Simplicity.** Bypasses the combinatorial explosion of generating pairs.\n  - **Cons: Data Scarcity.** Requires datasets that are already scored/ranked, which are harder to obtain than simple pairwise clicks.\n\n**5. Reward modeling (RLHF style)** \n  Use a trained Reward Model to evaluate responses continuously during generation or testing.\n  - **Pros: Automation.** Allows for scalable evaluation without humans in the loop.\n  - **Cons: Proxy Bias.** The model optimizes for the reward score, not necessarily true quality (Goodhart’s Law), leading to reward hacking.\n\n**In short:**\n- **Score-based** measures **absolute** quality (but is noisy).\n- **Ranking** measures **relative** quality (and is efficient).\n- **Probabilistic/Direct** methods are emerging research areas to handle **uncertainty** and **efficiency**.",
+    "tags": [
+      "Deep"
+    ]
+  },
+  {
+    "type": "Learning",
+    "id": "Q16.",
+    "question": "What are emerging trends in alignment beyond RLHF? Where are they used?",
+    "answer": "The field is moving away from the complex PPO pipeline toward simpler optimization and scalable supervision.\n\n**1. DPO (Direct Preference Optimization)**\n- Removes the separate Reward Model and PPO loop. It optimizes the policy directly on preference data using a simple classification loss.\n- **Use Case:** The current open-source standard (Llama 3, Mistral) due to stability and memory efficiency.\n\n**2. IPO (Implicit Preference Optimization)**\n- Adds regularization to DPO to prevent overfitting on preference data.\n- **Use Case: Robust Alignment.** Essential when preference labels are noisy or theoretically grounded constraints are needed (e.g., scientific code generation).\n\n**3. Reasoning Alignment (Process Supervision / “System 2”)**\n- Instead of rewarding just the final answer (Outcome Supervision), this method rewards valid steps of reasoning (Process Supervision). It trains models to think (Chain-of-Thought) before answering.\n- **Use Case: Complex Logic.** Essential for Math/Code models (e.g., OpenAI o1, DeepSeek-R1).\n\n**4. RLAIF (Reinforcement Learning from AI Feedback)**\n- Uses a strong model (e.g., GPT-4) to rank outputs for a smaller model.\n- **Use Case: Scaling.** Used by Google/Anthropic to bypass human bottlenecks.\n\n**5. KTO (Kahneman-Tversky Optimization)**\n- Aligns using simple “Good/Bad” (binary) labels, removing the need for paired “A vs B” data.\n- **Use Case: Enterprise Data.** Useful when you have logs of successful tasks but no direct comparisons.\n\n**6. Constitutional AI**\n- Aligns model to principles (rules or constitutions) rather than human ratings.\n- **Use Case: Safety & Compliance.** Pioneered by Anthropic (Claude) to ensure models remain harmless without extensive human intervention on every edge case.\n\n**7. Self-rewarding models**\n- The model acts as both generator and judge to train itself iteratively.\n- **Use Case: Superhuman Performance.** Attempting to break the “human ceiling”.\n\n**In short:**\n- **DPO / IPO / KTO** fix the **optimization**: They make training stable, robust, and possible with simpler (or unpaired) data.\n- **RLAIF / Constitutional / Self-Reward** fix the **supervision**: They remove the bottleneck of human labeling by using AI judges or rule sets.\n- **Process Supervision** fixes the **reasoning**: It forces models to \"show their work\" and verify logic step-by-step, reducing hallucinations in math and code.",
+    "tags": [
+      "Deep"
+    ]
+  },
+  {
     "type": "Deployment",
     "id": "Q1",
     "question": "How to deploy transformer models faster?",
-    "answer": "- **Quantization:** Reduce weight precision (FP32 → FP16/INT8/INT4) to lower memory bandwidth and accelerate matrix multiplications.  \n- **Pruning:** Remove redundant neurons or attention heads to shrink the model while maintaining core behavior.  \n- **Knowledge Distillation:** Train a smaller “student” model to mimic a large “teacher,” improving efficiency with minimal performance loss.  \n- **Model & Tensor Parallelism:** Distribute model layers or matrix operations across multiple GPUs to handle very large models.  \n- **Efficient Transformer Variants:** Use architectures like FlashAttention, Reformer, or MPT-style models to reduce compute bottlenecks.  \n- **Batching:** Process multiple requests simultaneously to increase throughput and improve GPU utilization.  \n- **Specialized Inference Runtimes:** Use engines like TensorRT, ONNX Runtime, and vLLM for kernel fusion and optimized decoding.\n\n---",
+    "answer": "- **Quantization:** Reduce weight precision (FP32 → FP16/INT8/INT4) to lower memory bandwidth and accelerate matrix multiplications.  \n- **Pruning:** Remove redundant neurons or attention heads to shrink the model while maintaining core behavior.  \n- **Knowledge Distillation:** Train a smaller “student” model to mimic a large “teacher,” improving efficiency with minimal performance loss.  \n- **Model & Tensor Parallelism:** Distribute model layers or matrix operations across multiple GPUs to handle very large models.  \n- **Efficient Transformer Variants:** Use architectures like FlashAttention, Reformer, or MPT-style models to reduce compute bottlenecks.  \n- **Batching:** Process multiple requests simultaneously to increase throughput and improve GPU utilization.  \n- **Specialized Inference Runtimes:** Use engines like TensorRT, ONNX Runtime, and vLLM for kernel fusion and optimized decoding.",
     "tags": [
       "Deep"
     ]
@@ -675,8 +686,8 @@
   {
     "type": "Deployment",
     "id": "Q2",
-    "question": "What is batching in model deployment, and how does it improve inference efficiency?",
-    "answer": "Batching processes multiple input sequences together in a single forward pass. Since GPUs excel at parallel computation, batching increases throughput and reduces kernel-launch overhead.  \nFor example, encoding 32 prompts together may be only slightly slower than processing one, yielding ~20–30× better throughput.  \nHowever, large batches can increase **tail latency**, so production systems use **dynamic or adaptive batching** to maximize efficiency while keeping requests responsive.\n\n---",
+    "question": "What is speculative decoding in LLM deployment?",
+    "answer": "Speculative decoding uses two models:  \n- A small, fast **draft model** proposes multiple future tokens.  \n- A large **target model** verifies or rejects these tokens in parallel.  \nAccepted tokens allow the model to “jump ahead,” producing 2–4× faster inference with minimal accuracy loss.  \nThis method greatly accelerates autoregressive decoding without retraining the main model.",
     "tags": [
       "Deep"
     ]
@@ -684,17 +695,17 @@
   {
     "type": "Deployment",
     "id": "Q3",
-    "question": "What is speculative decoding in LLM deployment?",
-    "answer": "Speculative decoding uses two models:  \n- A small, fast **draft model** proposes multiple future tokens.  \n- A large **target model** verifies or rejects these tokens in parallel.  \nAccepted tokens allow the model to “jump ahead,” producing 2–4× faster inference with minimal accuracy loss.  \nThis method greatly accelerates autoregressive decoding without retraining the main model.\n\n---",
+    "question": "Given an LLM, how can we ensure that it can scale to handle large context?",
+    "answer": "Scalability requires separating retrieval from computation. Retrieval-Augmented Generation (RAG) stores knowledge in vector DBs, enabling models to handle large domains without expanding their context windows.  \nChunking keeps retrieval efficient at scale.  \nHorizontal model replicas, sharded vector indexes, KV-cache reuse, and continuous batching allow the system to serve high concurrency with predictable latency.",
     "tags": [
-      "Deep"
+      "Basic"
     ]
   },
   {
     "type": "Deployment",
     "id": "Q4",
-    "question": "Given an LLM, how can we ensure that it can scale to handle large context?",
-    "answer": "Scalability requires separating retrieval from computation. Retrieval-Augmented Generation (RAG) stores knowledge in vector DBs, enabling models to handle large domains without expanding their context windows.  \nChunking keeps retrieval efficient at scale.  \nHorizontal model replicas, sharded vector indexes, KV-cache reuse, and continuous batching allow the system to serve high concurrency with predictable latency.\n\n---",
+    "question": "What are the main challenges in deploying LLMs?",
+    "answer": "1. **Latency:** Autoregressive generation is sequential and slow.  \n2. **GPU Memory Limitations:** Large models require multi-GPU inference or quantization.  \n3. **Operational Cost:** Running GPU clusters is expensive.  \n4. **Concurrency:** High traffic requires batching, caching, and schedulers.  \n5. **Safety & Alignment:** Preventing harmful outputs requires guardrails.  \n6. **Continuous Updating:** Updates to weights and policies must happen without service downtime.",
     "tags": [
       "Basic"
     ]
@@ -702,8 +713,8 @@
   {
     "type": "Deployment",
     "id": "Q5",
-    "question": "What are the main challenges in deploying LLMs?",
-    "answer": "1. **Latency:** Autoregressive generation is sequential and slow.  \n2. **GPU Memory Limitations:** Large models require multi-GPU inference or quantization.  \n3. **Operational Cost:** Running GPU clusters is expensive.  \n4. **Concurrency:** High traffic requires batching, caching, and schedulers.  \n5. **Safety & Alignment:** Preventing harmful outputs requires guardrails.  \n6. **Continuous Updating:** Updates to weights and policies must happen without service downtime.\n\n---",
+    "question": "Why is RAG better than giving the model all the information at once? (Example: pasting an entire book into the prompt)",
+    "answer": "Transformer attention scales quadratically (O(n²)), so extremely long inputs cause slow, memory-heavy inference and costly prompts.  \nExample: pasting a 200-page PDF forces the model to read thousands of irrelevant tokens.\n\nRAG instead retrieves only the **most relevant chunks**, which:  \n- Reduces latency  \n- Lowers token cost  \n- Prevents GPU memory exhaustion  \n- Improves answer quality  \n- Allows unlimited knowledge scaling without needing larger context windows  \n\nRAG fetches exactly what is needed and lets the LLM reason over concise, focused information.",
     "tags": [
       "Basic"
     ]
@@ -711,17 +722,17 @@
   {
     "type": "Deployment",
     "id": "Q6",
-    "question": "Why is RAG better than giving the model all the information at once? (Example: pasting an entire book into the prompt)",
-    "answer": "Transformer attention scales quadratically (O(n²)), so extremely long inputs cause slow, memory-heavy inference and costly prompts.  \nExample: pasting a 200-page PDF forces the model to read thousands of irrelevant tokens.\n\nRAG instead retrieves only the **most relevant chunks**, which:  \n- Reduces latency  \n- Lowers token cost  \n- Prevents GPU memory exhaustion  \n- Improves answer quality  \n- Allows unlimited knowledge scaling without needing larger context windows  \n\nRAG fetches exactly what is needed and lets the LLM reason over concise, focused information.\n\n---",
+    "question": "How to handle when longer outputs are required in LLMs?",
+    "answer": "- **Sliding-window attention:** Restrict attention to recent tokens.  \n- **Chunked generation:** Produce text in segments, summarize, and continue.  \n- **Memory-augmented transformers:** Store long-range info outside the context window.  \n- **Streaming:** Send partial outputs to reduce perceived delay.  \nThese techniques support long transcripts or documents efficiently.",
     "tags": [
-      "Basic"
+      "Deep"
     ]
   },
   {
     "type": "Deployment",
     "id": "Q7",
-    "question": "How to handle when longer outputs are required in LLMs?",
-    "answer": "- **Sliding-window attention:** Restrict attention to recent tokens.  \n- **Chunked generation:** Produce text in segments, summarize, and continue.  \n- **Memory-augmented transformers:** Store long-range info outside the context window.  \n- **Streaming:** Send partial outputs to reduce perceived delay.  \nThese techniques support long transcripts or documents efficiently.\n\n---",
+    "question": "How to make an LLM safer?",
+    "answer": "Imagine safety as a multi-layer security gate:\n\n1. **Prompt guardrails** stop dangerous requests before they reach the model.  \n   *Example:* A user asks:  \n   *“How can I bypass airport security?”*  \n   The guardrail rewrites/blocks it.\n\n2. **Output guardrails** inspect the model’s reply for toxicity, bias, or unsafe content.\n\n3. **Policy models** act like expert reviewers scoring outputs for safety violations or hallucinations.\n\nAdditional layers include red-teaming pipelines, human-in-the-loop checks, RLHF tuning, audit logs, and domain-specific policies.  \nTogether these ensure responsible model behavior.",
     "tags": [
       "Deep"
     ]
@@ -729,26 +740,26 @@
   {
     "type": "Deployment",
     "id": "Q8",
-    "question": "How to make an LLM safer?",
-    "answer": "Imagine safety as a multi-layer security gate:\n\n1. **Prompt guardrails** stop dangerous requests before they reach the model.  \n   *Example:* A user asks:  \n   *“How can I bypass airport security?”*  \n   The guardrail rewrites/blocks it.\n\n2. **Output guardrails** inspect the model’s reply for toxicity, bias, or unsafe content.\n\n3. **Policy models** act like expert reviewers scoring outputs for safety violations or hallucinations.\n\nAdditional layers include red-teaming pipelines, human-in-the-loop checks, RLHF tuning, audit logs, and domain-specific policies.  \nTogether these ensure responsible model behavior.\n\n---",
-    "tags": [
-      "Deep"
-    ]
-  },
-  {
-    "type": "Deployment",
-    "id": "Q9",
     "question": "What is model quantization and why is it important?",
-    "answer": "Quantization converts FP32/FP16 weights into INT8/INT4/NF4 formats, reducing memory and compute cost. An 8-bit model often uses 4× less RAM and runs nearly 2× faster.\n\n**Story:** Deploying a full-precision LLM on a small device is like carrying a giant suitcase on a tiny scooter—technically possible but slow and unstable. Quantization shrinks it into a backpack: lighter, more efficient, and easy to use anywhere.\n\nModern PTQ/QAT techniques preserve accuracy, making quantization essential for edge devices and economical large-scale inference.\n\n---",
+    "answer": "Quantization converts FP32/FP16 weights into INT8/INT4/NF4 formats, reducing memory and compute cost. An 8-bit model often uses 4× less RAM and runs nearly 2× faster.\n\n**Story:** Deploying a full-precision LLM on a small device is like carrying a giant suitcase on a tiny scooter—technically possible but slow and unstable. Quantization shrinks it into a backpack: lighter, more efficient, and easy to use anywhere.\n\nModern PTQ/QAT techniques preserve accuracy, making quantization essential for edge devices and economical large-scale inference.",
     "tags": [
       "Basic"
     ]
   },
   {
     "type": "Deployment",
-    "id": "Q10",
+    "id": "Q9",
     "question": "What is pruning in transformer models?",
-    "answer": "Pruning removes weights, neurons, or attention heads that contribute little to model quality.  \n- **Structured pruning:** Removes whole heads/channels and accelerates real hardware.  \n- **Unstructured pruning:** Zeros individual weights (sparse), requiring special kernels.  \nPruning reduces FLOPs, memory, and latency, especially when paired with fine-tuning or distillation.\n\n---",
+    "answer": "Pruning removes weights, neurons, or attention heads that contribute little to model quality.  \n- **Structured pruning:** Removes whole heads/channels and accelerates real hardware.  \n- **Unstructured pruning:** Zeros individual weights (sparse), requiring special kernels.  \nPruning reduces FLOPs, memory, and latency, especially when paired with fine-tuning or distillation.",
+    "tags": [
+      "Deep"
+    ]
+  },
+  {
+    "type": "Deployment",
+    "id": "Q10",
+    "question": "Q11. What is tensor parallelism?",
+    "answer": "Tensor parallelism splits large matrix multiplications (QKV projections, FFN layers) across multiple GPUs.  \nEach GPU computes a shard of the operation, then synchronizes results.  \nThis enables extremely large models (30B–400B) to run efficiently without exceeding a single GPU’s memory.",
     "tags": [
       "Deep"
     ]
@@ -756,8 +767,8 @@
   {
     "type": "Deployment",
     "id": "Q11",
-    "question": "Q11. What is tensor parallelism?",
-    "answer": "Tensor parallelism splits large matrix multiplications (QKV projections, FFN layers) across multiple GPUs.  \nEach GPU computes a shard of the operation, then synchronizes results.  \nThis enables extremely large models (30B–400B) to run efficiently without exceeding a single GPU’s memory.\n\n---",
+    "question": "Q12. What is pipeline parallelism?",
+    "answer": "Pipeline parallelism assigns different transformer layers to different GPUs.  \nMicro-batches are passed through the pipeline so each GPU stays busy.  \nThe 1F1B schedule reduces idle “bubbles,” improving throughput for deep models.",
     "tags": [
       "Deep"
     ]
@@ -765,8 +776,8 @@
   {
     "type": "Deployment",
     "id": "Q12",
-    "question": "Q12. What is pipeline parallelism?",
-    "answer": "Pipeline parallelism assigns different transformer layers to different GPUs.  \nMicro-batches are passed through the pipeline so each GPU stays busy.  \nThe 1F1B schedule reduces idle “bubbles,” improving throughput for deep models.\n\n---",
+    "question": "Q13. What is KV-cache optimization?",
+    "answer": "KV-cache stores past key/value tensors so the model doesn’t recompute them every token.  \nThis reduces per-token compute from O(n) → O(1).  \nOptimizations include cache quantization, paged layouts, and flash attention integration—crucial for high-concurrency inference.",
     "tags": [
       "Deep"
     ]
@@ -774,62 +785,62 @@
   {
     "type": "Deployment",
     "id": "Q13",
-    "question": "Q13. What is KV-cache optimization?",
-    "answer": "KV-cache stores past key/value tensors so the model doesn’t recompute them every token.  \nThis reduces per-token compute from O(n) → O(1).  \nOptimizations include cache quantization, paged layouts, and flash attention integration—crucial for high-concurrency inference.\n\n---",
+    "question": "Q14. What is FlashAttention?",
+    "answer": "FlashAttention minimizes GPU memory traffic by keeping Q/K/V on-chip during computation.  \nThis fused-kernel design yields 2–3× faster attention and supports longer sequences without running out of memory.  \nIt is the default attention kernel in modern LLMs.",
     "tags": [
-      "Deep"
+      "Basic"
     ]
   },
   {
     "type": "Deployment",
     "id": "Q14",
-    "question": "Q14. What is FlashAttention?",
-    "answer": "FlashAttention minimizes GPU memory traffic by keeping Q/K/V on-chip during computation.  \nThis fused-kernel design yields 2–3× faster attention and supports longer sequences without running out of memory.  \nIt is the default attention kernel in modern LLMs.\n\n---",
+    "question": "Q15. How do VLMs optimize image processing during inference?",
+    "answer": "- **Image embedding caching**  \n- **Lightweight preview encoders**  \n- **Downsampling / patch compression**  \n- **Sharing embeddings across queries**  \nThese techniques accelerate the vision front-end.",
     "tags": [
-      "Basic"
+      "Deep"
     ]
   },
   {
     "type": "Deployment",
     "id": "Q15",
-    "question": "Q15. How do VLMs optimize image processing during inference?",
-    "answer": "- **Image embedding caching**  \n- **Lightweight preview encoders**  \n- **Downsampling / patch compression**  \n- **Sharing embeddings across queries**  \nThese techniques accelerate the vision front-end.\n\n---",
+    "question": "Q16. What is batching in VLMs?",
+    "answer": "VLMs batch multiple images or image-text pairs to fully utilize GPU parallelism.  \nThis reduces per-image latency and increases throughput, especially under heavy traffic.",
     "tags": [
-      "Deep"
+      "Basic"
     ]
   },
   {
     "type": "Deployment",
     "id": "Q16",
-    "question": "Q16. What is batching in VLMs?",
-    "answer": "VLMs batch multiple images or image-text pairs to fully utilize GPU parallelism.  \nThis reduces per-image latency and increases throughput, especially under heavy traffic.\n\n---",
-    "tags": [
-      "Basic"
-    ]
-  },
-  {
-    "type": "Deployment",
-    "id": "Q17",
     "question": "Q17. How to reduce latency for very long context windows?",
-    "answer": "- **Sliding-window attention**  \n- **Sparse attention (Longformer, BigBird, Mistral)**  \n- **RoPE/NTK scaling**  \n- **Hierarchical compression of old tokens**  \nThese techniques make 100k–1M token windows feasible.\n\n---",
+    "answer": "- **Sliding-window attention**  \n- **Sparse attention (Longformer, BigBird, Mistral)**  \n- **RoPE/NTK scaling**  \n- **Hierarchical compression of old tokens**  \nThese techniques make 100k–1M token windows feasible.",
     "tags": [
       "Deep"
     ]
   },
   {
     "type": "Deployment",
-    "id": "Q18",
+    "id": "Q17",
     "question": "Q18. What is distillation for multimodal models?",
-    "answer": "Distillation trains a smaller VLM to mimic a larger one by aligning:  \n- Logits  \n- Image embeddings from the vision tower  \n- Cross-modal attention maps  \n- Hidden states  \nThis reduces memory, speeds up inference, and preserves multimodal reasoning.\n\n---",
+    "answer": "Distillation trains a smaller VLM to mimic a larger one by aligning:  \n- Logits  \n- Image embeddings from the vision tower  \n- Cross-modal attention maps  \n- Hidden states  \nThis reduces memory, speeds up inference, and preserves multimodal reasoning.",
     "tags": [
       "Basic"
     ]
   },
   {
     "type": "Deployment",
-    "id": "Q19",
+    "id": "Q18",
     "question": "Q19. What is a serving engine (vLLM, TGI, TensorRT-LLM)?",
-    "answer": "A serving engine is an optimized runtime that manages batching, KV-cache, scheduling, and GPU kernels for fast inference.\n\n**Advantages:**  \n- **vLLM:** Paged attention, continuous batching, very high throughput  \n- **TGI:** Production features, multi-model serving, stable APIs  \n- **TensorRT-LLM:** NVIDIA-optimized kernels, CUDA graphs, fastest GPU performance\n\n---",
+    "answer": "A serving engine is an optimized runtime that manages batching, KV-cache, scheduling, and GPU kernels for fast inference.\n\n**Advantages:**  \n- **vLLM:** Paged attention, continuous batching, very high throughput  \n- **TGI:** Production features, multi-model serving, stable APIs  \n- **TensorRT-LLM:** NVIDIA-optimized kernels, CUDA graphs, fastest GPU performance",
+    "tags": [
+      "Deep"
+    ]
+  },
+  {
+    "type": "Deployment",
+    "id": "Q19",
+    "question": "Q20. What is paged attention in vLLM?",
+    "answer": "Paged Attention stores KV-cache in fixed-size pages, like virtual memory.  \nBenefits include:  \n- Efficient massive batching  \n- Zero fragmentation  \n- Low-latency scheduling  \nThis is a core reason vLLM scales so well.",
     "tags": [
       "Deep"
     ]
@@ -837,53 +848,53 @@
   {
     "type": "Deployment",
     "id": "Q20",
-    "question": "Q20. What is paged attention in vLLM?",
-    "answer": "Paged Attention stores KV-cache in fixed-size pages, like virtual memory.  \nBenefits include:  \n- Efficient massive batching  \n- Zero fragmentation  \n- Low-latency scheduling  \nThis is a core reason vLLM scales so well.\n\n---",
+    "question": "Q21. How do we deploy LLMs on edge devices?",
+    "answer": "- INT8/INT4/INT3 quantization  \n- Structured pruning  \n- Distillation  \n- ONNX/CoreML/TFLite compilation  \n- Operator fusion  \nThese allow LLMs to run on phones, edge GPUs, and embedded boards.",
     "tags": [
-      "Deep"
+      "Basic"
     ]
   },
   {
     "type": "Deployment",
     "id": "Q21",
-    "question": "Q21. How do we deploy LLMs on edge devices?",
-    "answer": "- INT8/INT4/INT3 quantization  \n- Structured pruning  \n- Distillation  \n- ONNX/CoreML/TFLite compilation  \n- Operator fusion  \nThese allow LLMs to run on phones, edge GPUs, and embedded boards.\n\n---",
+    "question": "Q22. How do we make an LLM deployment resilient so that the system keeps working even when parts of it fail?",
+    "answer": "- **Replication** of model servers  \n- **Cross-zone deployment**  \n- **Checkpointing** for fast recovery  \n- **Retries & smart routing**  \n- **Graceful degradation** (fallback to smaller models)  \nThese ensure uptime during hardware or network failures.",
     "tags": [
-      "Basic"
+      "Deep"
     ]
   },
   {
     "type": "Deployment",
     "id": "Q22",
-    "question": "Q22. How do we make an LLM deployment resilient so that the system keeps working even when parts of it fail?",
-    "answer": "- **Replication** of model servers  \n- **Cross-zone deployment**  \n- **Checkpointing** for fast recovery  \n- **Retries & smart routing**  \n- **Graceful degradation** (fallback to smaller models)  \nThese ensure uptime during hardware or network failures.\n\n---",
-    "tags": [
-      "Deep"
-    ]
-  },
-  {
-    "type": "Deployment",
-    "id": "Q23",
     "question": "Q23. How to monitor deployed LLMs in production?",
-    "answer": "Track:  \n- Latency (p50/p90/p99)  \n- Throughput, queue depth  \n- GPU utilization  \n- Token generation rate  \n- Safety violations & hallucinations  \n- RAG metrics (recall, hit-rate)  \n- User feedback signals  \nMonitoring ensures stable, safe, high-performance deployments.\n\n---",
+    "answer": "Track:  \n- Latency (p50/p90/p99)  \n- Throughput, queue depth  \n- GPU utilization  \n- Token generation rate  \n- Safety violations & hallucinations  \n- RAG metrics (recall, hit-rate)  \n- User feedback signals  \nMonitoring ensures stable, safe, high-performance deployments.",
     "tags": [
       "Basic"
     ]
   },
   {
     "type": "Deployment",
-    "id": "Q24",
+    "id": "Q23",
     "question": "Q24. How to scale LLM APIs to millions of users?",
-    "answer": "- Load balancing  \n- Autoscaling  \n- Continuous batching & KV-cache sharing  \n- Multi-tenant scheduling  \n- Model sharding  \n- Geo-distributed inference nodes  \nThis architecture supports global-scale traffic.\n\n---",
+    "answer": "- Load balancing  \n- Autoscaling  \n- Continuous batching & KV-cache sharing  \n- Multi-tenant scheduling  \n- Model sharding  \n- Geo-distributed inference nodes  \nThis architecture supports global-scale traffic.",
     "tags": [
       "Deep"
     ]
   },
   {
     "type": "Deployment",
-    "id": "Q25",
+    "id": "Q24",
     "question": "Q25. What is the main bottleneck in VLM deployment? How to mitigate?",
-    "answer": "High-resolution image encoding is usually the slowest step.  \nMitigations:  \n- Pre-encoding  \n- Downsampling  \n- Preview encoders  \n- Sharing embeddings  \nOptimizing the vision tower significantly improves speed.\n\n---",
+    "answer": "High-resolution image encoding is usually the slowest step.  \nMitigations:  \n- Pre-encoding  \n- Downsampling  \n- Preview encoders  \n- Sharing embeddings  \nOptimizing the vision tower significantly improves speed.",
+    "tags": [
+      "Basic"
+    ]
+  },
+  {
+    "type": "Deployment",
+    "id": "Q25",
+    "question": "Q29. What personalization methods exist during deployment (online personalization)?",
+    "answer": "- RAG-based user memory  \n- Soft prompting / prefix tuning per user  \n- Routing to user-specific adapters  \n- Contextual learning with stored preferences  \n- Online RLHF-lite  \n- Session-level embeddings  \nThese enable immediate personalization without retraining.",
     "tags": [
       "Basic"
     ]
@@ -891,35 +902,161 @@
   {
     "type": "Deployment",
     "id": "Q26",
-    "question": "Q29. What personalization methods exist during deployment (online personalization)?",
-    "answer": "- RAG-based user memory  \n- Soft prompting / prefix tuning per user  \n- Routing to user-specific adapters  \n- Contextual learning with stored preferences  \n- Online RLHF-lite  \n- Session-level embeddings  \nThese enable immediate personalization without retraining.\n\n---",
-    "tags": [
-      "Basic"
-    ]
-  },
-  {
-    "type": "Deployment",
-    "id": "Q27",
     "question": "Q31. How do we evaluate personalization quality in LLMs?",
-    "answer": "- User-profile accuracy  \n- Relevance score  \n- Consistency over long sessions  \n- Wrong-personalization error rate  \n- Engagement metrics  \n- Retrieval metrics (recall@K, hit-rate, similarity)  \nEvaluation combines metrics and user feedback loops.\n\n---",
+    "answer": "- User-profile accuracy  \n- Relevance score  \n- Consistency over long sessions  \n- Wrong-personalization error rate  \n- Engagement metrics  \n- Retrieval metrics (recall@K, hit-rate, similarity)  \nEvaluation combines metrics and user feedback loops.",
     "tags": [
       "Basic"
     ]
   },
   {
     "type": "Deployment",
-    "id": "Q29",
+    "id": "Q11.",
+    "question": "What is tensor parallelism?",
+    "answer": "Tensor parallelism splits large matrix multiplications (QKV projections, FFN layers) across multiple GPUs.  \nEach GPU computes a shard of the operation, then synchronizes results.  \nThis enables extremely large models (30B–400B) to run efficiently without exceeding a single GPU’s memory.",
+    "tags": [
+      "Deep"
+    ]
+  },
+  {
+    "type": "Deployment",
+    "id": "Q12.",
+    "question": "What is pipeline parallelism?",
+    "answer": "Pipeline parallelism assigns different transformer layers to different GPUs.  \nMicro-batches are passed through the pipeline so each GPU stays busy.  \nThe 1F1B schedule reduces idle “bubbles,” improving throughput for deep models.",
+    "tags": [
+      "Deep"
+    ]
+  },
+  {
+    "type": "Deployment",
+    "id": "Q13.",
+    "question": "What is KV-cache optimization?",
+    "answer": "KV-cache stores past key/value tensors so the model doesn’t recompute them every token.  \nThis reduces per-token compute from O(n) → O(1).  \nOptimizations include cache quantization, paged layouts, and flash attention integration—crucial for high-concurrency inference.",
+    "tags": [
+      "Deep"
+    ]
+  },
+  {
+    "type": "Deployment",
+    "id": "Q14.",
+    "question": "What is FlashAttention?",
+    "answer": "FlashAttention minimizes GPU memory traffic by keeping Q/K/V on-chip during computation.  \nThis fused-kernel design yields 2–3× faster attention and supports longer sequences without running out of memory.  \nIt is the default attention kernel in modern LLMs.",
+    "tags": [
+      "Basic"
+    ]
+  },
+  {
+    "type": "Deployment",
+    "id": "Q15.",
+    "question": "How do VLMs optimize image processing during inference?",
+    "answer": "- **Image embedding caching**  \n- **Lightweight preview encoders**  \n- **Downsampling / patch compression**  \n- **Sharing embeddings across queries**  \nThese techniques accelerate the vision front-end.",
+    "tags": [
+      "Deep"
+    ]
+  },
+  {
+    "type": "Deployment",
+    "id": "Q16.",
+    "question": "What is batching in VLMs?",
+    "answer": "VLMs batch multiple images or image-text pairs to fully utilize GPU parallelism.  \nThis reduces per-image latency and increases throughput, especially under heavy traffic.",
+    "tags": [
+      "Basic"
+    ]
+  },
+  {
+    "type": "Deployment",
+    "id": "Q17.",
+    "question": "How to reduce latency for very long context windows?",
+    "answer": "- **Sliding-window attention**  \n- **Sparse attention (Longformer, BigBird, Mistral)**  \n- **RoPE/NTK scaling**  \n- **Hierarchical compression of old tokens**  \nThese techniques make 100k–1M token windows feasible.",
+    "tags": [
+      "Deep"
+    ]
+  },
+  {
+    "type": "Deployment",
+    "id": "Q18.",
+    "question": "What is distillation for multimodal models?",
+    "answer": "Distillation trains a smaller VLM to mimic a larger one by aligning:  \n- Logits  \n- Image embeddings from the vision tower  \n- Cross-modal attention maps  \n- Hidden states  \nThis reduces memory, speeds up inference, and preserves multimodal reasoning.",
+    "tags": [
+      "Basic"
+    ]
+  },
+  {
+    "type": "Deployment",
+    "id": "Q19.",
+    "question": "What is a serving engine (vLLM, TGI, TensorRT-LLM)?",
+    "answer": "A serving engine is an optimized runtime that manages batching, KV-cache, scheduling, and GPU kernels for fast inference.\n\n**Advantages:**  \n- **vLLM:** Paged attention, continuous batching, very high throughput  \n- **TGI:** Production features, multi-model serving, stable APIs  \n- **TensorRT-LLM:** NVIDIA-optimized kernels, CUDA graphs, fastest GPU performance",
+    "tags": [
+      "Deep"
+    ]
+  },
+  {
+    "type": "Deployment",
+    "id": "Q20.",
+    "question": "What is paged attention in vLLM?",
+    "answer": "Paged Attention stores KV-cache in fixed-size pages, like virtual memory.  \nBenefits include:  \n- Efficient massive batching  \n- Zero fragmentation  \n- Low-latency scheduling  \nThis is a core reason vLLM scales so well.",
+    "tags": [
+      "Deep"
+    ]
+  },
+  {
+    "type": "Deployment",
+    "id": "Q21.",
+    "question": "How do we deploy LLMs on edge devices?",
+    "answer": "- INT8/INT4/INT3 quantization  \n- Structured pruning  \n- Distillation  \n- ONNX/CoreML/TFLite compilation  \n- Operator fusion  \nThese allow LLMs to run on phones, edge GPUs, and embedded boards.",
+    "tags": [
+      "Basic"
+    ]
+  },
+  {
+    "type": "Deployment",
+    "id": "Q22.",
+    "question": "How do we make an LLM deployment resilient so that the system keeps working even when parts of it fail?",
+    "answer": "- **Replication** of model servers  \n- **Cross-zone deployment**  \n- **Checkpointing** for fast recovery  \n- **Retries & smart routing**  \n- **Graceful degradation** (fallback to smaller models)  \nThese ensure uptime during hardware or network failures.",
+    "tags": [
+      "Deep"
+    ]
+  },
+  {
+    "type": "Deployment",
+    "id": "Q23.",
+    "question": "How to monitor deployed LLMs in production?",
+    "answer": "Track:  \n- Latency (p50/p90/p99)  \n- Throughput, queue depth  \n- GPU utilization  \n- Token generation rate  \n- Safety violations & hallucinations  \n- RAG metrics (recall, hit-rate)  \n- User feedback signals  \nMonitoring ensures stable, safe, high-performance deployments.",
+    "tags": [
+      "Basic"
+    ]
+  },
+  {
+    "type": "Deployment",
+    "id": "Q24.",
+    "question": "How to scale LLM APIs to millions of users?",
+    "answer": "- Load balancing  \n- Autoscaling  \n- Continuous batching & KV-cache sharing  \n- Multi-tenant scheduling  \n- Model sharding  \n- Geo-distributed inference nodes  \nThis architecture supports global-scale traffic.",
+    "tags": [
+      "Deep"
+    ]
+  },
+  {
+    "type": "Deployment",
+    "id": "Q25.",
+    "question": "What is the main bottleneck in VLM deployment? How to mitigate?",
+    "answer": "High-resolution image encoding is usually the slowest step.  \nMitigations:  \n- Pre-encoding  \n- Downsampling  \n- Preview encoders  \n- Sharing embeddings  \nOptimizing the vision tower significantly improves speed.",
+    "tags": [
+      "Basic"
+    ]
+  },
+  {
+    "type": "Deployment",
+    "id": "Q29.",
     "question": "What personalization methods exist during deployment (online personalization)?",
-    "answer": "- RAG-based user memory  \n- Soft prompting / prefix tuning per user  \n- Routing to user-specific adapters  \n- Contextual learning with stored preferences  \n- Online RLHF-lite  \n- Session-level embeddings  \nThese enable immediate personalization without retraining.\n\n---",
+    "answer": "- RAG-based user memory  \n- Soft prompting / prefix tuning per user  \n- Routing to user-specific adapters  \n- Contextual learning with stored preferences  \n- Online RLHF-lite  \n- Session-level embeddings  \nThese enable immediate personalization without retraining.",
     "tags": [
       "Basic"
     ]
   },
   {
     "type": "Deployment",
-    "id": "Q31",
+    "id": "Q31.",
     "question": "How do we evaluate personalization quality in LLMs?",
-    "answer": "- User-profile accuracy  \n- Relevance score  \n- Consistency over long sessions  \n- Wrong-personalization error rate  \n- Engagement metrics  \n- Retrieval metrics (recall@K, hit-rate, similarity)  \nEvaluation combines metrics and user feedback loops.\n\n---",
+    "answer": "- User-profile accuracy  \n- Relevance score  \n- Consistency over long sessions  \n- Wrong-personalization error rate  \n- Engagement metrics  \n- Retrieval metrics (recall@K, hit-rate, similarity)  \nEvaluation combines metrics and user feedback loops.",
     "tags": [
       "Basic"
     ]

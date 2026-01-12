@@ -23,41 +23,51 @@ def extract_qa_from_markdown(file_path, verbose=False):
     qa_list = []
     q_counter = 1
 
-    # Pattern 1: ## Question Title\n**T:** tag\n**A:** answer (format in theory.md, deployment.md)
+    # Pattern 1: ## Question Title\n**T:** tag\n**A:** or **:A** answer (format in theory.md, deployment.md)
     pattern_new = re.compile(
-        r"##\s+(.+?)\n\*\*T:\*\*\s*(.+?)\n\*\*A:\*\*\s*(.*?)(?=\n##|\n###|\Z)",
+        r"##\s+([^\n]+)\n\*\*T:\*\*\s*([^\n\*]+?)\s*\n\*\*(:?A:?)\*\*\s*(.*?)(?=\n---|\n##|\Z)",
         re.DOTALL
     )
     
-    # Pattern 2: ### Q1. Question\n**T:** tag\n**A:** answer (format in model.md, learning.md)
+    # Pattern 2: ### Q1. Question\n**T:** tag\n**A:** or **:A** answer (format in model.md, learning.md)
     pattern_old = re.compile(
-        r"###\s*(Q\d+)[\.:]?\s*(.*?)\n\*\*T:\*\*\s*(.+?)\n\*\*A:\*\*\s*(.*?)(?=\n###|\n##|\Z)",
+        r"###\s*(Q\d+[\.\d]*)[\.:]?\s*([^\n]+)\n\*\*T:\*\*\s*([^\n\*]+?)\s*\n\*\*(:?A:?)\*\*\s*(.*?)(?=\n---|\n###|\n##|\Z)",
         re.DOTALL
     )
 
     # Try new format first (## Question)
     for match in pattern_new.finditer(text):
-        question, tag, answer = match.groups()
+        question, tag, answer_marker, answer = match.groups()
+        # Clean up answer - stop at --- separator
+        answer_clean = answer.strip()
+        if "\n---" in answer_clean:
+            answer_clean = answer_clean.split("\n---")[0].strip()
+        
         qa_list.append({
             "type": topic_type,
             "id": f"Q{q_counter}",
             "question": question.strip(),
-            "answer": answer.strip(),
+            "answer": answer_clean,
             "tags": [tag.strip()] if tag.strip() else []
         })
         q_counter += 1
 
     # Also try old format (### Q1. Question) - they might coexist in same file
     for match in pattern_old.finditer(text):
-        qnum, question, tag, answer = match.groups()
+        qnum, question, tag, answer_marker, answer = match.groups()
         # Check if this question was already added (in case both patterns match)
         existing_ids = [q["id"] for q in qa_list]
         if qnum.strip() not in existing_ids:
+            # Clean up answer - stop at --- separator
+            answer_clean = answer.strip()
+            if "\n---" in answer_clean:
+                answer_clean = answer_clean.split("\n---")[0].strip()
+            
             qa_list.append({
                 "type": topic_type,
                 "id": qnum.strip(),
                 "question": question.strip(),
-                "answer": answer.strip(),
+                "answer": answer_clean,
                 "tags": [tag.strip()] if tag.strip() else []
             })
 
