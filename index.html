@@ -46,6 +46,96 @@
     let order = [];
     let visited = [];
 
+    // OpenRouter API configuration
+    const OPENROUTER_API_KEY = ""; // User needs to add their API key
+    const OPENROUTER_API_URL = "https://openrouter.ai/api/v1/chat/completions";
+    const OPENROUTER_MODEL = "allenai/molmo-2-8b:free"; // Free model
+
+    async function verifyAnswerWithLLM(userAnswer, correctAnswer, question) {
+      if (!OPENROUTER_API_KEY) {
+        return {
+          success: false,
+          error: "OpenRouter API key not configured. Please add your API key in the code."
+        };
+      }
+
+      const prompt = `You are an expert evaluator. Compare the user's answer with the correct answer for the following question.
+
+Question: ${question}
+
+Correct Answer:
+${correctAnswer}
+
+User's Answer:
+${userAnswer}
+
+Please provide:
+1. A similarity score from 0-100 (where 100 means perfect match)
+2. A brief analysis of how well the user's answer matches the correct answer
+3. Key points that are correct or missing
+4. Overall feedback
+
+Format your response as JSON:
+{
+  "score": <number 0-100>,
+  "analysis": "<brief analysis>",
+  "keyPoints": "<key points>",
+  "feedback": "<overall feedback>"
+}`;
+
+      try {
+        const response = await fetch(OPENROUTER_API_URL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${OPENROUTER_API_KEY}`,
+            "HTTP-Referer": window.location.origin,
+            "X-Title": "Q&A Practice App"
+          },
+          body: JSON.stringify({
+            model: OPENROUTER_MODEL,
+            messages: [
+              {
+                role: "user",
+                content: prompt
+              }
+            ],
+            temperature: 0.3
+          })
+        });
+
+        if (!response.ok) {
+          throw new Error(`API error: ${response.status}`);
+        }
+
+        const data = await response.json();
+        const llmResponse = data.choices[0].message.content;
+
+        // Try to parse JSON from the response
+        try {
+          // Extract JSON from markdown code blocks if present
+          const jsonMatch = llmResponse.match(/```(?:json)?\s*(\{[\s\S]*\})\s*```/) || 
+                          llmResponse.match(/\{[\s\S]*\}/);
+          const parsed = JSON.parse(jsonMatch ? jsonMatch[1] : llmResponse);
+          return { success: true, ...parsed };
+        } catch (parseError) {
+          // If JSON parsing fails, return the raw response
+          return {
+            success: true,
+            score: null,
+            analysis: llmResponse,
+            keyPoints: "",
+            feedback: llmResponse
+          };
+        }
+      } catch (error) {
+        return {
+          success: false,
+          error: error.message || "Failed to verify answer"
+        };
+      }
+    }
+
     function populateTopicTabs() {
       const topics = [...new Set(qaData.map(q => q.type).filter(Boolean))];
       const tabContainer = $("#topic-tabs");
@@ -137,15 +227,59 @@
           <div class="question">${q.id}. ${q.question}</div>
           <textarea class="user-input" id="user-answer" placeholder="Type your answer here..."></textarea>
           <div>
+            <button id="verify-btn">🤖 Verify with LLM</button>
             <button id="check-btn">Check Answer</button>
             <button id="prev-btn">Previous</button>
             <button id="next-btn">Next</button>
           </div>
+          <div id="verification-result" class="verification-box" style="display: none;"></div>
           <div id="correct-answer" class="answer-box">${q.answer}</div>
         </div>
       `);
 
       container.append(card);
+
+      $("#verify-btn").on("click", async () => {
+        const userAnswer = $("#user-answer").val().trim();
+        if (!userAnswer) {
+          alert("Please enter an answer before verifying.");
+          return;
+        }
+
+        $("#verify-btn").prop("disabled", true).text("🔄 Verifying...");
+        const resultDiv = $("#verification-result");
+        resultDiv.html("<p>🔄 Verifying your answer with LLM...</p>").slideDown(300);
+
+        const verification = await verifyAnswerWithLLM(userAnswer, q.answer, q.question);
+
+        if (!verification.success) {
+          resultDiv.html(`
+            <div class="verification-error">
+              <p><strong>❌ Error:</strong> ${verification.error}</p>
+            </div>
+          `);
+        } else {
+          const score = verification.score !== null ? verification.score : "N/A";
+          const scoreColor = verification.score >= 80 ? "#4CAF50" : verification.score >= 60 ? "#FF9800" : "#F44336";
+
+          resultDiv.html(`
+            <div class="verification-content">
+              <div class="score-display" style="background: ${scoreColor}; color: white; padding: 10px; border-radius: 5px; margin-bottom: 15px; text-align: center;">
+                <h3>Score: ${score}${verification.score !== null ? '/100' : ''}</h3>
+              </div>
+              <div class="verification-details">
+                <p><strong>Analysis:</strong></p>
+                <p>${verification.analysis || verification.feedback}</p>
+                ${verification.keyPoints ? `<p><strong>Key Points:</strong></p><p>${verification.keyPoints}</p>` : ''}
+                ${verification.feedback && verification.analysis ? `<p><strong>Feedback:</strong></p><p>${verification.feedback}</p>` : ''}
+              </div>
+            </div>
+          `);
+        }
+
+        $("#verify-btn").prop("disabled", false).text("🤖 Verify with LLM");
+        if (window.MathJax) MathJax.typesetPromise();
+      });
 
       $("#check-btn").on("click", () => $("#correct-answer").slideDown(300));
       $("#next-btn").on("click", () => {
