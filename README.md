@@ -1,10 +1,14 @@
 # Interview Prep
 
+**Live site:** https://lens-lab-ai.github.io/Interview/
+
 A structured collection of interview preparation materials organized by topic.
 
 ## Topics
 
 - **[Transformers](Topics/Transformers/)** — Theory, model architecture, deployment, case studies, and Q&A
+- **[Diffusion](Topics/Diffusion/)**
+- **[Reinforcement Learning](Topics/ReinforcementLearning/)**
 
 ## Structure
 
@@ -17,6 +21,8 @@ Topics/
     case_study.md
     learning.md
     QA.json
+  Diffusion/
+  ReinforcementLearning/
 scripts/
   convert_to_json.py
 web_utils/
