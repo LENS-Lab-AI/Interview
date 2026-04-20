@@ -71,6 +71,45 @@ def extract_qa_from_markdown(file_path, verbose=False):
                 "tags": [tag.strip()] if tag.strip() else []
             })
 
+    # Pattern 3: **Q. question** / **Q: question** followed by **A:** answer (Diffusion format)
+    if not qa_list:
+        pattern_bold_q = re.compile(
+            r'\*\*Q[.:]?\s*(.+?)\*\*\s*\n+(.*?)(?=\n\*\*Q[.:]?|\n---|\Z)',
+            re.DOTALL
+        )
+        for match in pattern_bold_q.finditer(text):
+            question, answer = match.groups()
+            answer_clean = re.sub(r'^\*\*A:\*\*\s*', '', answer.strip(), flags=re.MULTILINE).strip()
+            if answer_clean:
+                qa_list.append({
+                    "type": topic_type,
+                    "id": f"Q{q_counter}",
+                    "question": question.strip(),
+                    "answer": answer_clean,
+                    "tags": []
+                })
+                q_counter += 1
+
+    # Pattern 4: * **question?** / indent * bullet answers (RL bullet format)
+    if not qa_list:
+        pattern_bullet = re.compile(
+            r'^\* \*\*(.+?)\*\*\s*\n((?:[ \t]+\*[^\n]+\n?)+)',
+            re.MULTILINE
+        )
+        for match in pattern_bullet.finditer(text):
+            question, bullets = match.groups()
+            answer_lines = re.findall(r'[ \t]+\*\s*(.+)', bullets)
+            answer_clean = ' '.join(answer_lines).strip()
+            if answer_clean:
+                qa_list.append({
+                    "type": topic_type,
+                    "id": f"Q{q_counter}",
+                    "question": question.strip(),
+                    "answer": answer_clean,
+                    "tags": []
+                })
+                q_counter += 1
+
     if verbose:
         if qa_list:
             print(f"Extracted {len(qa_list)} Q&A from {os.path.basename(file_path)} ({topic_type})")
