@@ -27,6 +27,13 @@
 <body>
   <h1>Q&A Practice</h1>
   <br>
+  <!-- Row 0: Subject selector -->
+  <div class="subject-selector" id="subject-selector">
+    <button class="subject-btn active" data-subject="Transformers">Transformers</button>
+    <button class="subject-btn" data-subject="Diffusion">Diffusion</button>
+    <button class="subject-btn" data-subject="ReinforcementLearning">Reinforcement Learning</button>
+  </div>
+  <br>
   <!-- Row 1: Mode buttons -->
   <div class="mode-switch">
     <button id="all-btn" class="active">🧠 All Mode</button>
@@ -45,6 +52,7 @@
     let currentIndex = -1;
     let order = [];
     let visited = [];
+    let currentSubject = "Transformers";
 
     // OpenRouter API configuration
     const OPENROUTER_API_KEY = "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"; // User needs to add their API key
@@ -423,17 +431,33 @@ IMPORTANT: Return ONLY valid JSON, no additional text before or after.`;
       else renderPracticeMode();
     }
 
-    $(document).ready(function () {
-      $.getJSON("Topics/Transformers/QA.json", function (data) {
+    function loadSubject(subject) {
+      currentSubject = subject;
+      currentTopic = "All";
+      order = [];
+      visited = [];
+      $.getJSON(`Topics/${subject}/QA.json`, function (data) {
         qaData = data;
         populateTopicTabs();
-        setMode("all");
+        setMode(mode);
       }).fail(() => {
-        $("#qa-container").html("<p>❌ Failed to load QA.json</p>");
+        qaData = [];
+        $("#topic-tabs").empty();
+        $("#qa-container").html(`<p>⚠️ No questions available for ${subject} yet.</p>`);
+      });
+    }
+
+    $(document).ready(function () {
+      $(".subject-btn").on("click", function () {
+        $(".subject-btn").removeClass("active");
+        $(this).addClass("active");
+        loadSubject($(this).data("subject"));
       });
 
       $("#all-btn").on("click", () => setMode("all"));
       $("#practice-btn").on("click", () => setMode("practice"));
+
+      loadSubject("Transformers");
     });
   </script>
 </body>
