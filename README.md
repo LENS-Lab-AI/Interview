@@ -1,4 +1,4 @@
-# Interview Prep
+# Interview Preparation
 
 **Live site:** https://lens-lab-ai.github.io/Interview/
 
