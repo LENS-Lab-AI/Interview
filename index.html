@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Q&A Practice</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  
+
+  <!-- MathJax for LaTeX rendering -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" async></script>
+
+  <link rel="stylesheet" href="web_utils/style.css">
+
+</head>
+
+<body>
+  <h1>Q&A Practice</h1>
+  <br>
+  <!-- Row 0: Subject selector -->
+  <div class="subject-selector" id="subject-selector">
+    <button class="subject-btn active" data-subject="Transformers">Transformers</button>
+    <button class="subject-btn" data-subject="Diffusion">Diffusion</button>
+    <button class="subject-btn" data-subject="ReinforcementLearning">Reinforcement Learning</button>
+  </div>
+  <br>
+  <!-- Row 1: Mode buttons -->
+  <div class="mode-switch">
+    <button id="all-btn" class="active">🧠 All Mode</button>
+    <button id="practice-btn">⚡ Practice Mode</button>
+  </div>
+  <br>
+  <!-- Row 2: Topic Tabs -->
+  <div class="topic-tabs" id="topic-tabs"></div>
+  <br>
+  <div id="qa-container"></div>
+
+  <script>
+    let qaData = [];
+    let mode = "all";
+    let currentTopic = "All";
+    let currentIndex = -1;
+    let order = [];
+    let visited = [];
+    let currentSubject = "Transformers";
+
+    // OpenRouter API configuration
+    const OPENROUTER_API_KEY = "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";
+    const OPENROUTER_API_URL = "https://openrouter.ai/api/v1/chat/completions";
+    const OPENROUTER_MODEL = "allenai/molmo-2-8b:free"; // Free model
+
+    async function verifyAnswerWithLLM(userAnswer, correctAnswer, question) {
+      if (!OPENROUTER_API_KEY) {
+        return {
+          success: false,
+          error: "OpenRouter API key not configured. Please add your API key in the code."
+        };
+      }
+
+      const prompt = `You are an expert evaluator. Compare the user's answer with the correct answer for the following question.
+
+Question: ${question}
+
+Correct Answer:
+${correctAnswer}
+
+User's Answer:
+${userAnswer}
+
+Please provide your evaluation as a JSON object with the following structure:
+{
+  "score": <number from 0-100>,
+  "analysis": "<brief analysis text>",
+  "keyPoints": "<key points text>",
+  "feedback": "<overall feedback text>"
+}
+
+IMPORTANT: Return ONLY valid JSON, no additional text before or after.`;
+
+
+      try {
+        const response = await fetch(OPENROUTER_API_URL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${OPENROUTER_API_KEY}`,
+            "HTTP-Referer": window.location.origin,
+            "X-Title": "Q&A Practice App"
+          },
+          body: JSON.stringify({
+            model: OPENROUTER_MODEL,
+            messages: [
+              {
+                role: "user",
+                content: prompt
+              }
+            ],
+            temperature: 0.3
+          })
+        });
+
+        if (!response.ok) {
+          throw new Error(`API error: ${response.status}`);
+        }
+
+        const data = await response.json();
+        let llmResponse = data.choices[0].message.content.trim();
+
+        // Try to parse JSON from the response
+        try {
+          // Try to find JSON object in the response
+          let jsonStr = llmResponse;
+
+          // If response starts with {, try to parse directly
+          if (llmResponse.startsWith('{')) {
+            // Find the matching closing brace
+            let braceCount = 0;
+            let endIndex = -1;
+            for (let i = 0; i < llmResponse.length; i++) {
+              if (llmResponse[i] === '{') braceCount++;
+              if (llmResponse[i] === '}') {
+                braceCount--;
+                if (braceCount === 0) {
+                  endIndex = i + 1;
+                  break;
+                }
+              }
+            }
+            if (endIndex > 0) {
+              jsonStr = llmResponse.substring(0, endIndex);
+            }
+          } else {
+            // Try to extract JSON using regex
+            const jsonMatch = llmResponse.match(/\{[\s\S]*\}/);
+            if (jsonMatch) {
+              jsonStr = jsonMatch[0];
+            }
+          }
+
+          const parsed = JSON.parse(jsonStr);
+
+          // Ensure we have the expected fields - JSON.parse preserves whitespace in strings
+          return {
+            success: true,
+            score: typeof parsed.score === 'number' ? parsed.score : null,
+            analysis: parsed.analysis || '',
+            keyPoints: parsed.keyPoints || parsed.key_points || '',
+            feedback: parsed.feedback || ''
+          };
+        } catch (parseError) {
+          console.error("JSON parse error:", parseError);
+          console.error("LLM response:", llmResponse);
+
+          // If JSON parsing fails, try to extract information manually
+          return {
+            success: true,
+            score: null,
+            analysis: llmResponse,
+            keyPoints: "",
+            feedback: llmResponse
+          };
+        }
+      } catch (error) {
+        return {
+          success: false,
+          error: error.message || "Failed to verify answer"
+        };
+      }
+    }
+
+    function populateTopicTabs() {
+      const topics = [...new Set(qaData.map(q => q.type).filter(Boolean))];
+      const tabContainer = $("#topic-tabs");
+      tabContainer.empty();
+
+      // Always include "All"
+      tabContainer.append(`<div class="topic-tab active" data-topic="All">All</div>`);
+      topics.forEach(topic => {
+        tabContainer.append(`<div class="topic-tab" data-topic="${topic}">${topic}</div>`);
+      });
+
+      $(".topic-tab").on("click", function () {
+        $(".topic-tab").removeClass("active");
+        $(this).addClass("active");
+        currentTopic = $(this).data("topic");
+        setMode(mode);
+      });
+    }
+
+    function getFilteredData() {
+      return currentTopic === "All" ? qaData : qaData.filter(q => q.type === currentTopic);
+    }
+
+    function renderAllMode() {
+      const container = $("#qa-container");
+      container.empty();
+      const filtered = getFilteredData();
+
+      filtered.forEach((q) => {
+        const tagsHtml = q.tags && q.tags.length > 0 
+          ? `<div class="tags-container">${q.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}</div>`
+          : '';
+        const card = $(`
+          <div class="qa-card">
+            <div class="type-tags-row">
+              <div class="type-label">${q.type}</div>
+              ${tagsHtml}
+            </div>
+            <div class="question">${q.id}. ${q.question}<span class="toggle-icon">+</span></div>
+            <div class="answer">${q.answer}</div>
+          </div>
+        `);
+        container.append(card);
+      });
+
+      $(".answer").hide();
+      $(".toggle-icon").text("+");
+
+      $(".question").on("click", function () {
+        const ans = $(this).siblings(".answer");
+        const icon = $(this).find(".toggle-icon");
+        const isVisible = ans.is(":visible");
+        ans.slideToggle(200);
+        icon.text(isVisible ? "+" : "−");
+      });
+
+      if (window.MathJax) MathJax.typesetPromise();
+    }
+
+    function renderPracticeMode(index = null) {
+      const container = $("#qa-container");
+      container.empty();
+      const filteredData = getFilteredData();
+
+      if (filteredData.length === 0) {
+        container.html(`<p>⚠️ No questions in this topic.</p>`);
+        return;
+      }
+
+      if (order.length === 0) {
+        order = [...Array(filteredData.length).keys()];
+        for (let i = order.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [order[i], order[j]] = [order[j], order[i]];
+        }
+        visited = [];
+      }
+
+      if (index !== null) currentIndex = index;
+      else currentIndex = visited.length;
+
+      if (currentIndex >= order.length) {
+        container.html(`<p>🎉 You've completed all questions in this topic!</p>`);
+        return;
+      }
+
+      const qIndex = order[currentIndex];
+      visited.push(qIndex);
+      const q = filteredData[qIndex];
+
+      const tagsHtml = q.tags && q.tags.length > 0 
+        ? `<div class="tags-container">${q.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}</div>`
+        : '';
+      const card = $(`
+        <div class="practice-card">
+          <div class="counter">Question ${currentIndex + 1} / ${filteredData.length}</div>
+          <div class="type-tags-row">
+            <div class="type-label">${q.type}</div>
+            ${tagsHtml}
+          </div>
+          <div class="question">${q.id}. ${q.question}</div>
+          <textarea class="user-input" id="user-answer" placeholder="Type your answer here..."></textarea>
+          <div>
+            <button id="verify-btn">🤖 Verify with LLM</button>
+            <button id="check-btn">Check Answer</button>
+            <button id="prev-btn">Previous</button>
+            <button id="next-btn">Next</button>
+          </div>
+          <div id="verification-result" class="verification-box" style="display: none;"></div>
+          <div id="correct-answer" class="answer-box">${q.answer}</div>
+        </div>
+      `);
+
+      container.append(card);
+
+      $("#verify-btn").on("click", async () => {
+        const userAnswer = $("#user-answer").val().trim();
+        if (!userAnswer) {
+          alert("Please enter an answer before verifying.");
+          return;
+        }
+
+        $("#verify-btn").prop("disabled", true).text("🔄 Verifying...");
+        const resultDiv = $("#verification-result");
+        resultDiv.html("<p>🔄 Verifying your answer with LLM...</p>").slideDown(300);
+
+        const verification = await verifyAnswerWithLLM(userAnswer, q.answer, q.question);
+
+        if (!verification.success) {
+          resultDiv.html(`
+            <div class="verification-error">
+              <p><strong>❌ Error:</strong> ${verification.error}</p>
+            </div>
+          `);
+        } else {
+          // Handle score properly (0 is a valid score)
+          const score = (verification.score !== null && verification.score !== undefined) ? verification.score : "N/A";
+          let scoreColor = "#64748b"; // Default gray
+
+          if (typeof score === 'number') {
+            if (score >= 80) {
+              scoreColor = "#4CAF50"; // Green
+            } else if (score >= 60) {
+              scoreColor = "#FF9800"; // Orange
+            } else {
+              scoreColor = "#F44336"; // Red
+            }
+          }
+
+          // Build the HTML content
+          let htmlContent = `
+            <div class="verification-content">
+              <div class="score-display" style="background: ${scoreColor}; color: white; padding: 10px; border-radius: 5px; margin-bottom: 15px; text-align: center;">
+                <h3>Score: ${score}${typeof score === 'number' ? '/100' : ''}</h3>
+              </div>
+              <div class="verification-details">`;
+
+          // Add Analysis section
+          // Add Analysis section
+          if (verification.analysis && verification.analysis.trim()) {
+            // Check if analysis is JSON string, if so try to parse it
+            let analysisText = verification.analysis;
+            try {
+              if (analysisText.trim().startsWith('{')) {
+                const parsedAnalysis = JSON.parse(analysisText);
+                analysisText = parsedAnalysis.analysis || parsedAnalysis.feedback || analysisText;
+              }
+            } catch (e) {
+              // Not JSON, use as is
+            }
+            // Escape HTML and preserve whitespace
+            const escapedAnalysis = $('<div>').text(analysisText).html();
+            htmlContent += `
+                <div class="verification-section">
+                  <p class="section-title">📊 Analysis:</p>
+                  <p class="section-content">${escapedAnalysis.replace(/\n/g, '<br>')}</p>
+                </div>`;
+          }
+
+          // Add Key Points section
+          if (verification.keyPoints && verification.keyPoints.trim()) {
+            let keyPointsText = verification.keyPoints;
+            try {
+              if (keyPointsText.trim().startsWith('{')) {
+                const parsedKeyPoints = JSON.parse(keyPointsText);
+                keyPointsText = parsedKeyPoints.keyPoints || parsedKeyPoints.key_points || keyPointsText;
+              }
+            } catch (e) {
+              // Not JSON, use as is
+            }
+            // Escape HTML and preserve whitespace
+            const escapedKeyPoints = $('<div>').text(keyPointsText).html();
+            htmlContent += `
+                <div class="verification-section">
+                  <p class="section-title">🔑 Key Points:</p>
+                  <p class="section-content">${escapedKeyPoints.replace(/\n/g, '<br>')}</p>
+                </div>`;
+          }
+
+          // Add Feedback section (only if different from analysis)
+          if (verification.feedback && verification.feedback.trim() &&
+            verification.feedback !== verification.analysis) {
+            let feedbackText = verification.feedback;
+            try {
+              if (feedbackText.trim().startsWith('{')) {
+                const parsedFeedback = JSON.parse(feedbackText);
+                feedbackText = parsedFeedback.feedback || feedbackText;
+              }
+            } catch (e) {
+              // Not JSON, use as is
+            }
+            // Escape HTML and preserve whitespace
+            const escapedFeedback = $('<div>').text(feedbackText).html();
+            htmlContent += `
+                <div class="verification-section">
+                  <p class="section-title">💡 Feedback:</p>
+                  <p class="section-content">${escapedFeedback.replace(/\n/g, '<br>')}</p>
+                </div>`;
+          }
+
+          htmlContent += `
+              </div>
+            </div>`;
+
+          resultDiv.html(htmlContent);
+        }
+
+        $("#verify-btn").prop("disabled", false).text("🤖 Verify with LLM");
+        if (window.MathJax) MathJax.typesetPromise();
+      });
+
+      $("#check-btn").on("click", () => $("#correct-answer").slideDown(300));
+      $("#next-btn").on("click", () => {
+        if (currentIndex < order.length - 1) renderPracticeMode(currentIndex + 1);
+        else container.html(`<p>🎉 You've completed all questions!</p>`);
+      });
+      $("#prev-btn").on("click", () => {
+        if (currentIndex > 0) renderPracticeMode(currentIndex - 1);
+      });
+
+      if (window.MathJax) MathJax.typesetPromise();
+    }
+
+    function setMode(newMode) {
+      mode = newMode;
+      $("#all-btn").toggleClass("active", mode === "all");
+      $("#practice-btn").toggleClass("active", mode === "practice");
+      order = [];
+      visited = [];
+      if (mode === "all") renderAllMode();
+      else renderPracticeMode();
+    }
+
+    function loadSubject(subject) {
+      currentSubject = subject;
+      currentTopic = "All";
+      order = [];
+      visited = [];
+      $.getJSON(`Topics/${subject}/QA.json`, function (data) {
+        qaData = data;
+        populateTopicTabs();
+        setMode(mode);
+      }).fail(() => {
+        qaData = [];
+        $("#topic-tabs").empty();
+        $("#qa-container").html(`<p>⚠️ No questions available for ${subject} yet.</p>`);
+      });
+    }
+
+    $(document).ready(function () {
+      $(".subject-btn").on("click", function () {
+        $(".subject-btn").removeClass("active");
+        $(this).addClass("active");
+        loadSubject($(this).data("subject"));
+      });
+
+      $("#all-btn").on("click", () => setMode("all"));
+      $("#practice-btn").on("click", () => setMode("practice"));
+
+      loadSubject("Transformers");
+    });
+  </script>
+</body>
+</html>
