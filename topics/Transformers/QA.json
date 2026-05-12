@@ -101,6 +101,15 @@
   {
     "type": "Deployment",
     "id": "Q2",
+    "question": "What is batching in model deployment, and how does it improve inference efficiency?",
+    "answer": "Batching processes multiple input sequences together in a single forward pass. Since GPUs excel at parallel computation, batching increases throughput and reduces kernel-launch overhead.  \nFor example, encoding 32 prompts together may be only slightly slower than processing one, yielding ~20–30× better throughput.  \nHowever, large batches can increase **tail latency**, so production systems use **dynamic or adaptive batching** to maximize efficiency while keeping requests responsive.",
+    "tags": [
+      "Deep"
+    ]
+  },
+  {
+    "type": "Deployment",
+    "id": "Q3",
     "question": "What is speculative decoding in LLM deployment?",
     "answer": "Speculative decoding uses two models:  \n- A small, fast **draft model** proposes multiple future tokens.  \n- A large **target model** verifies or rejects these tokens in parallel.  \nAccepted tokens allow the model to “jump ahead,” producing 2–4× faster inference with minimal accuracy loss.  \nThis method greatly accelerates autoregressive decoding without retraining the main model.",
     "tags": [
@@ -109,7 +118,7 @@
   },
   {
     "type": "Deployment",
-    "id": "Q3",
+    "id": "Q4",
     "question": "Given an LLM, how can we ensure that it can scale to handle large context?",
     "answer": "Scalability requires separating retrieval from computation. Retrieval-Augmented Generation (RAG) stores knowledge in vector DBs, enabling models to handle large domains without expanding their context windows.  \nChunking keeps retrieval efficient at scale.  \nHorizontal model replicas, sharded vector indexes, KV-cache reuse, and continuous batching allow the system to serve high concurrency with predictable latency.",
     "tags": [
@@ -118,7 +127,7 @@
   },
   {
     "type": "Deployment",
-    "id": "Q4",
+    "id": "Q5",
     "question": "What are the main challenges in deploying LLMs?",
     "answer": "1. **Latency:** Autoregressive generation is sequential and slow.  \n2. **GPU Memory Limitations:** Large models require multi-GPU inference or quantization.  \n3. **Operational Cost:** Running GPU clusters is expensive.  \n4. **Concurrency:** High traffic requires batching, caching, and schedulers.  \n5. **Safety & Alignment:** Preventing harmful outputs requires guardrails.  \n6. **Continuous Updating:** Updates to weights and policies must happen without service downtime.",
     "tags": [
@@ -127,7 +136,7 @@
   },
   {
     "type": "Deployment",
-    "id": "Q5",
+    "id": "Q6",
     "question": "Why is RAG better than giving the model all the information at once? (Example: pasting an entire book into the prompt)",
     "answer": "Transformer attention scales quadratically (O(n²)), so extremely long inputs cause slow, memory-heavy inference and costly prompts.  \nExample: pasting a 200-page PDF forces the model to read thousands of irrelevant tokens.\n\nRAG instead retrieves only the **most relevant chunks**, which:  \n- Reduces latency  \n- Lowers token cost  \n- Prevents GPU memory exhaustion  \n- Improves answer quality  \n- Allows unlimited knowledge scaling without needing larger context windows  \n\nRAG fetches exactly what is needed and lets the LLM reason over concise, focused information.",
     "tags": [
@@ -136,7 +145,7 @@
   },
   {
     "type": "Deployment",
-    "id": "Q6",
+    "id": "Q7",
     "question": "How to handle when longer outputs are required in LLMs?",
     "answer": "- **Sliding-window attention:** Restrict attention to recent tokens.  \n- **Chunked generation:** Produce text in segments, summarize, and continue.  \n- **Memory-augmented transformers:** Store long-range info outside the context window.  \n- **Streaming:** Send partial outputs to reduce perceived delay.  \nThese techniques support long transcripts or documents efficiently.",
     "tags": [
@@ -145,7 +154,7 @@
   },
   {
     "type": "Deployment",
-    "id": "Q7",
+    "id": "Q8",
     "question": "How to make an LLM safer?",
     "answer": "Imagine safety as a multi-layer security gate:\n\n1. **Prompt guardrails** stop dangerous requests before they reach the model.  \n   *Example:* A user asks:  \n   *“How can I bypass airport security?”*  \n   The guardrail rewrites/blocks it.\n\n2. **Output guardrails** inspect the model’s reply for toxicity, bias, or unsafe content.\n\n3. **Policy models** act like expert reviewers scoring outputs for safety violations or hallucinations.\n\nAdditional layers include red-teaming pipelines, human-in-the-loop checks, RLHF tuning, audit logs, and domain-specific policies.  \nTogether these ensure responsible model behavior.",
     "tags": [
@@ -154,7 +163,7 @@
   },
   {
     "type": "Deployment",
-    "id": "Q8",
+    "id": "Q9",
     "question": "What is model quantization and why is it important?",
     "answer": "Quantization converts FP32/FP16 weights into INT8/INT4/NF4 formats, reducing memory and compute cost. An 8-bit model often uses 4× less RAM and runs nearly 2× faster.\n\n**Story:** Deploying a full-precision LLM on a small device is like carrying a giant suitcase on a tiny scooter—technically possible but slow and unstable. Quantization shrinks it into a backpack: lighter, more efficient, and easy to use anywhere.\n\nModern PTQ/QAT techniques preserve accuracy, making quantization essential for edge devices and economical large-scale inference.",
     "tags": [
@@ -163,7 +172,7 @@
   },
   {
     "type": "Deployment",
-    "id": "Q9",
+    "id": "Q10",
     "question": "What is pruning in transformer models?",
     "answer": "Pruning removes weights, neurons, or attention heads that contribute little to model quality.  \n- **Structured pruning:** Removes whole heads/channels and accelerates real hardware.  \n- **Unstructured pruning:** Zeros individual weights (sparse), requiring special kernels.  \nPruning reduces FLOPs, memory, and latency, especially when paired with fine-tuning or distillation.",
     "tags": [
@@ -550,6 +559,15 @@
   },
   {
     "type": "Models",
+    "id": "Q10",
+    "question": "What are some key language transformers?",
+    "answer": "Major architectures include BERT, RoBERTa, T5, and GPT.\n\n* BERT: Bidirectional encoder, good for understanding tasks (classification, QA).\n* RoBERTa: Robustly optimized BERT with better training strategies (no NSP, larger batch sizes).\n* T5: Unifies all NLP tasks as text-to-text problems.\n* GPT: Decoder-only autoregressive model optimized for generation.",
+    "tags": [
+      "Basic"
+    ]
+  },
+  {
+    "type": "Models",
     "id": "Q11",
     "question": "How does T5 unify multiple NLP tasks?",
     "answer": "T5 reframes every task (translation, summarization, classification) as text-to-text by adding a task prefix token (e.g., “summarize:” or “translate English to German:”). This unified approach made multitask learning and fine-tuning more generalizable.",
@@ -588,7 +606,7 @@
     "type": "Models",
     "id": "Q15",
     "question": "What is CLIP? How is SigLIP different from CLIP?",
-    "answer": "* CLIP (Contrastive Language-Image Pretraining) aligns text and image embeddings using a contrastive loss to learn cross-modal representations.\n* SigLIP modifies the loss to use sigmoid activation instead of softmax on similarity scores, allowing independent scoring.\n    <!-- * Using SigLIP may introduce small inconsistencies due to non-normalized similarities. -->",
+    "answer": "* CLIP (Contrastive Language-Image Pretraining) aligns text and image embeddings using a contrastive loss to learn cross-modal representations.\n* SigLIP modifies the loss to use sigmoid activation instead of softmax on similarity scores, allowing independent scoring.",
     "tags": [
       "Basic"
     ]
@@ -636,6 +654,15 @@
     "answer": "The self-attention mechanism scales as O(n²) with sequence length, making it memory and compute heavy.",
     "tags": [
       "Basic"
+    ]
+  },
+  {
+    "type": "Models",
+    "id": "Q21",
+    "question": "What are the main innovations for long-context handling?",
+    "answer": "* Longformer: Uses sparse attention patterns (local + global) to scale linearly with sequence length.\n\n* BigBird: Combines global, random, and local attention, improving efficiency and theoretical expressivity.\n\n* Reformer: Uses LSH attention to reduce complexity from O(n²) to O(n log n).\n\n* Linformer: Projects key and value matrices to lower dimensions.\n\n* Hyena and Mamba: Explore state-space models as transformer alternatives for long-context retention.",
+    "tags": [
+      "Deep"
     ]
   },
   {

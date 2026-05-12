@@ -13,6 +13,9 @@ def extract_qa_from_markdown(file_path, verbose=False):
             print(f"Skipping empty file: {file_path}")
         return []
 
+    # Strip HTML comments (they break pattern matching between elements)
+    text = re.sub(r'<!--.*?-->', '', text, flags=re.DOTALL).strip()
+
     # Extract type from first line (e.g. '# Theory')
     first_line = text.splitlines()[0].strip()
     type_match = re.match(r"#\s*(.*)", first_line)
@@ -24,14 +27,15 @@ def extract_qa_from_markdown(file_path, verbose=False):
     q_counter = 1
 
     # Pattern 1: ## Question Title\n**T:** tag\n**A:** or **:A** answer (format in theory.md, deployment.md)
+    # Handles both **T:** tag and **T: tag** formats, and optional blank lines between elements
     pattern_new = re.compile(
-        r"(?<!#)##(?!#)\s+([^\n]+)\n\*\*T:\*\*\s*([^\n\*]+?)\s*\n\*\*(:?A:?)\*\*\s*(.*?)(?=\n---|\n##|\Z)",
+        r"(?<!#)##(?!#)\s+([^\n]+)\n+\*\*T:\*{0,2}\s*([^\n\*]+?)\s*\*{0,2}\s*\n+\*\*(:?A:?)\*\*\s*(.*?)(?=\n---|\n##|\Z)",
         re.DOTALL
     )
     
     # Pattern 2: ### Q1. Question\n**T:** tag\n**A:** or **:A** answer (format in model.md, learning.md)
     pattern_old = re.compile(
-        r"###\s*(Q\d+(?:\.\d+)*)[\.:]?\s*([^\n]+)\n+\*\*T:\*\*\s*([^\n\*]+?)\s*\n+\*\*(:?A:?)\*\*\s*(.*?)(?=\n---|\n###|\n##|\Z)",
+        r"###\s*(Q\d+(?:\.\d+)*)[\.:]?\s*([^\n]+)\n+\*\*T:\*{0,2}\s*([^\n\*]+?)\s*\*{0,2}\s*\n+\*\*(:?A:?)\*\*\s*(.*?)(?=\n---|\n###|\n##|\Z)",
         re.DOTALL
     )
 
