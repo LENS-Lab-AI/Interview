@@ -12,7 +12,7 @@
     "type": "Foundations of probability",
     "id": "Q2",
     "question": "Why can we not maximize MLE directly?",
-    "answer": "The careful answer is: **sometimes we can**. In simple fully observed models, direct MLE is straightforward.\n\nWe **cannot maximize MLE directly** when the likelihood itself or its gradient is intractable. This happens most often in:",
+    "answer": "The careful answer is: **sometimes we can**. In simple fully observed models, direct MLE is straightforward.\n\nWe **cannot maximize MLE directly** when the likelihood itself or its gradient is intractable. This happens most often in:\n\n**(a) Latent-variable models**\n\nIf\n$$\np_\\theta(x)=\\int p_\\theta(x,z)\\,dz,\n$$\nthen the marginalization over $z$ may be analytically impossible or computationally prohibitive.\n\nEven if we write the likelihood,\n\n$$\n\\ell(\\theta)=\\sum_i \\log p_\\theta(x_i),\n$$\n\nits gradient often involves the posterior:\n\n$$\n\\nabla_\\theta \\log p_\\theta(x)\n=\\mathbb{E}_{p_\\theta(z\\mid x)}\\left[\\nabla_\\theta \\log p_\\theta(x,z)\\right],\n$$\nand $p_\\theta(z\\mid x)$ is precisely what we do not know how to compute.\n\n**(b) Models with an intractable partition function**\n\nIn EBMs,\n\n$$\np_\\theta(x)=\\frac{e^{-E_\\theta(x)}}{Z_\\theta},\\qquad\nZ_\\theta=\\int e^{-E_\\theta(x)}dx.\n$$\n\nMLE requires $\\log Z_\\theta$, whose gradient is\n\n$$\n\\nabla_\\theta \\log Z_\\theta\n=\\mathbb{E}_{p_\\theta(x)}[-\\nabla_\\theta E_\\theta(x)].\n$$\nThat expectation is often expensive because it requires sampling from the model itself.\n\n**(c) Nonconvex high-dimensional optimization**\n\nEven when the likelihood is explicit, direct maximization may still be numerically difficult due to local optima, saddle points, poor conditioning, or huge datasets.\n\nSo the real issue is not “MLE is impossible” in general. The issue is that **direct maximization of the exact likelihood can be computationally intractable**, and we therefore use approximations such as:\n\n- **EM**,\n- **variational inference / ELBO**,\n- **MCMC-based approximations**,\n- **contrastive divergence**, **score matching**, **noise-contrastive estimation**, etc.\n\n**In short:**\n\n- direct MLE is fine in simple observed models\n- fails in practice when likelihood or gradient is intractable\n- main reasons: latent variables, partition functions, hard optimization\n- ELBO/EM/MCMC replace exact MLE with tractable surrogates",
     "tags": [
       "Deep"
     ]
@@ -21,7 +21,7 @@
     "type": "Foundations of probability",
     "id": "Q3",
     "question": "How to prove / derive the ELBO?",
-    "answer": "There are two standard derivations.",
+    "answer": "There are two standard derivations.\n\n**Derivation via Jensen**\n\nStart with\n\n$$\n\\log p_\\theta(x)=\\log \\int p_\\theta(x,z)\\,dz.\n$$\n\nInsert $q_\\phi(z\\mid x)$:\n\n$$\n\\log p_\\theta(x)\n=\\log \\int q_\\phi(z\\mid x)\\frac{p_\\theta(x,z)}{q_\\phi(z\\mid x)}\\,dz\n=\\log \\mathbb{E}_{q_\\phi}\\left[\\frac{p_\\theta(x,z)}{q_\\phi(z\\mid x)}\\right].\n$$\n\nBy Jensen,\n\n$$\n\\log \\mathbb{E}_{q_\\phi}\\left[\\frac{p_\\theta(x,z)}{q_\\phi(z\\mid x)}\\right]\n\\ge\n\\mathbb{E}_{q_\\phi}\\left[\\log \\frac{p_\\theta(x,z)}{q_\\phi(z\\mid x)}\\right].\n$$\n\nSo\n\n$$\n\\log p_\\theta(x)\\ge\n\\mathbb{E}_{q_\\phi}[\\log p_\\theta(x,z)-\\log q_\\phi(z\\mid x)].\n$$\n\n**Derivation via KL**\n\nStart from\n\n$$\n\\mathrm{KL}(q_\\phi(z\\mid x)\\|p_\\theta(z\\mid x))\n=\\mathbb{E}_{q_\\phi}\\left[\\log\\frac{q_\\phi(z\\mid x)}{p_\\theta(z\\mid x)}\\right].\n$$\n\nUse\n\n$$\np_\\theta(z\\mid x)=\\frac{p_\\theta(x,z)}{p_\\theta(x)}.\n$$\n\nThen rearrange to get\n\n$$\n\\log p_\\theta(x)=\\text{ELBO}+\\mathrm{KL}(q_\\phi(z\\mid x)\\|p_\\theta(z\\mid x)).\n$$\n\n**What to emphasize:**\n\nThe KL derivation is the best one to say in an interview, because it makes the approximation gap explicit.\n\n**Likely follow-up:**\n\n**Which derivation is more insightful?**\n Jensen explains the lower bound; the KL derivation explains the optimization meaning.\n\n**In short:**\n\n- introduce $q(z\\mid x)$\n- Jensen gives lower bound\n- KL derivation gives exact decomposition\n- bound is tight when $q=p(z\\mid x)$",
     "tags": [
       "Deep"
     ]
@@ -30,7 +30,7 @@
     "type": "Foundations of probability",
     "id": "Q4",
     "question": "What is EBM? Why do we need this when we have MLE / KL divergence?",
-    "answer": "An **Energy-Based Model** defines\n$$\np_\\theta(x)=\\frac{e^{-E_\\theta(x)}}{Z_\\theta}.\n$$\nThe model assigns lower energy to more plausible states.\n\nMLE and KL divergence are **training principles**. An EBM is a **model class**. We need EBMs because in many problems it is much easier to define a scalar compatibility score than a tractable normalized likelihood.",
+    "answer": "An **Energy-Based Model** defines\n$$\np_\\theta(x)=\\frac{e^{-E_\\theta(x)}}{Z_\\theta}.\n$$\nThe model assigns lower energy to more plausible states.\n\nMLE and KL divergence are **training principles**. An EBM is a **model class**. We need EBMs because in many problems it is much easier to define a scalar compatibility score than a tractable normalized likelihood.\n\n**What to emphasize:**\n\nEBMs are useful when:\n\n- normalization is hard,\n- dependencies are complex,\n- structured outputs matter,\n- relative plausibility matters more than explicit density factorization.\n\nIn structured prediction, one often writes\n$$\n\\hat y = \\arg\\min_y E_\\theta(x,y).\n$$\n\n**Likely follow-up:**\n\n**If $Z_\\theta$ is intractable, how do you train them?**\n Approximate MLE, contrastive divergence, score matching, noise-contrastive estimation, or score-based objectives.\n\n**How is this related to KL?**\n MLE still corresponds to minimizing $\\mathrm{KL}(p_{\\text{data}}\\|p_\\theta)$, but computing it is difficult because $p_\\theta$ is hard to normalize.\n\n**In short:**\n\n- EBM = $p(x)\\propto e^{-E(x)}$\n- energy low = plausible\n- EBM is a model family, not an objective\n- useful when normalized likelihood is hard to specify",
     "tags": [
       "Basic"
     ]
@@ -39,7 +39,7 @@
     "type": "Foundations of probability",
     "id": "Q5",
     "question": "What's the difference between min, average, and expectation?",
-    "answer": "These are three different operations.\n\n- **Minimum**:\n\n$$\n\\min_\\theta f(\\theta)\n$$\n\nis an optimization operator.\n\n- **Average**:\n\n$$\n\\frac1n\\sum_{i=1}^n f(x_i)\n$$\n\nis the empirical mean over a sample.\n\n- **Expectation**:\n\n$$\n\\mathbb{E}[f(X)] = \\int f(x)p(x)\\,dx\n$$\n\nis the population mean under a probability distribution.",
+    "answer": "These are three different operations.\n\n- **Minimum**:\n\n$$\n\\min_\\theta f(\\theta)\n$$\n\nis an optimization operator.\n\n- **Average**:\n\n$$\n\\frac1n\\sum_{i=1}^n f(x_i)\n$$\n\nis the empirical mean over a sample.\n\n- **Expectation**:\n\n$$\n\\mathbb{E}[f(X)] = \\int f(x)p(x)\\,dx\n$$\n\nis the population mean under a probability distribution.\n\n**What to emphasize:**\n\nExpectation is theoretical; average is sample-based; minimum is optimization.\n\nA central statistical distinction is:\n$$\n\\min_\\theta \\frac1n \\sum_{i=1}^n L(\\theta,x_i)\n$$\nversus\n$$\n\\min_\\theta \\mathbb{E}[L(\\theta,X)].\n$$\nThe first is empirical risk minimization; the second is population risk minimization.\n\n**Likely follow-up:**\n\n**Do min and expectation commute?**\n Usually no:\n$$\n\\min_\\theta \\mathbb{E}[L(\\theta,X)] \\neq \\mathbb{E}[\\min_\\theta L(\\theta,X)].\n$$\n\n**In short:**\n\n- minimum = optimization\n- average = sample mean\n- expectation = distribution mean\n- average estimates expectation\n- minimum and expectation usually do not commute",
     "tags": [
       "Basic"
     ]
@@ -48,7 +48,7 @@
     "type": "Foundations of probability",
     "id": "Q6",
     "question": "Get 6/7 probability out of a 6-side dice",
-    "answer": "Assuming the question means: construct an event with exact probability $6/7$ using repeated fair die rolls.\n\nRoll the die twice. That gives $36$ equally likely ordered outcomes. Reject one outcome, say $(6,6)$, and reroll whenever it happens. Then the remaining $35$ accepted outcomes are equally likely.\n\nNow label $30$ of those $35$ outcomes as “success” and the other $5$ as “failure”. Then\n$$\n\\mathbb{P}(\\text{success})=\\frac{30}{35}=\\frac67.\n$$",
+    "answer": "Assuming the question means: construct an event with exact probability $6/7$ using repeated fair die rolls.\n\nRoll the die twice. That gives $36$ equally likely ordered outcomes. Reject one outcome, say $(6,6)$, and reroll whenever it happens. Then the remaining $35$ accepted outcomes are equally likely.\n\nNow label $30$ of those $35$ outcomes as “success” and the other $5$ as “failure”. Then\n$$\n\\mathbb{P}(\\text{success})=\\frac{30}{35}=\\frac67.\n$$\n\n**What to emphasize:**\n\nThis is an exact construction using rejection sampling.\n\n**Likely follow-up:**\n\n**Why not do it in one roll?**\n Because a single fair die only gives probabilities that are multiples of $1/6$, and $6/7$ is not one of them.\n\n**In short:**\n\n- one roll cannot realize $6/7$\n- two rolls give $36$ outcomes\n- reject one outcome to get $35$ equiprobable states\n- choose 30 successes: $30/35=6/7$",
     "tags": [
       "Hands-on"
     ]
@@ -66,7 +66,7 @@
     "type": "Foundations of probability",
     "id": "Q8",
     "question": "What is Markov property? How to model a non-Markov process as a Markov process?",
-    "answer": "A process is **Markov** if the future depends on the past only through the present:\n\n$$\n\\mathbb{P}(X_{t+1}\\in A\\mid X_t,X_{t-1},\\dots)\n=\\mathbb{P}(X_{t+1}\\in A\\mid X_t).\n$$",
+    "answer": "A process is **Markov** if the future depends on the past only through the present:\n\n$$\n\\mathbb{P}(X_{t+1}\\in A\\mid X_t,X_{t-1},\\dots)\n=\\mathbb{P}(X_{t+1}\\in A\\mid X_t).\n$$\n\n**What to emphasize:**\n\nThe present state is a sufficient statistic of the past for predicting the future.\n\nTo convert a non-Markov process into a Markov one, augment the state with enough memory.\n\nFor a $k$-th order chain, define\n$$\nY_t=(X_t,\\dots,X_{t-k+1}),\n$$\nthen $Y_t$ is first-order Markov.\n\nFor AR($p$):\n$$\nX_t=\\sum_{i=1}^p a_i X_{t-i}+\\varepsilon_t,\n$$\ndefine\n$$\nY_t=(X_t,\\dots,X_{t-p+1}).\n$$\n\n**Likely follow-up:**\n\n**Can every non-Markov process be made Markov?**\n Yes in principle by taking the whole past as the state, but that may be infinite-dimensional.\n\n**In short:**\n\n- Markov = future independent of past given present\n- present summarizes predictive information\n- non-Markov can be Markovized by state augmentation\n- finite augmentation works when memory is finite",
     "tags": [
       "Basic"
     ]
@@ -75,7 +75,7 @@
     "type": "Foundations of probability",
     "id": "Q9",
     "question": "Define EBM and where they are used",
-    "answer": "An EBM defines an energy $E_\\theta(x)$ or $E_\\theta(x,y)$ and treats lower energy as higher compatibility.\n\nUnconditional form:\n$$\np_\\theta(x)=\\frac{e^{-E_\\theta(x)}}{Z_\\theta}.\n$$\nConditional form:\n$$\np_\\theta(y\\mid x)\\propto e^{-E_\\theta(x,y)}.\n$$",
+    "answer": "An EBM defines an energy $E_\\theta(x)$ or $E_\\theta(x,y)$ and treats lower energy as higher compatibility.\n\nUnconditional form:\n$$\np_\\theta(x)=\\frac{e^{-E_\\theta(x)}}{Z_\\theta}.\n$$\nConditional form:\n$$\np_\\theta(y\\mid x)\\propto e^{-E_\\theta(x,y)}.\n$$\n\n**What to emphasize:**\n\nEBMs are useful wherever scoring compatibility is easier than constructing a normalized explicit likelihood.\n\nTypical applications:\n\n- generative modeling,\n- structured prediction,\n- computer vision,\n- inverse RL,\n- anomaly detection,\n- score-based modeling.\n\n**Likely follow-up:**\n\n**What is the main difficulty?**\n Partition function estimation and sampling.\n\n**Why are they powerful?**\n Because they can represent complex dependencies without restrictive factorization assumptions.\n\n**In short:**\n\n- EBM = learn an energy landscape\n- low energy = data-like / compatible\n- used in vision, structure prediction, RL, anomaly detection\n- expressive but hard to normalize and sample from",
     "tags": [
       "Basic"
     ]
