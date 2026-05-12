@@ -219,6 +219,8 @@ a.breadcrumb-item:hover {
   transition: all 0.2s ease;
   text-transform: uppercase;
   letter-spacing: 0.03em;
+  display: inline-block;
+  margin: 0.15rem;
 }
 
 .topic-tab:hover {
@@ -252,6 +254,8 @@ a.breadcrumb-item:hover {
   cursor: pointer;
   transition: all 0.2s ease;
   letter-spacing: 0.02em;
+  display: inline-block;
+  margin: 0.15rem;
 }
 
 .tag-filter:hover {
