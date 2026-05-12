@@ -1,4 +1,4 @@
-# Learning - Aditya
+# Learning 
 
 ## What is temporal-difference (TD) learning, and how is it different from Monte Carlo (MC) learning?
 **T:** Basic
