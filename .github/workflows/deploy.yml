@@ -1,4 +1,4 @@
-name: Deploy to GitHub Pages
+name: Build and Deploy to GitHub Pages
 
 on:
   push:
@@ -8,13 +8,27 @@ permissions:
   contents: write
 
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
-      - name: Inject API key
-        run: sed -i "s|%%OPENROUTER_API_KEY%%|${{ secrets.OPENROUTER_API_KEY }}|g" index.html
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Convert markdown to JSON
+        run: bash update.sh
+
+      - name: Commit updated QA.json files
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add Topics/*/QA.json
+          git diff --staged --quiet || (git commit -m "Auto-update QA.json files" && git push)
+
+      - name: Inject proxy URL
+        run: sed -i "s|%%PROXY_URL%%|${{ vars.PROXY_URL }}|g" index.html
 
       - name: Deploy to gh-pages
         uses: peaceiris/actions-gh-pages@v4
