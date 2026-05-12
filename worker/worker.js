@@ -34,7 +34,7 @@ export default {
 
     try {
       const body = await request.json();
-      body.model = body.model || 'allenai/molmo-2-8b:free';
+      body.model = body.model || 'meta-llama/llama-3.3-70b-instruct:free';
 
       const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
         method: 'POST',
