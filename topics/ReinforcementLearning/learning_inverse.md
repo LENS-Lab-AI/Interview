@@ -82,7 +82,7 @@ A good oral answer is: GRPO trades the stability of an explicit critic for the s
 
 So conceptually, DPO says: if you have pairwise preferences like “response A is better than response B,” you can optimize the policy **offline and directly** rather than doing the usual reward-model-plus-PPO pipeline. That is why DPO is seen as simpler and more stable in many practical settings. 
 
-### If DPO is easier, why didn’t people just do that first?
+**If DPO is easier, why didn’t people just do that first?**
 
 Because it came **later**, after the community had already built the RLHF pipeline around reward models and PPO, and because DPO depends on a particular theoretical reduction of the RLHF objective. Historically, PPO-style RLHF was the standard practical recipe first; DPO was proposed in 2023 as a simplification once the field better understood the objective. 
 
@@ -154,13 +154,13 @@ If they ask about **Rényi divergence**: JSD is not the same thing, but it is re
 **A:** 
 **RLVR** means **Reinforcement Learning with Verifiable Rewards**: instead of asking humans to rank outputs, you use an automated verifier—unit tests, exact-answer checking, symbolic equivalence, theorem checking, etc.—to produce the reward. It has become especially important in math and code. 
 
-### Pros
+**Pros:**
 
 The biggest advantage is **cheap, scalable supervision**. If correctness can be checked automatically, you can generate many trajectories and train online without the bottleneck of human preference labeling. That is one reason RLVR has looked attractive for mathematical and coding reasoning. 
 
 A second advantage is that the reward is often **more objective** than human preference scores. For tasks with exact correctness, RLVR can directly reinforce answers that satisfy the external criterion instead of relying on human taste or noisy judging. 
 
-### Cons
+**Cons:**
 
 The limitation is obvious but deep: RLVR only works well where you have a **reliable verifier**. That makes it much easier in math and code than in open-ended dialogue, taste, policy, or creativity. Extending RLVR beyond tightly verifiable domains is an active research problem. 
 
