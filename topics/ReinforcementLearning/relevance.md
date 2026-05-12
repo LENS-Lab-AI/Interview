@@ -1,4 +1,4 @@
-# Connections to other topics - Sree
+# RL-ish
 
 ## What is thomspon sampling?
 
