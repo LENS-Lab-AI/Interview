@@ -2,7 +2,7 @@
   {
     "type": "Foundations of probability",
     "id": "Q1",
-    "question": "what is ELBO? Why we use it?",
+    "question": "What is ELBO? Why we use it?",
     "answer": "The **ELBO** is the **Evidence Lower BOund** on the marginal log-likelihood $\\log p_\\theta(x)$, typically used in latent-variable models where\n$$\np_\\theta(x)=\\int p_\\theta(x,z)\\,dz\n$$\nis hard to compute exactly.\n\nFor any auxiliary distribution $q_\\phi(z\\mid x)$,\n$$\\log p_\\theta(x)\\;\\ge\\;\\mathbb{E}_{q_\\phi(z\\mid x)}\\left[\\log p_\\theta(x,z)-\\log q_\\phi(z\\mid x)\\right].$$\n\nThis lower bound is the ELBO:\n$$\\mathcal{L}(\\theta,\\phi;x)=\\mathbb{E}_{q_\\phi(z\\mid x)}[\\log p_\\theta(x,z)]-\\mathbb{E}_{q_\\phi(z\\mid x)}[\\log q_\\phi(z\\mid x)].$$\n\nA more interpretable form is\n\n$$\n\\mathcal{L}(\\theta,\\phi;x)\n=\\mathbb{E}_{q_\\phi(z\\mid x)}[\\log p_\\theta(x\\mid z)]\n-\\mathrm{KL}\\!\\left(q_\\phi(z\\mid x)\\,\\|\\,p_\\theta(z)\\right).\n$$\n\nSo ELBO has two terms:\n\n- a **data-fit / reconstruction term**: make $z$ explain $x$,\n- a **regularization term**: keep the approximate posterior close to the prior.\n\nWhy use it? Because exact Bayesian learning or exact MLE in latent-variable models often requires the posterior\n$$\np_\\theta(z\\mid x)=\\frac{p_\\theta(x,z)}{p_\\theta(x)},\n$$\nand both the denominator $p_\\theta(x)$ and the posterior are intractable. The ELBO converts the problem into an optimization problem over a tractable surrogate.\n\nCrucially,\n$$\n\\log p_\\theta(x)=\\mathcal{L}(\\theta,\\phi;x)+\\mathrm{KL}\\!\\left(q_\\phi(z\\mid x)\\,\\|\\,p_\\theta(z\\mid x)\\right).\n$$\nSo maximizing the ELBO does two things at once:\n\n1. it increases a lower bound on the true log-evidence,\n2. it makes $q_\\phi(z\\mid x)$ closer to the true posterior.\n\nThis is why ELBO is central in **variational inference**, **VAEs**, and many Bayesian latent-variable models.\n\n**In short**\n\n- ELBO = tractable lower bound on $\\log p_\\theta(x)$\n- used when exact marginalization/posterior inference is intractable\n- maximization = approximate inference + approximate learning",
     "tags": [
       "Basic"
@@ -11,7 +11,7 @@
   {
     "type": "Foundations of probability",
     "id": "Q2",
-    "question": "why we cannot maximize MLE directly?",
+    "question": "Why we cannot maximize MLE directly?",
     "answer": "The careful answer is: **sometimes we can**. In simple fully observed models, direct MLE is straightforward.\n\nWe **cannot maximize MLE directly** when the likelihood itself or its gradient is intractable. This happens most often in:",
     "tags": [
       "Deep"
@@ -20,7 +20,7 @@
   {
     "type": "Foundations of probability",
     "id": "Q3",
-    "question": "how to proof/derive the ELBO",
+    "question": "How to proof/derive the ELBO",
     "answer": "There are two standard derivations.",
     "tags": [
       "Deep"
@@ -29,7 +29,7 @@
   {
     "type": "Foundations of probability",
     "id": "Q4",
-    "question": "what is EBM? why we need this when we have MLE, KL divergence:",
+    "question": "What is EBM? why we need this when we have MLE, KL divergence:",
     "answer": "An **Energy-Based Model** defines\n$$\np_\\theta(x)=\\frac{e^{-E_\\theta(x)}}{Z_\\theta}.\n$$\nThe model assigns lower energy to more plausible states.\n\nMLE and KL divergence are **training principles**. An EBM is a **model class**. We need EBMs because in many problems it is much easier to define a scalar compatibility score than a tractable normalized likelihood.",
     "tags": [
       "Basic"
@@ -47,7 +47,7 @@
   {
     "type": "Foundations of probability",
     "id": "Q6",
-    "question": "get 6 out of 7 probability out of a 6-side dice",
+    "question": "Get 6 out of 7 probability out of a 6-side dice",
     "answer": "Assuming the question means: construct an event with exact probability $6/7$ using repeated fair die rolls.\n\nRoll the die twice. That gives $36$ equally likely ordered outcomes. Reject one outcome, say $(6,6)$, and reroll whenever it happens. Then the remaining $35$ accepted outcomes are equally likely.\n\nNow label $30$ of those $35$ outcomes as “success” and the other $5$ as “failure”. Then\n$$\n\\mathbb{P}(\\text{success})=\\frac{30}{35}=\\frac67.\n$$",
     "tags": [
       "Hands-on"
@@ -56,7 +56,7 @@
   {
     "type": "Foundations of probability",
     "id": "Q7",
-    "question": "what is Ornstein–Uhlenbeck process? what it is Brownian motion? what's the difference between these?",
+    "question": "What is Ornstein–Uhlenbeck process? what it is Brownian motion? what's the difference between these?",
     "answer": "### Brownian motion\n\nA standard Brownian motion $(W_t)$ satisfies:\n\n- $W_0=0$,\n- continuous paths,\n- independent increments,\n- $W_t-W_s\\sim \\mathcal N(0,t-s)$.\n\nIt solves\n$$\ndX_t=dW_t.\n$$",
     "tags": [
       "Deep"
@@ -74,7 +74,7 @@
   {
     "type": "Foundations of probability",
     "id": "Q9",
-    "question": "define EBM and where they are used",
+    "question": "Define EBM and where they are used",
     "answer": "An EBM defines an energy $E_\\theta(x)$ or $E_\\theta(x,y)$ and treats lower energy as higher compatibility.\n\nUnconditional form:\n$$\np_\\theta(x)=\\frac{e^{-E_\\theta(x)}}{Z_\\theta}.\n$$\nConditional form:\n$$\np_\\theta(y\\mid x)\\propto e^{-E_\\theta(x,y)}.\n$$",
     "tags": [
       "Basic"
