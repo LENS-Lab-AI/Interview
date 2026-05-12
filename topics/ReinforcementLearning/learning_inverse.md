@@ -127,7 +127,7 @@ For two distributions $P$ and $Q$, the **Jensen–Shannon divergence** is
 
 $$
 \mathrm{JSD}(P,Q)
-=\frac12 \mathrm{KL}(P\|M)+\frac12 \mathrm{KL}(Q\|M),\qquadM=\frac12(P+Q).
+=\frac12 \mathrm{KL}(P\|M)+\frac12 \mathrm{KL}(Q\|M),\qquad{}M=\frac12(P+Q).
 $$
 
 So it measures how far each distribution is from their average mixture. It was introduced by Lin as a symmetric Shannon-entropy-based divergence. 
