@@ -1,4 +1,4 @@
-# RL-ish
+# RL Related
 
 ## What is thomspon sampling?
 
