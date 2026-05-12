@@ -204,29 +204,64 @@ a.breadcrumb-item:hover {
   justify-content: center;
   flex-wrap: wrap;
   gap: 0.5rem;
-  margin-bottom: 2rem;
+  margin-bottom: 0.4rem;
 }
 
 .topic-tab {
   background: transparent;
   color: #64748b;
   border: 1px solid #334155;
-  border-radius: 20px;
+  border-radius: 6px;
   padding: 0.3rem 0.9rem;
-  font-size: 0.9rem;
-  font-weight: 500;
+  font-size: 0.85rem;
+  font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
 }
 
 .topic-tab:hover {
-  color: #e2e8f0;
-  border-color: #475569;
+  color: #c4b5fd;
+  border-color: rgba(99, 102, 241, 0.3);
 }
 
 .topic-tab.active {
-  background: rgba(56, 189, 248, 0.12);
-  color: #38bdf8;
+  background: rgba(99, 102, 241, 0.15);
+  color: #a5b4fc;
+  border-color: rgba(99, 102, 241, 0.3);
+}
+
+/* === Tag Filters === */
+.tag-filters {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.6rem;
+}
+
+.tag-filter {
+  background: transparent;
+  color: #64748b;
+  border: 1px solid rgba(56, 189, 248, 0.2);
+  border-radius: 14px;
+  padding: 0.2rem 0.75rem;
+  font-size: 0.78rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  letter-spacing: 0.02em;
+}
+
+.tag-filter:hover {
+  color: #7dd3fc;
+  border-color: rgba(56, 189, 248, 0.4);
+}
+
+.tag-filter.active {
+  background: rgba(56, 189, 248, 0.1);
+  color: #7dd3fc;
   border-color: rgba(56, 189, 248, 0.3);
 }
 

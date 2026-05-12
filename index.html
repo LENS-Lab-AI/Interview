@@ -106,11 +106,12 @@
     <h1 id="topic-title"></h1>
 
     <div class="mode-switch">
-      <button id="all-btn" class="active">All Mode</button>
+      <button id="all-btn" class="active">Study Mode</button>
       <button id="practice-btn">Practice Mode</button>
     </div>
     <br>
     <div class="topic-tabs" id="topic-tabs"></div>
+    <div class="tag-filters" id="tag-filters"></div>
     <br>
     <div id="qa-container"></div>
   </div>
@@ -119,6 +120,7 @@
     let qaData = [];
     let mode = "all";
     let currentTopic = "All";
+    let currentTag = "All";
     let currentIndex = -1;
     let order = [];
     let visited = [];
@@ -363,12 +365,39 @@ IMPORTANT: Return ONLY valid JSON, no additional text before or after.`;
         $(".topic-tab").removeClass("active");
         $(this).addClass("active");
         currentTopic = $(this).data("topic");
+        currentTag = "All";
+        populateTagFilters();
+        setMode(mode);
+      });
+    }
+
+    function populateTagFilters() {
+      const pool = currentTopic === "All" ? qaData : qaData.filter(q => q.type === currentTopic);
+      const tags = [...new Set(pool.flatMap(q => q.tags || []).filter(Boolean))];
+      const container = $("#tag-filters");
+      container.empty();
+      if (tags.length === 0) return;
+      const TAG_ORDER = ["Basic", "Deep", "Hands-on"];
+      tags.sort((a, b) => {
+        const ia = TAG_ORDER.indexOf(a), ib = TAG_ORDER.indexOf(b);
+        return (ia === -1 ? TAG_ORDER.length : ia) - (ib === -1 ? TAG_ORDER.length : ib);
+      });
+      container.append(`<span class="tag-filter active" data-tag="All">All</span>`);
+      tags.forEach(tag => {
+        container.append(`<span class="tag-filter" data-tag="${tag}">${tag}</span>`);
+      });
+      $(".tag-filter").on("click", function () {
+        $(".tag-filter").removeClass("active");
+        $(this).addClass("active");
+        currentTag = $(this).data("tag");
         setMode(mode);
       });
     }
 
     function getFilteredData() {
-      return currentTopic === "All" ? qaData : qaData.filter(q => q.type === currentTopic);
+      let data = currentTopic === "All" ? qaData : qaData.filter(q => q.type === currentTopic);
+      if (currentTag !== "All") data = data.filter(q => q.tags && q.tags.includes(currentTag));
+      return data;
     }
 
     // --- All Mode ---
@@ -545,12 +574,14 @@ IMPORTANT: Return ONLY valid JSON, no additional text before or after.`;
     function loadSubject(subject) {
       currentSubject = subject;
       currentTopic = "All";
+      currentTag = "All";
       order = [];
       visited = [];
       mode = "all";
       $.getJSON(`topics/${subject}/QA.json`, function (data) {
         qaData = data.sort((a, b) => typeRank(a.type) - typeRank(b.type));
         populateTopicTabs();
+        populateTagFilters();
         setMode(mode);
       }).fail(() => {
         qaData = [];
