@@ -3,11 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Q&A Practice</title>
+  <title>Interview Preparation</title>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  
 
-  <!-- MathJax for LaTeX rendering -->
   <script>
     window.MathJax = {
       tex: {
@@ -21,29 +19,99 @@
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" async></script>
 
   <link rel="stylesheet" href="web_utils/style.css">
-
 </head>
 
 <body>
-  <h1>Q&A Practice</h1>
-  <br>
-  <!-- Row 0: Subject selector -->
-  <div class="subject-selector" id="subject-selector">
-    <button class="subject-btn active" data-subject="Transformers">Transformers</button>
-    <button class="subject-btn" data-subject="Diffusion">Diffusion</button>
-    <button class="subject-btn" data-subject="ReinforcementLearning">Reinforcement Learning</button>
+
+  <!-- Top Bar -->
+  <div class="top-bar">
+    <nav class="breadcrumb" id="breadcrumb">
+      <span class="breadcrumb-item active">Home</span>
+    </nav>
+    <button class="settings-btn" id="settings-btn" title="Settings">&#9881;</button>
   </div>
-  <br>
-  <!-- Row 1: Mode buttons -->
-  <div class="mode-switch">
-    <button id="all-btn" class="active">🧠 All Mode</button>
-    <button id="practice-btn">⚡ Practice Mode</button>
+
+  <!-- Settings Modal -->
+  <div id="settings-modal" class="modal-overlay" style="display:none;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Settings</h2>
+        <button class="modal-close" id="modal-close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="settings-section">
+          <label for="model-select">LLM Model</label>
+          <select id="model-select">
+            <option value="allenai/molmo-2-8b:free">molmo-2-8b (Free)</option>
+          </select>
+          <p class="settings-hint">Model used for answer verification. Free models are listed first.</p>
+        </div>
+        <div class="settings-section">
+          <label for="api-key-input">OpenRouter API Key</label>
+          <input type="password" id="api-key-input" placeholder="sk-or-v1-...">
+          <p class="settings-hint">Stored locally in your browser. Get a free key at <a href="https://openrouter.ai/keys" target="_blank">openrouter.ai/keys</a>.</p>
+        </div>
+        <div class="settings-actions">
+          <button id="save-settings-btn">Save</button>
+          <button id="clear-settings-btn">Clear</button>
+        </div>
+        <p id="settings-status" class="key-status"></p>
+      </div>
+    </div>
   </div>
-  <br>
-  <!-- Row 2: Topic Tabs -->
-  <div class="topic-tabs" id="topic-tabs"></div>
-  <br>
-  <div id="qa-container"></div>
+
+  <!-- HOME VIEW -->
+  <div id="home-view">
+    <h1>Interview Preparation</h1>
+    <p class="home-subtitle">Select a topic to start practicing</p>
+    <div class="cards-grid">
+
+      <div class="topic-card" data-subject="Transformers">
+        <div class="card-bg" style="background-image: url('images/transformers.jpg')"></div>
+        <div class="card-overlay"></div>
+        <div class="card-content">
+          <h2>Transformers</h2>
+          <p>Attention mechanisms, architectures, deployment & case studies</p>
+          <span class="card-count" id="count-Transformers"></span>
+        </div>
+      </div>
+
+      <div class="topic-card" data-subject="Diffusion">
+        <div class="card-bg" style="background-image: url('images/diffusion.jpg')"></div>
+        <div class="card-overlay"></div>
+        <div class="card-content">
+          <h2>Diffusion</h2>
+          <p>DDPM, DDIM, score matching & generative modeling</p>
+          <span class="card-count" id="count-Diffusion"></span>
+        </div>
+      </div>
+
+      <div class="topic-card" data-subject="ReinforcementLearning">
+        <div class="card-bg" style="background-image: url('images/reinforcement-learning.jpg')"></div>
+        <div class="card-overlay"></div>
+        <div class="card-content">
+          <h2>Reinforcement Learning</h2>
+          <p>Bellman equations, policy gradients, Q-learning & beyond</p>
+          <span class="card-count" id="count-ReinforcementLearning"></span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- TOPIC VIEW -->
+  <div id="topic-view" style="display: none;">
+    <h1 id="topic-title"></h1>
+
+    <div class="mode-switch">
+      <button id="all-btn" class="active">All Mode</button>
+      <button id="practice-btn">Practice Mode</button>
+    </div>
+    <br>
+    <div class="topic-tabs" id="topic-tabs"></div>
+    <br>
+    <div id="qa-container"></div>
+  </div>
 
   <script>
     let qaData = [];
@@ -52,21 +120,125 @@
     let currentIndex = -1;
     let order = [];
     let visited = [];
-    let currentSubject = "Transformers";
+    let currentSubject = "";
 
-    // OpenRouter API configuration
-    const OPENROUTER_API_KEY = "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";
     const OPENROUTER_API_URL = "https://openrouter.ai/api/v1/chat/completions";
-    const OPENROUTER_MODEL = "allenai/molmo-2-8b:free"; // Free model
+    const OPENROUTER_MODEL = "allenai/molmo-2-8b:free";
+    const PROXY_URL = "https://interview-qa-proxy.ataparia.workers.dev/";
+
+    const subjects = {
+      Transformers: "Transformers",
+      Diffusion: "Diffusion",
+      ReinforcementLearning: "Reinforcement Learning"
+    };
+
+    // --- Routing ---
+
+    function navigate(hash) {
+      window.location.hash = hash;
+    }
+
+    function handleRoute() {
+      const hash = window.location.hash || "#home";
+
+      if (hash === "#home" || hash === "") {
+        showHome();
+      } else if (hash.startsWith("#topic/")) {
+        const subject = hash.replace("#topic/", "");
+        if (subjects[subject]) {
+          showTopic(subject);
+        } else {
+          navigate("#home");
+        }
+      } else {
+        navigate("#home");
+      }
+    }
+
+    function updateBreadcrumb(subject) {
+      const bc = $("#breadcrumb");
+      bc.empty();
+      if (subject) {
+        bc.append(`<a class="breadcrumb-item" href="#home">Home</a>`);
+        bc.append(`<span class="breadcrumb-sep">/</span>`);
+        bc.append(`<span class="breadcrumb-item active">${subjects[subject]}</span>`);
+      } else {
+        bc.append(`<span class="breadcrumb-item active">Home</span>`);
+      }
+    }
+
+    function showHome() {
+      updateBreadcrumb(null);
+      $("#home-view").show();
+      $("#topic-view").hide();
+      currentSubject = "";
+      loadQuestionCounts();
+    }
+
+    function showTopic(subject) {
+      updateBreadcrumb(subject);
+      $("#home-view").hide();
+      $("#topic-view").show();
+      $("#topic-title").text(subjects[subject]);
+      loadSubject(subject);
+    }
+
+    function loadQuestionCounts() {
+      Object.keys(subjects).forEach(subject => {
+        $.getJSON(`Topics/${subject}/QA.json`, function (data) {
+          $(`#count-${subject}`).text(`${data.length} questions`);
+        }).fail(() => {
+          $(`#count-${subject}`).text("Coming soon");
+        });
+      });
+    }
+
+    // --- Model List ---
+
+    async function loadModels() {
+      const cached = sessionStorage.getItem('openrouter_models');
+      if (cached) {
+        populateModelSelect(JSON.parse(cached));
+        return;
+      }
+      try {
+        const res = await fetch('https://openrouter.ai/api/v1/models');
+        const data = await res.json();
+        const models = data.data
+          .filter(m => m.architecture && m.architecture.output_modalities && m.architecture.output_modalities.includes('text'))
+          .map(m => ({
+            id: m.id,
+            name: m.name,
+            free: m.pricing && m.pricing.prompt === '0' && m.pricing.completion === '0'
+          }))
+          .sort((a, b) => {
+            if (a.free !== b.free) return a.free ? -1 : 1;
+            return a.name.localeCompare(b.name);
+          });
+        sessionStorage.setItem('openrouter_models', JSON.stringify(models));
+        populateModelSelect(models);
+      } catch (e) {}
+    }
+
+    function populateModelSelect(models) {
+      const select = $('#model-select');
+      const saved = localStorage.getItem('openrouter_model') || OPENROUTER_MODEL;
+      select.empty();
+      let foundSaved = false;
+      models.forEach(m => {
+        if (m.id === saved) foundSaved = true;
+        const label = m.free ? `${m.name} (Free)` : m.name;
+        select.append($('<option>', { value: m.id, text: label }));
+      });
+      if (!foundSaved) {
+        select.prepend($('<option>', { value: saved, text: saved }));
+      }
+      select.val(saved);
+    }
+
+    // --- LLM Verification ---
 
     async function verifyAnswerWithLLM(userAnswer, correctAnswer, question) {
-      if (!OPENROUTER_API_KEY) {
-        return {
-          success: false,
-          error: "OpenRouter API key not configured. Please add your API key in the code."
-        };
-      }
-
       const prompt = `You are an expert evaluator. Compare the user's answer with the correct answer for the following question.
 
 Question: ${question}
@@ -87,69 +259,70 @@ Please provide your evaluation as a JSON object with the following structure:
 
 IMPORTANT: Return ONLY valid JSON, no additional text before or after.`;
 
+      const requestBody = {
+        model: localStorage.getItem('openrouter_model') || OPENROUTER_MODEL,
+        messages: [{ role: "user", content: prompt }],
+        temperature: 0.3
+      };
+
+      const useProxy = PROXY_URL && !PROXY_URL.startsWith("%%");
+      const apiKey = localStorage.getItem('openrouter_api_key');
+
+      if (!useProxy && !apiKey) {
+        return { success: false, error: "No API key configured. Click the gear icon to add your OpenRouter key." };
+      }
 
       try {
-        const response = await fetch(OPENROUTER_API_URL, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${OPENROUTER_API_KEY}`,
-            "HTTP-Referer": window.location.origin,
-            "X-Title": "Q&A Practice App"
-          },
-          body: JSON.stringify({
-            model: OPENROUTER_MODEL,
-            messages: [
-              {
-                role: "user",
-                content: prompt
-              }
-            ],
-            temperature: 0.3
-          })
-        });
+        let response;
 
-        if (!response.ok) {
-          throw new Error(`API error: ${response.status}`);
+        if (useProxy) {
+          try {
+            response = await fetch(PROXY_URL, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(requestBody)
+            });
+          } catch (e) {
+            response = null;
+          }
         }
+
+        if (!response || !response.ok) {
+          if (!apiKey) {
+            return { success: false, error: useProxy ? "Proxy unavailable and no local API key set." : "No API key configured. Click the gear icon to add your OpenRouter key." };
+          }
+          response = await fetch(OPENROUTER_API_URL, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${apiKey}`,
+              "HTTP-Referer": window.location.origin,
+              "X-Title": "Interview Preparation"
+            },
+            body: JSON.stringify(requestBody)
+          });
+        }
+
+        if (!response.ok) throw new Error(`API error: ${response.status}`);
 
         const data = await response.json();
         let llmResponse = data.choices[0].message.content.trim();
 
-        // Try to parse JSON from the response
         try {
-          // Try to find JSON object in the response
           let jsonStr = llmResponse;
-
-          // If response starts with {, try to parse directly
           if (llmResponse.startsWith('{')) {
-            // Find the matching closing brace
-            let braceCount = 0;
-            let endIndex = -1;
+            let braceCount = 0, endIndex = -1;
             for (let i = 0; i < llmResponse.length; i++) {
               if (llmResponse[i] === '{') braceCount++;
-              if (llmResponse[i] === '}') {
-                braceCount--;
-                if (braceCount === 0) {
-                  endIndex = i + 1;
-                  break;
-                }
-              }
+              if (llmResponse[i] === '}') { braceCount--; if (braceCount === 0) { endIndex = i + 1; break; } }
             }
-            if (endIndex > 0) {
-              jsonStr = llmResponse.substring(0, endIndex);
-            }
+            if (endIndex > 0) jsonStr = llmResponse.substring(0, endIndex);
           } else {
-            // Try to extract JSON using regex
             const jsonMatch = llmResponse.match(/\{[\s\S]*\}/);
-            if (jsonMatch) {
-              jsonStr = jsonMatch[0];
-            }
+            if (jsonMatch) jsonStr = jsonMatch[0];
           }
 
           const parsed = JSON.parse(jsonStr);
-
-          // Ensure we have the expected fields - JSON.parse preserves whitespace in strings
           return {
             success: true,
             score: typeof parsed.score === 'number' ? parsed.score : null,
@@ -158,32 +331,19 @@ IMPORTANT: Return ONLY valid JSON, no additional text before or after.`;
             feedback: parsed.feedback || ''
           };
         } catch (parseError) {
-          console.error("JSON parse error:", parseError);
-          console.error("LLM response:", llmResponse);
-
-          // If JSON parsing fails, try to extract information manually
-          return {
-            success: true,
-            score: null,
-            analysis: llmResponse,
-            keyPoints: "",
-            feedback: llmResponse
-          };
+          return { success: true, score: null, analysis: llmResponse, keyPoints: "", feedback: llmResponse };
         }
       } catch (error) {
-        return {
-          success: false,
-          error: error.message || "Failed to verify answer"
-        };
+        return { success: false, error: error.message || "Failed to verify answer" };
       }
     }
+
+    // --- Topic Tabs ---
 
     function populateTopicTabs() {
       const topics = [...new Set(qaData.map(q => q.type).filter(Boolean))];
       const tabContainer = $("#topic-tabs");
       tabContainer.empty();
-
-      // Always include "All"
       tabContainer.append(`<div class="topic-tab active" data-topic="All">All</div>`);
       topics.forEach(topic => {
         tabContainer.append(`<div class="topic-tab" data-topic="${topic}">${topic}</div>`);
@@ -201,13 +361,15 @@ IMPORTANT: Return ONLY valid JSON, no additional text before or after.`;
       return currentTopic === "All" ? qaData : qaData.filter(q => q.type === currentTopic);
     }
 
+    // --- All Mode ---
+
     function renderAllMode() {
       const container = $("#qa-container");
       container.empty();
       const filtered = getFilteredData();
 
       filtered.forEach((q) => {
-        const tagsHtml = q.tags && q.tags.length > 0 
+        const tagsHtml = q.tags && q.tags.length > 0
           ? `<div class="tags-container">${q.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}</div>`
           : '';
         const card = $(`
@@ -237,13 +399,15 @@ IMPORTANT: Return ONLY valid JSON, no additional text before or after.`;
       if (window.MathJax) MathJax.typesetPromise();
     }
 
+    // --- Practice Mode ---
+
     function renderPracticeMode(index = null) {
       const container = $("#qa-container");
       container.empty();
       const filteredData = getFilteredData();
 
       if (filteredData.length === 0) {
-        container.html(`<p>⚠️ No questions in this topic.</p>`);
+        container.html(`<p class="empty-msg">No questions in this topic.</p>`);
         return;
       }
 
@@ -260,7 +424,7 @@ IMPORTANT: Return ONLY valid JSON, no additional text before or after.`;
       else currentIndex = visited.length;
 
       if (currentIndex >= order.length) {
-        container.html(`<p>🎉 You've completed all questions in this topic!</p>`);
+        container.html(`<p class="empty-msg">You've completed all questions in this topic!</p>`);
         return;
       }
 
@@ -268,7 +432,7 @@ IMPORTANT: Return ONLY valid JSON, no additional text before or after.`;
       visited.push(qIndex);
       const q = filteredData[qIndex];
 
-      const tagsHtml = q.tags && q.tags.length > 0 
+      const tagsHtml = q.tags && q.tags.length > 0
         ? `<div class="tags-container">${q.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}</div>`
         : '';
       const card = $(`
@@ -280,8 +444,8 @@ IMPORTANT: Return ONLY valid JSON, no additional text before or after.`;
           </div>
           <div class="question">${q.id}. ${q.question}</div>
           <textarea class="user-input" id="user-answer" placeholder="Type your answer here..."></textarea>
-          <div>
-            <button id="verify-btn">🤖 Verify with LLM</button>
+          <div class="practice-actions">
+            <button id="verify-btn">Verify with LLM</button>
             <button id="check-btn">Check Answer</button>
             <button id="prev-btn">Previous</button>
             <button id="next-btn">Next</button>
@@ -295,124 +459,54 @@ IMPORTANT: Return ONLY valid JSON, no additional text before or after.`;
 
       $("#verify-btn").on("click", async () => {
         const userAnswer = $("#user-answer").val().trim();
-        if (!userAnswer) {
-          alert("Please enter an answer before verifying.");
-          return;
-        }
+        if (!userAnswer) { alert("Please enter an answer before verifying."); return; }
 
-        $("#verify-btn").prop("disabled", true).text("🔄 Verifying...");
+        $("#verify-btn").prop("disabled", true).text("Verifying...");
         const resultDiv = $("#verification-result");
-        resultDiv.html("<p>🔄 Verifying your answer with LLM...</p>").slideDown(300);
+        resultDiv.html("<p>Verifying your answer with LLM...</p>").slideDown(300);
 
         const verification = await verifyAnswerWithLLM(userAnswer, q.answer, q.question);
 
         if (!verification.success) {
-          resultDiv.html(`
-            <div class="verification-error">
-              <p><strong>❌ Error:</strong> ${verification.error}</p>
-            </div>
-          `);
+          resultDiv.html(`<div class="verification-error"><p><strong>Error:</strong> ${verification.error}</p></div>`);
         } else {
-          // Handle score properly (0 is a valid score)
           const score = (verification.score !== null && verification.score !== undefined) ? verification.score : "N/A";
-          let scoreColor = "#64748b"; // Default gray
-
+          let scoreColor = "#64748b";
           if (typeof score === 'number') {
-            if (score >= 80) {
-              scoreColor = "#4CAF50"; // Green
-            } else if (score >= 60) {
-              scoreColor = "#FF9800"; // Orange
-            } else {
-              scoreColor = "#F44336"; // Red
-            }
+            if (score >= 80) scoreColor = "#4CAF50";
+            else if (score >= 60) scoreColor = "#FF9800";
+            else scoreColor = "#F44336";
           }
 
-          // Build the HTML content
-          let htmlContent = `
-            <div class="verification-content">
-              <div class="score-display" style="background: ${scoreColor}; color: white; padding: 10px; border-radius: 5px; margin-bottom: 15px; text-align: center;">
-                <h3>Score: ${score}${typeof score === 'number' ? '/100' : ''}</h3>
-              </div>
-              <div class="verification-details">`;
+          let htmlContent = `<div class="verification-content">
+            <div class="score-display" style="background: ${scoreColor}; color: white; padding: 10px; border-radius: 5px; margin-bottom: 15px; text-align: center;">
+              <h3>Score: ${score}${typeof score === 'number' ? '/100' : ''}</h3>
+            </div><div class="verification-details">`;
 
-          // Add Analysis section
-          // Add Analysis section
           if (verification.analysis && verification.analysis.trim()) {
-            // Check if analysis is JSON string, if so try to parse it
-            let analysisText = verification.analysis;
-            try {
-              if (analysisText.trim().startsWith('{')) {
-                const parsedAnalysis = JSON.parse(analysisText);
-                analysisText = parsedAnalysis.analysis || parsedAnalysis.feedback || analysisText;
-              }
-            } catch (e) {
-              // Not JSON, use as is
-            }
-            // Escape HTML and preserve whitespace
-            const escapedAnalysis = $('<div>').text(analysisText).html();
-            htmlContent += `
-                <div class="verification-section">
-                  <p class="section-title">📊 Analysis:</p>
-                  <p class="section-content">${escapedAnalysis.replace(/\n/g, '<br>')}</p>
-                </div>`;
+            const escaped = $('<div>').text(verification.analysis).html();
+            htmlContent += `<div class="verification-section"><p class="section-title">Analysis:</p><p class="section-content">${escaped.replace(/\n/g, '<br>')}</p></div>`;
           }
-
-          // Add Key Points section
           if (verification.keyPoints && verification.keyPoints.trim()) {
-            let keyPointsText = verification.keyPoints;
-            try {
-              if (keyPointsText.trim().startsWith('{')) {
-                const parsedKeyPoints = JSON.parse(keyPointsText);
-                keyPointsText = parsedKeyPoints.keyPoints || parsedKeyPoints.key_points || keyPointsText;
-              }
-            } catch (e) {
-              // Not JSON, use as is
-            }
-            // Escape HTML and preserve whitespace
-            const escapedKeyPoints = $('<div>').text(keyPointsText).html();
-            htmlContent += `
-                <div class="verification-section">
-                  <p class="section-title">🔑 Key Points:</p>
-                  <p class="section-content">${escapedKeyPoints.replace(/\n/g, '<br>')}</p>
-                </div>`;
+            const escaped = $('<div>').text(verification.keyPoints).html();
+            htmlContent += `<div class="verification-section"><p class="section-title">Key Points:</p><p class="section-content">${escaped.replace(/\n/g, '<br>')}</p></div>`;
           }
-
-          // Add Feedback section (only if different from analysis)
-          if (verification.feedback && verification.feedback.trim() &&
-            verification.feedback !== verification.analysis) {
-            let feedbackText = verification.feedback;
-            try {
-              if (feedbackText.trim().startsWith('{')) {
-                const parsedFeedback = JSON.parse(feedbackText);
-                feedbackText = parsedFeedback.feedback || feedbackText;
-              }
-            } catch (e) {
-              // Not JSON, use as is
-            }
-            // Escape HTML and preserve whitespace
-            const escapedFeedback = $('<div>').text(feedbackText).html();
-            htmlContent += `
-                <div class="verification-section">
-                  <p class="section-title">💡 Feedback:</p>
-                  <p class="section-content">${escapedFeedback.replace(/\n/g, '<br>')}</p>
-                </div>`;
+          if (verification.feedback && verification.feedback.trim() && verification.feedback !== verification.analysis) {
+            const escaped = $('<div>').text(verification.feedback).html();
+            htmlContent += `<div class="verification-section"><p class="section-title">Feedback:</p><p class="section-content">${escaped.replace(/\n/g, '<br>')}</p></div>`;
           }
-
-          htmlContent += `
-              </div>
-            </div>`;
-
+          htmlContent += `</div></div>`;
           resultDiv.html(htmlContent);
         }
 
-        $("#verify-btn").prop("disabled", false).text("🤖 Verify with LLM");
+        $("#verify-btn").prop("disabled", false).text("Verify with LLM");
         if (window.MathJax) MathJax.typesetPromise();
       });
 
       $("#check-btn").on("click", () => $("#correct-answer").slideDown(300));
       $("#next-btn").on("click", () => {
         if (currentIndex < order.length - 1) renderPracticeMode(currentIndex + 1);
-        else container.html(`<p>🎉 You've completed all questions!</p>`);
+        else container.html(`<p class="empty-msg">You've completed all questions!</p>`);
       });
       $("#prev-btn").on("click", () => {
         if (currentIndex > 0) renderPracticeMode(currentIndex - 1);
@@ -420,6 +514,8 @@ IMPORTANT: Return ONLY valid JSON, no additional text before or after.`;
 
       if (window.MathJax) MathJax.typesetPromise();
     }
+
+    // --- Mode & Subject ---
 
     function setMode(newMode) {
       mode = newMode;
@@ -436,6 +532,7 @@ IMPORTANT: Return ONLY valid JSON, no additional text before or after.`;
       currentTopic = "All";
       order = [];
       visited = [];
+      mode = "all";
       $.getJSON(`Topics/${subject}/QA.json`, function (data) {
         qaData = data;
         populateTopicTabs();
@@ -443,21 +540,49 @@ IMPORTANT: Return ONLY valid JSON, no additional text before or after.`;
       }).fail(() => {
         qaData = [];
         $("#topic-tabs").empty();
-        $("#qa-container").html(`<p>⚠️ No questions available for ${subject} yet.</p>`);
+        $("#qa-container").html(`<p class="empty-msg">No questions available for ${subjects[subject] || subject} yet.</p>`);
       });
     }
 
+    // --- Init ---
+
     $(document).ready(function () {
-      $(".subject-btn").on("click", function () {
-        $(".subject-btn").removeClass("active");
-        $(this).addClass("active");
-        loadSubject($(this).data("subject"));
+      $(".topic-card").on("click", function () {
+        const subject = $(this).data("subject");
+        navigate(`#topic/${subject}`);
       });
 
       $("#all-btn").on("click", () => setMode("all"));
       $("#practice-btn").on("click", () => setMode("practice"));
 
-      loadSubject("Transformers");
+      // Settings modal
+      $("#settings-btn").on("click", () => {
+        $("#api-key-input").val(localStorage.getItem('openrouter_api_key') || '');
+        $("#settings-status").text('');
+        loadModels();
+        $("#settings-modal").fadeIn(200);
+      });
+      $("#modal-close").on("click", () => $("#settings-modal").fadeOut(200));
+      $("#settings-modal").on("click", function (e) {
+        if (e.target === this) $(this).fadeOut(200);
+      });
+      $("#save-settings-btn").on("click", () => {
+        const key = $("#api-key-input").val().trim();
+        const model = $("#model-select").val();
+        if (key) localStorage.setItem('openrouter_api_key', key);
+        if (model) localStorage.setItem('openrouter_model', model);
+        $("#settings-status").text("Settings saved").css("color", "#4CAF50");
+      });
+      $("#clear-settings-btn").on("click", () => {
+        localStorage.removeItem('openrouter_api_key');
+        localStorage.removeItem('openrouter_model');
+        $("#api-key-input").val('');
+        $("#model-select").val(OPENROUTER_MODEL);
+        $("#settings-status").text("Settings cleared").css("color", "#94a3b8");
+      });
+
+      window.addEventListener("hashchange", handleRoute);
+      handleRoute();
     });
   </script>
 </body>
