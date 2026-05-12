@@ -297,6 +297,123 @@
     ]
   },
   {
+    "type": "RL",
+    "id": "Q1",
+    "question": "What is thomspon sampling?",
+    "answer": "one with best mean (bandit algorithm that samples a reward model from the posterior and picks the action that looks best under that sample.)",
+    "tags": [
+      "Basic"
+    ]
+  },
+  {
+    "type": "RL",
+    "id": "Q2",
+    "question": "What is UCB, how is it different from thompson sampling",
+    "answer": "UCB, or Upper Confidence Bound, is another bandit algorithm that chooses actions according to an optimistic estimate of their value. Instead of using only the empirical mean reward, it adds an uncertainty bonus, so the action score is roughly “mean plus uncertainty.” This encourages the algorithm to try actions that are either known to be good or still uncertain. The main difference from Thompson Sampling is that UCB is deterministic once the estimates are fixed and explicitly builds in optimism through confidence intervals, while Thompson Sampling is randomized and explores by sampling from a posterior distribution over rewards.",
+    "tags": [
+      "Basic"
+    ]
+  },
+  {
+    "type": "RL",
+    "id": "Q3",
+    "question": "Why is UCB and Thompson used commonly?",
+    "answer": "They are widely used because they are simple, principled, and effective ways to trade off exploration and exploitation. More importantly, both come with strong theoretical regret guarantees, which makes them attractive in settings where we want both practical performance and mathematical justification.",
+    "tags": [
+      "Hands-on"
+    ]
+  },
+  {
+    "type": "RL",
+    "id": "Q4",
+    "question": "What theoretical guarantees you can provide with UCB and Thompson samplimg?",
+    "answer": "The main theoretical guarantee for both UCB and Thompson Sampling is that their regret grows sublinearly with the number of rounds. Regret measures how much reward is lost compared with always choosing the optimal action. If regret is sublinear, then the average regret per round goes to zero as the number of rounds increases, which means the algorithm asymptotically learns to act optimally.",
+    "tags": [
+      "Deep"
+    ]
+  },
+  {
+    "type": "RL",
+    "id": "Q5",
+    "question": "What is Bayesian Optimization?",
+    "answer": "Bayesian Optimization is a framework for optimizing expensive black-box functions when evaluations are costly and gradients may be unavailable. It works by fitting a surrogate model, often a Gaussian process, to approximate the unknown objective function, and then using an acquisition function to decide where to evaluate next. The surrogate captures both predicted performance and uncertainty, while the acquisition function balances exploring uncertain regions and exploiting areas that already look promising. This makes Bayesian Optimization especially useful in settings like hyperparameter tuning, robotics experiments, and scientific optimization where each evaluation may be expensive or time-consuming.",
+    "tags": [
+      "Basic"
+    ]
+  },
+  {
+    "type": "RL",
+    "id": "Q6",
+    "question": "What are the limitations of BO, what are the alternatives?",
+    "answer": "Problems - gaussian is expensive  use RL when n is high",
+    "tags": [
+      "Deep"
+    ]
+  },
+  {
+    "type": "RL",
+    "id": "Q7",
+    "question": "What is Krigging?",
+    "answer": "Kriging is a statistical interpolation method originally developed in geostatistics, and it is closely related to Gaussian process regression. The basic idea is to predict the value of an unknown function at a new point by using nearby observed data points together with an explicit model of spatial or functional correlation. In machine learning and optimization, Kriging is often used as a surrogate model because it provides not only a mean prediction but also an uncertainty estimate, which is very useful for deciding where to sample next. In fact, classical Bayesian Optimization with Gaussian processes can be viewed as using a Kriging-style predictive model.",
+    "tags": [
+      "Basic"
+    ]
+  },
+  {
+    "type": "RL",
+    "id": "Q8",
+    "question": "What is MCTS?",
+    "answer": "Monte Carlo Tree Search is a planning algorithm that builds a search tree by simulating many rollouts and using them to estimate good actions.",
+    "tags": [
+      "Basic"
+    ]
+  },
+  {
+    "type": "RL",
+    "id": "Q9",
+    "question": "What is the weakness of MCTS?",
+    "answer": "The main weakness of MCTS is that it can be computationally expensive, especially when the branching factor is large or when accurate rollouts require a strong simulator. Its performance also depends heavily on the quality of the simulation model and rollout policy; if the simulator is poor or the horizon is very long, the estimates can become noisy and misleading. In very large, continuous, or partially observed environments, naive MCTS may struggle because the tree grows too quickly and many states are rarely revisited. As a result, MCTS is often most effective when combined with good heuristics, learned value functions, or domain-specific structure.",
+    "tags": [
+      "Hands-on"
+    ]
+  },
+  {
+    "type": "RL",
+    "id": "Q10",
+    "question": "What is Model predictive control",
+    "answer": "Model Predictive Control (MPC) is a control strategy where, at every time step, you use a model of the system to predict how the system will evolve over a finite future horizon, solve an optimization problem to find the best sequence of control actions, apply only the first action, and then repeat the process at the next step using new state feedback.",
+    "tags": [
+      "Basic"
+    ]
+  },
+  {
+    "type": "RL",
+    "id": "Q11",
+    "question": "Compare MPC with RL",
+    "answer": "MPC plans online using an explicit dynamics model, while RL learns a policy from experience that can act quickly at test time.",
+    "tags": [
+      "Hands-on"
+    ]
+  },
+  {
+    "type": "RL",
+    "id": "Q12",
+    "question": "What is MPPI?",
+    "answer": "Model Predictive Path Integral control, is a sampling-based MPC method that updates controls by weighting noisy trajectories by their costs.",
+    "tags": [
+      "Basic"
+    ]
+  },
+  {
+    "type": "RL",
+    "id": "Q13",
+    "question": "How can we use LLM as policy, how does it learn implicitly",
+    "answer": "An LLM can act as a policy by mapping observations or text state descriptions to actions, and it learns implicitly by absorbing behavioral patterns from pretraining or fine-tuning data.",
+    "tags": [
+      "Basic"
+    ]
+  },
+  {
     "type": "Theory",
     "id": "Q1",
     "question": "What is the Bellman Equation?",
