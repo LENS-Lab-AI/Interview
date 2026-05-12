@@ -1,6 +1,52 @@
+/* === Topic Theme Variables === */
+:root {
+  --accent: #38bdf8;
+  --accent-soft: #7dd3fc;
+  --accent-bg: rgba(56, 189, 248, 0.1);
+  --accent-bg-strong: rgba(56, 189, 248, 0.12);
+  --accent-border: rgba(56, 189, 248, 0.3);
+  --accent-border-hover: rgba(56, 189, 248, 0.4);
+  --accent-glow: rgba(56, 189, 248, 0.08);
+  --accent-glow-subtle: rgba(56, 189, 248, 0.05);
+  --tab-color: #60a5fa;
+  --tab-bg: rgba(37, 99, 235, 0.18);
+  --tab-border: rgba(37, 99, 235, 0.35);
+  --tab-hover: #93c5fd;
+}
+
+[data-theme="Diffusion"] {
+  --accent: #a78bfa;
+  --accent-soft: #c4b5fd;
+  --accent-bg: rgba(139, 92, 246, 0.1);
+  --accent-bg-strong: rgba(139, 92, 246, 0.14);
+  --accent-border: rgba(139, 92, 246, 0.3);
+  --accent-border-hover: rgba(139, 92, 246, 0.45);
+  --accent-glow: rgba(139, 92, 246, 0.08);
+  --accent-glow-subtle: rgba(139, 92, 246, 0.05);
+  --tab-color: #8b5cf6;
+  --tab-bg: rgba(109, 40, 217, 0.18);
+  --tab-border: rgba(109, 40, 217, 0.35);
+  --tab-hover: #a78bfa;
+}
+
+[data-theme="ReinforcementLearning"] {
+  --accent: #34d399;
+  --accent-soft: #6ee7b7;
+  --accent-bg: rgba(52, 211, 153, 0.1);
+  --accent-bg-strong: rgba(52, 211, 153, 0.14);
+  --accent-border: rgba(52, 211, 153, 0.3);
+  --accent-border-hover: rgba(52, 211, 153, 0.45);
+  --accent-glow: rgba(52, 211, 153, 0.08);
+  --accent-glow-subtle: rgba(52, 211, 153, 0.05);
+  --tab-color: #10b981;
+  --tab-bg: rgba(5, 150, 105, 0.18);
+  --tab-border: rgba(5, 150, 105, 0.35);
+  --tab-hover: #34d399;
+}
+
 /* === Base Layout === */
 body {
-  background: radial-gradient(circle at 20% 20%, #0f172a, #020617);
+  background: radial-gradient(circle at 20% 20%, #111827, #030712);
   color: #cbd5e1;
   font-family: "DM Sans", system-ui, -apple-system, sans-serif;
   margin: 0;
@@ -37,7 +83,7 @@ body {
 }
 
 a.breadcrumb-item:hover {
-  color: #38bdf8;
+  color: var(--accent);
 }
 
 .breadcrumb-item.active {
@@ -150,6 +196,9 @@ a.breadcrumb-item:hover {
   letter-spacing: 0.05em;
 }
 
+[data-subject="Diffusion"] .card-count { color: #a78bfa; }
+[data-subject="ReinforcementLearning"] .card-count { color: #34d399; }
+
 /* === Topic View === */
 #topic-view {
   width: 100%;
@@ -193,9 +242,9 @@ a.breadcrumb-item:hover {
 }
 
 .mode-switch button.active {
-  background: #38bdf8;
+  background: var(--accent);
   color: #0f172a;
-  border-color: #38bdf8;
+  border-color: var(--accent);
 }
 
 /* === Topic Tabs === */
@@ -224,14 +273,14 @@ a.breadcrumb-item:hover {
 }
 
 .topic-tab:hover {
-  color: #c4b5fd;
-  border-color: rgba(99, 102, 241, 0.3);
+  color: var(--tab-hover);
+  border-color: var(--tab-border);
 }
 
 .topic-tab.active {
-  background: rgba(99, 102, 241, 0.15);
-  color: #a5b4fc;
-  border-color: rgba(99, 102, 241, 0.3);
+  background: var(--tab-bg);
+  color: var(--tab-color);
+  border-color: var(--tab-border);
 }
 
 /* === Tag Filters === */
@@ -246,7 +295,7 @@ a.breadcrumb-item:hover {
 .tag-filter {
   background: transparent;
   color: #64748b;
-  border: 1px solid rgba(56, 189, 248, 0.2);
+  border: 1px solid var(--accent-border);
   border-radius: 14px;
   padding: 0.2rem 0.75rem;
   font-size: 0.78rem;
@@ -259,14 +308,14 @@ a.breadcrumb-item:hover {
 }
 
 .tag-filter:hover {
-  color: #7dd3fc;
-  border-color: rgba(56, 189, 248, 0.4);
+  color: var(--accent-soft);
+  border-color: var(--accent-border-hover);
 }
 
 .tag-filter.active {
-  background: rgba(56, 189, 248, 0.1);
-  color: #7dd3fc;
-  border-color: rgba(56, 189, 248, 0.3);
+  background: var(--accent-bg);
+  color: var(--accent-soft);
+  border-color: var(--accent-border);
 }
 
 /* === Q&A Cards === */
@@ -282,14 +331,14 @@ a.breadcrumb-item:hover {
   border-radius: 12px;
   padding: 1.5rem;
   margin-bottom: 1.5rem;
-  box-shadow: 0 4px 10px rgba(56, 189, 248, 0.05);
+  box-shadow: 0 4px 10px var(--accent-glow-subtle);
   transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .qa-card:hover {
   transform: translateY(-3px);
   border-color: #475569;
-  box-shadow: 0 8px 20px rgba(56, 189, 248, 0.08);
+  box-shadow: 0 8px 20px var(--accent-glow);
 }
 
 .practice-card button,
@@ -314,14 +363,14 @@ a.breadcrumb-item:hover {
 }
 
 #verify-btn {
-  color: #38bdf8;
-  border-color: rgba(56, 189, 248, 0.3);
+  color: var(--accent);
+  border-color: var(--accent-border);
 }
 
 #verify-btn:hover {
-  background: rgba(56, 189, 248, 0.12);
-  color: #38bdf8;
-  border-color: rgba(56, 189, 248, 0.4);
+  background: var(--accent-bg-strong);
+  color: var(--accent);
+  border-color: var(--accent-border-hover);
 }
 
 .practice-actions {
@@ -340,8 +389,8 @@ a.breadcrumb-item:hover {
 
 .type-label {
   font-size: 0.75rem;
-  background: rgba(99, 102, 241, 0.15);
-  color: #a5b4fc;
+  background: var(--tab-bg);
+  color: var(--tab-color);
   padding: 4px 10px;
   border-radius: 6px;
   display: inline-block;
@@ -359,11 +408,11 @@ a.breadcrumb-item:hover {
 
 .tag {
   font-size: 0.7rem;
-  background: rgba(56, 189, 248, 0.1);
-  color: #7dd3fc;
+  background: var(--accent-bg);
+  color: var(--accent-soft);
   padding: 3px 10px;
   border-radius: 12px;
-  border: 1px solid rgba(56, 189, 248, 0.25);
+  border: 1px solid var(--accent-border);
   display: inline-block;
   font-weight: 500;
   letter-spacing: 0.02em;
@@ -387,7 +436,7 @@ a.breadcrumb-item:hover {
 }
 
 .question:hover .toggle-icon {
-  color: #38bdf8;
+  color: var(--accent);
 }
 
 .answer {
@@ -432,8 +481,8 @@ a.breadcrumb-item:hover {
 
 .answer code,
 .answer-box code {
-  background: rgba(56, 189, 248, 0.08);
-  color: #7dd3fc;
+  background: var(--accent-bg);
+  color: var(--accent-soft);
   padding: 0.15rem 0.4rem;
   border-radius: 4px;
   font-size: 0.88em;
@@ -481,13 +530,13 @@ a.breadcrumb-item:hover {
 
 .user-input:focus {
   outline: none;
-  border-color: #38bdf8;
+  border-color: var(--accent);
 }
 
 .answer-box {
   margin-top: 1rem;
   background: rgba(30, 41, 59, 0.7);
-  border-left: 3px solid #38bdf8;
+  border-left: 3px solid var(--accent);
   padding: 1rem 1.2rem;
   border-radius: 0 8px 8px 0;
   display: none;
@@ -583,7 +632,7 @@ a.breadcrumb-item:hover {
 }
 
 .settings-btn:hover {
-  color: #38bdf8;
+  color: var(--accent);
 }
 
 /* === Modal === */
@@ -664,7 +713,7 @@ a.breadcrumb-item:hover {
 
 .modal-body input:focus {
   outline: none;
-  border-color: #38bdf8;
+  border-color: var(--accent);
 }
 
 .settings-section {
@@ -679,7 +728,7 @@ a.breadcrumb-item:hover {
 }
 
 .settings-hint a {
-  color: #38bdf8;
+  color: var(--accent);
   text-decoration: none;
 }
 
@@ -706,13 +755,13 @@ a.breadcrumb-item:hover {
 }
 
 .settings-actions button:first-child {
-  background: rgba(56, 189, 248, 0.12);
-  color: #38bdf8;
-  border-color: rgba(56, 189, 248, 0.3);
+  background: var(--accent-bg-strong);
+  color: var(--accent);
+  border-color: var(--accent-border);
 }
 
 .settings-actions button:first-child:hover {
-  background: rgba(56, 189, 248, 0.2);
+  background: var(--accent-bg-strong);
 }
 
 .settings-actions button:hover {
