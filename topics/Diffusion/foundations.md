@@ -63,7 +63,7 @@ The careful answer is: **sometimes we can**. In simple fully observed models, di
 
 We **cannot maximize MLE directly** when the likelihood itself or its gradient is intractable. This happens most often in:
 
-### (a) Latent-variable models
+**(a) Latent-variable models**
 
 If
 $$
@@ -85,7 +85,7 @@ $$
 $$
 and $p_\theta(z\mid x)$ is precisely what we do not know how to compute.
 
-### (b) Models with an intractable partition function
+**(b) Models with an intractable partition function**
 
 In EBMs,
 
@@ -102,7 +102,7 @@ $$
 $$
 That expectation is often expensive because it requires sampling from the model itself.
 
-### (c) Nonconvex high-dimensional optimization
+**(c) Nonconvex high-dimensional optimization**
 
 Even when the likelihood is explicit, direct maximization may still be numerically difficult due to local optima, saddle points, poor conditioning, or huge datasets.
 
@@ -113,7 +113,7 @@ So the real issue is not “MLE is impossible” in general. The issue is that *
 - **MCMC-based approximations**,
 - **contrastive divergence**, **score matching**, **noise-contrastive estimation**, etc.
 
-**In short**
+**In short:**
 
 - direct MLE is fine in simple observed models
 - fails in practice when likelihood or gradient is intractable
@@ -128,7 +128,7 @@ So the real issue is not “MLE is impossible” in general. The issue is that *
 **A:** 
 There are two standard derivations.
 
-### Derivation via Jensen
+**Derivation via Jensen**
 
 Start with
 
@@ -159,7 +159,7 @@ $$
 \mathbb{E}_{q_\phi}[\log p_\theta(x,z)-\log q_\phi(z\mid x)].
 $$
 
-### Derivation via KL
+**Derivation via KL**
 
 Start from
 
@@ -180,16 +180,16 @@ $$
 \log p_\theta(x)=\text{ELBO}+\mathrm{KL}(q_\phi(z\mid x)\|p_\theta(z\mid x)).
 $$
 
-### What to emphasize
+**What to emphasize:**
 
 The KL derivation is the best one to say in an interview, because it makes the approximation gap explicit.
 
-### Likely follow-up
+**Likely follow-up:**
 
 **Which derivation is more insightful?**
  Jensen explains the lower bound; the KL derivation explains the optimization meaning.
 
-### In short
+**In short:**
 
 - introduce $q(z\mid x)$
 - Jensen gives lower bound
@@ -212,7 +212,7 @@ The model assigns lower energy to more plausible states.
 
 MLE and KL divergence are **training principles**. An EBM is a **model class**. We need EBMs because in many problems it is much easier to define a scalar compatibility score than a tractable normalized likelihood.
 
-### What to emphasize
+**What to emphasize:**
 
 EBMs are useful when:
 
@@ -226,7 +226,7 @@ $$
 \hat y = \arg\min_y E_\theta(x,y).
 $$
 
-### Likely follow-up
+**Likely follow-up:**
 
 **If $Z_\theta$ is intractable, how do you train them?**
  Approximate MLE, contrastive divergence, score matching, noise-contrastive estimation, or score-based objectives.
@@ -234,7 +234,7 @@ $$
 **How is this related to KL?**
  MLE still corresponds to minimizing $\mathrm{KL}(p_{\text{data}}\|p_\theta)$, but computing it is difficult because $p_\theta$ is hard to normalize.
 
-### In short
+**In short:**
 
 - EBM = $p(x)\propto e^{-E(x)}$
 - energy low = plausible
@@ -273,7 +273,7 @@ $$
 
 is the population mean under a probability distribution.
 
-### What to emphasize
+**What to emphasize:**
 
 Expectation is theoretical; average is sample-based; minimum is optimization.
 
@@ -287,7 +287,7 @@ $$
 $$
 The first is empirical risk minimization; the second is population risk minimization.
 
-### Likely follow-up
+**Likely follow-up:**
 
 **Do min and expectation commute?**
  Usually no:
@@ -295,7 +295,7 @@ $$
 \min_\theta \mathbb{E}[L(\theta,X)] \neq \mathbb{E}[\min_\theta L(\theta,X)].
 $$
 
-### In short
+**In short:**
 
 - minimum = optimization
 - average = sample mean
@@ -327,7 +327,7 @@ $$
 \hat I = \frac1N\sum_{i=1}^N f(x^{(i)})\frac{p(x^{(i)})}{q(x^{(i)})}.
 $$
 
-### What to emphasize
+**What to emphasize:**
 
 The weight
 $$
@@ -337,7 +337,7 @@ corrects for the mismatch between proposal and target.
 
 The main issue is variance: if $q$ misses important regions, weights explode and the estimator becomes unstable.
 
-### Likely follow-up
+**Likely follow-up:**
 
 **What is the support condition?**
  If $p(x)>0$, then we need $q(x)>0$.
@@ -345,7 +345,7 @@ The main issue is variance: if $q$ misses important regions, weights explode and
 **What if only an unnormalized target is known?**
  Use self-normalized importance sampling.
 
-### In short
+**In short:**
 
 - sample from easy $q$, estimate under hard $p$
 - correct with weights $p/q$
@@ -366,16 +366,16 @@ $$
 \mathbb{P}(\text{success})=\frac{30}{35}=\frac67.
 $$
 
-### What to emphasize
+**What to emphasize:**
 
 This is an exact construction using rejection sampling.
 
-### Likely follow-up
+**Likely follow-up:**
 
 **Why not do it in one roll?**
  Because a single fair die only gives probabilities that are multiples of $1/6$, and $6/7$ is not one of them.
 
-### In short
+**In short:**
 
 - one roll cannot realize $6/7$
 - two rolls give $36$ outcomes
@@ -411,7 +411,7 @@ dX_t=-\theta(X_t-\mu)\,dt+\sigma\,dW_t,
 $$
 It is a Gaussian Markov process with mean reversion toward $\mu$.
 
-### What to emphasize
+**What to emphasize:**
 
 Brownian motion is pure diffusion. OU is diffusion plus restoring drift.
 
@@ -427,7 +427,7 @@ For OU:
 - stationary distribution exists,
 - temporal correlations decay exponentially.
 
-### Likely follow-up
+**Likely follow-up:**
 
 **Is OU Markov?**
  Yes.
@@ -435,7 +435,7 @@ For OU:
 **Is Brownian motion stationary?**
  No; increments are stationary, but the process itself is not.
 
-### In short
+**In short:**
 
 - Brownian: no restoring force, variance grows forever
 - OU: mean-reverting diffusion
@@ -458,7 +458,7 @@ $$
 65536-4\cdot6561+6\cdot256-4=40824.
 $$
 
-### What to emphasize
+**What to emphasize:**
 
 This is a standard onto-function counting problem.
 
@@ -468,12 +468,12 @@ $$
 $$
 where $S(8,4)$ is a Stirling number of the second kind.
 
-### Likely follow-up
+**Likely follow-up:**
 
 **What if books were identical?**
  Then it becomes an integer partition/composition problem, not a surjection count.
 
-### In short
+**In short:**
 
 - distinct books, distinct cases
 - onto maps from 8 items to 4 bins
@@ -493,7 +493,7 @@ $$
 =\mathbb{P}(X_{t+1}\in A\mid X_t).
 $$
 
-### What to emphasize
+**What to emphasize:**
 
 The present state is a sufficient statistic of the past for predicting the future.
 
@@ -514,12 +514,12 @@ $$
 Y_t=(X_t,\dots,X_{t-p+1}).
 $$
 
-### Likely follow-up
+**Likely follow-up:**
 
 **Can every non-Markov process be made Markov?**
  Yes in principle by taking the whole past as the state, but that may be infinite-dimensional.
 
-### In short
+**In short:**
 
 - Markov = future independent of past given present
 - present summarizes predictive information
@@ -543,7 +543,7 @@ $$
 p_\theta(y\mid x)\propto e^{-E_\theta(x,y)}.
 $$
 
-### What to emphasize
+**What to emphasize:**
 
 EBMs are useful wherever scoring compatibility is easier than constructing a normalized explicit likelihood.
 
@@ -556,7 +556,7 @@ Typical applications:
 - anomaly detection,
 - score-based modeling.
 
-### Likely follow-up
+**Likely follow-up:**
 
 **What is the main difficulty?**
  Partition function estimation and sampling.
@@ -564,7 +564,7 @@ Typical applications:
 **Why are they powerful?**
  Because they can represent complex dependencies without restrictive factorization assumptions.
 
-### In short
+**In short:**
 
 - EBM = learn an energy landscape
 - low energy = data-like / compatible
