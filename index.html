@@ -42,7 +42,7 @@
         <div class="settings-section">
           <label for="model-select">LLM Model</label>
           <select id="model-select">
-            <option value="allenai/molmo-2-8b:free">molmo-2-8b (Free)</option>
+            <option value="meta-llama/llama-3.3-70b-instruct:free">molmo-2-8b (Free)</option>
           </select>
           <p class="settings-hint">Model used for answer verification. Free models are listed first.</p>
         </div>
@@ -123,7 +123,7 @@
     let currentSubject = "";
 
     const OPENROUTER_API_URL = "https://openrouter.ai/api/v1/chat/completions";
-    const OPENROUTER_MODEL = "allenai/molmo-2-8b:free";
+    const OPENROUTER_MODEL = "meta-llama/llama-3.3-70b-instruct:free";
     const PROXY_URL = "%%PROXY_URL%%";
 
     const subjects = {
@@ -284,11 +284,14 @@ IMPORTANT: Return ONLY valid JSON, no additional text before or after.`;
             });
             if (!response.ok) {
               const errBody = await response.text().catch(() => '');
-              console.warn(`Proxy error ${response.status}: ${errBody}`);
-              response = null;
+              try {
+                const errJson = JSON.parse(errBody);
+                return { success: false, error: errJson.error?.message || errBody };
+              } catch {
+                return { success: false, error: `Error (${response.status}): ${errBody || 'Unknown error'}` };
+              }
             }
           } catch (e) {
-            console.warn('Proxy fetch failed:', e.message);
             response = null;
           }
         }
