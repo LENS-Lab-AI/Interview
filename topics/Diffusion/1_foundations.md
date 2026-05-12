@@ -1,7 +1,7 @@
 # Foundations of probability — Xinyuan
 
 ---
-## what is ELBO? Why we use it?
+## What is ELBO? Why we use it?
 **T:** Basic
 
 **A:** 
@@ -55,7 +55,7 @@ This is why ELBO is central in **variational inference**, **VAEs**, and many Bay
 
 ---
 
-## why we cannot maximize MLE directly?
+## Why we cannot maximize MLE directly?
 **T:** Deep
 
 **A:** 
@@ -122,7 +122,7 @@ So the real issue is not “MLE is impossible” in general. The issue is that *
 
 ---
 
-## how to proof/derive the ELBO
+## How to proof/derive the ELBO
 **T:** Deep
 
 **A:** 
@@ -200,7 +200,7 @@ The KL derivation is the best one to say in an interview, because it makes the a
 
 ---
 
-## what is EBM? why we need this when we have MLE, KL divergence:
+## What is EBM? why we need this when we have MLE, KL divergence:
 **T:** Basic
 
 **A:** 
@@ -303,7 +303,7 @@ $$
 - average estimates expectation
 - minimum and expectation usually do not commute
 ---
-### what's importance sampling
+### What's importance sampling
 **T:** Basic
 
 **:A** 
@@ -353,7 +353,7 @@ The main issue is variance: if $q$ misses important regions, weights explode and
 - works well only with a good proposal
 ---
 
-## get 6 out of 7 probability out of a 6-side dice
+## Get 6 out of 7 probability out of a 6-side dice
 **T:** Hands-on
 
 **A:** 
@@ -384,7 +384,7 @@ This is an exact construction using rejection sampling.
 
 ---
 
-## what is Ornstein–Uhlenbeck process? what it is Brownian motion? what's the difference between these?
+## What is Ornstein–Uhlenbeck process? what it is Brownian motion? what's the difference between these?
 **T:** Deep
 
 **A:** 
@@ -528,7 +528,7 @@ $$
 
 ---
 
-## define EBM and where they are used
+## Define EBM and where they are used
 **T:** Basic
 
 **A:** 
