@@ -289,5 +289,419 @@
     "tags": [
       "Hands-on"
     ]
+  },
+  {
+    "type": "Deployment/Applications",
+    "id": "Q1",
+    "question": "What is Curriculum Learning?",
+    "answer": "For the complex reinforcement learning tasks, teaching an agent a behavior in a single step is hard. In that case instead of training in a single step, teaching an agent with multiple stages are required. That's why Curriculum learning is used. In Curriculum learning, the given RL task is divided into multiple stages and trained with different reward functions at each stage. For example, if we are aiming to teach a robot how to walk, we will start with teaching it to stand up, then walk slowly, and then walk at the required speed.",
+    "tags": [
+      "Basic"
+    ]
+  },
+  {
+    "type": "Deployment/Applications",
+    "id": "Q2",
+    "question": "How do you decide the curriculum?",
+    "answer": "To define a curriculum, dividing the task into correct subtasks is required. Those tasks are required to be sequential with each other. Besides that, knowing the exact points at which the policies are sufficiently trained is required. Humans can define the curriculum, or a model can understand how to define the curriculum. LLMs are one way; the other way is based on putting a threshold.",
+    "tags": [
+      "Hands-on"
+    ]
+  },
+  {
+    "type": "Deployment/Applications",
+    "id": "Q3",
+    "question": "You train a policy in simulation, how would you deploy it in the real world?",
+    "answer": "Simulation and real-world physics can differ due to the complexity and non-linearity of the real world. Factors like motor backlash, friction, latency, sensor noise, and actuator dynamics are hard to model accurately in simulation. For simple cases, the policy can be deployed directly, but for complex systems like multi-joint robots, adaptation is required. Common techniques include domain randomization (training across varied simulated conditions), system identification (tuning simulation parameters to match the real robot), and domain adaptation (aligning simulated and real observation distributions). Fine-tuning on a small real-world dataset or using BC bootstrapping to initialize the policy from demonstrations can also help bridge the gap.",
+    "tags": [
+      "Hands-on"
+    ]
+  },
+  {
+    "type": "Deployment/Applications",
+    "id": "Q4",
+    "question": "What is domain randomization, and what are its effects?",
+    "answer": "If we always use the same environment in simulations, our RL model can memorize the setup and fail when a simple change occurs, such as a change in light color, brightness, or the objects in the environment. To solve this problem, random variations, such as lighting and slight angle differences, can be used. Other methodologies, such as friction randomization, in such a diverse scenario, alter the visualization of objects and distractors.",
+    "tags": [
+      "Basic"
+    ]
+  },
+  {
+    "type": "Deployment/Applications",
+    "id": "Q5",
+    "question": "What is hierarchical RL?",
+    "answer": "For some problems, multiple controllers in different control levels are required. For example, an autonomous car needs to navigate to the correct location while also completing the current street without hitting any objects. In a hierarchy, the top one cares about the high-level problem(like navigation), and the bottom one cares about the low-level problems(controlling the car and object avoidance).",
+    "tags": [
+      "Basic"
+    ]
+  },
+  {
+    "type": "Deployment/Applications",
+    "id": "Q6",
+    "question": "What is residual RL?",
+    "answer": "Classical controllers(PID, MPC, etc.) are strong and fast for solving predefined problems by solving the issues deterministically. However, they are weak at handling the unseen situations. For RL, it solves the problems slower but it has a high adaptibility. To combine those advantages, Residual RL has emerged. In here, a traditional controller controls the agent, while there is additional RL that is doing the learning and adapting.",
+    "tags": [
+      "Basic"
+    ]
+  },
+  {
+    "type": "Deployment/Applications",
+    "id": "Q7",
+    "question": "For Safe RL, how control barrier keep it safe?",
+    "answer": "Safety in learning-based algorithms is crucial, especially for real-world agents. For example, if an industrial-grade, high-torque 200 kg robotic arm is controlled by RL, we have to ensure it does not take actions that harm humans or damage the environment. And especially for neural network-based controllers, there is always a possibility that they may end up taking an awkward action, since neural network policies lack formal safety guarantees. To solve this problem, multiple techniques can be used:\n- Control Barrier Function: Defines a safe set in state space and mathematically constrains the policy so that actions always keep the system inside this set, guaranteeing safety by construction.\n- Action Shielding: Wraps the RL policy with an external safety filter that checks every proposed action and overrides it with a safe alternative whenever it would violate safety constraints.\n- Penalty Shaping: Gives large penalties to wrong actions while training RL, so the agent learns to avoid unsafe behaviors through the reward signal rather than hard constraints.",
+    "tags": [
+      "Hands-on"
+    ]
+  },
+  {
+    "type": "Deployment/Applications",
+    "id": "Q8",
+    "question": "What is Offline RL?",
+    "answer": "In some cases, it is hard to do random actions in the environment, which makes it hard to train RL models. To overcome it, we will first move the agent in the environment. Then we will collect the data and train the RL model based on that. In here, RL models learn by not interacting with the environment in real time (not online), but learn from the collected data.",
+    "tags": [
+      "Basic"
+    ]
+  },
+  {
+    "type": "Deployment/Applications",
+    "id": "Q9",
+    "question": "If we are able to collect data, why are we doing online RL?",
+    "answer": "Offline data only contains a fixed distribution of states/actions; the agent never sees what happens in situations the data didn't cover, leading to poor generalization and overestimation of unseen actions. Online RL lets the agent actively explore, generate new trajectories, and receive feedback on novel states, so it can correct its own mistakes and discover better policies beyond the dataset's support. For example, a self-driving car trained only on safe human driving never learns to recover from rare skids; a robot arm trained on offline demos fails on object poses absent from the data; a game agent stuck imitating logged play can't discover superior strategies its demonstrators never tried.",
+    "tags": [
+      "Deep"
+    ]
+  },
+  {
+    "type": "Deployment/Applications",
+    "id": "Q10",
+    "question": "What is the difference between supervised learning(e.g., behavior cloning) and offline RL",
+    "answer": "Supervised learning, like behavior cloning, just copies the actions in the dataset without caring about rewards or long-term outcomes, so it treats good and bad demonstrations equally and cannot improve beyond the demonstrator's skill level. Offline RL, on the other hand, uses the reward signal and value estimation to figure out which actions actually lead to high returns, so it can stitch together good parts of different trajectories and learn a policy better than any single behavior in the dataset. For example, behavior cloning on mixed expert and beginner driving data will imitate both, while offline RL can pick out only the expert-like actions. In robot manipulation, BC fails when the demos contain suboptimal grasps, but offline RL can learn which grasps gave higher success rewards. In healthcare, BC copies doctor decisions blindly, while offline RL evaluates which treatment choices actually led to better patient outcomes.",
+    "tags": [
+      "Deep"
+    ]
+  },
+  {
+    "type": "Deployment/Applications",
+    "id": "Q11",
+    "question": "What is multi-agent RL?",
+    "answer": "Some of the RL tasks require multiple agents to interact with each other. For example, if we want humanoid robots to play football, it requires multiple agents with different or the same tasks interacting with each other. These interactions can be mutual (same-team humanoid robots) or competitive (humanoid robots on different teams). In Multi-Agent RL, multiple agents learn by interacting with the environment and with each other.",
+    "tags": [
+      "Basic"
+    ]
+  },
+  {
+    "type": "Deployment/Applications",
+    "id": "Q12",
+    "question": "What is action shielding?",
+    "answer": "In safe RL, harmful actions must be avoided. To do that, action shielding overrides unsafe actions with safe alternatives at execution time, so no harmful action ever reaches the environment. This way, the agent can explore freely while an external safety layer guarantees that no unsafe action ever gets executed, though it is often combined with a penalty signal to discourage the policy from proposing those actions in the first place.",
+    "tags": [
+      "Deep"
+    ]
+  },
+  {
+    "type": "Deployment/Applications",
+    "id": "Q13",
+    "question": "What are the problems with too much domain Randomization?",
+    "answer": "Too much domain randomization makes the task unnecessarily hard by forcing the policy to be robust to irrelevant variations, leading to slower learning, worse asymptotic performance, and potential failure to learn at all. For example, randomizing object colors when the task only depends on shape wastes learning capacity, varying lighting conditions too wildly in a pick-and-place task makes it harder to learn grasping, and extreme physics randomization can make the simulated dynamics so different from reality that the learned policy doesn't transfer. To solve this, you can use curriculum learning to gradually increase randomization difficulty, apply automatic domain randomization that adapts the distribution based on task performance, or leverage domain knowledge to randomize only the parameters that actually affect sim-to-real transfer.\n\n\n.",
+    "tags": [
+      "Hands-on"
+    ]
+  },
+  {
+    "type": "Learning",
+    "id": "Q1",
+    "question": "What is temporal-difference (TD) learning, and how is it different from Monte Carlo (MC) learning?",
+    "answer": "Both are model-free evaluation algorithms. TD learning updates value estimates based on other learned estimates (bootstrapping) after every step. MC learning requires a complete episode to finish before updating values based on actual accumulated returns. \n\nConsequently, TD learning has lower variance but higher bias, whereas MC learning has high variance but zero bias.",
+    "tags": [
+      "Basic"
+    ]
+  },
+  {
+    "type": "Learning",
+    "id": "Q2",
+    "question": "What is the difference between value iteration and policy iteration?",
+    "answer": "Policy Iteration is a two-step process: it explicitly evaluates a fixed policy until convergence, then greedily improves the policy, repeating until optimal. \n\nValue Iteration collapses this process by directly applying the Bellman optimality equation to update state-value estimates in one sweep, extracting the optimal policy only at the end.",
+    "tags": [
+      "Basic"
+    ]
+  },
+  {
+    "type": "Learning",
+    "id": "Q3",
+    "question": "What is Q-learning?",
+    "answer": "Q-learning is an off-policy TD control algorithm. It iteratively approximates the optimal action-value function $Q(s,a)$, representing the expected cumulative reward of taking action $a$ in state $s$. Unlike a static transition table, it updates these values dynamically using the Bellman equation, independently of the behavioral policy used for exploration.",
+    "tags": [
+      "Basic"
+    ]
+  },
+  {
+    "type": "Learning",
+    "id": "Q4",
+    "question": "What is the difference between A2C and A3C?",
+    "answer": "Both are Actor-Critic architectures utilizing parallel workers. A3C (Asynchronous) allows independent workers to asynchronously update a global network, which can lead to parameter staleness. A2C (Advantage Actor-Critic) is the synchronous variant; a coordinator waits for all workers to complete their rollout segments before averaging the gradients to perform a unified update, making it more stable and GPU-efficient.",
+    "tags": [
+      "Basic"
+    ]
+  },
+  {
+    "type": "Learning",
+    "id": "Q5",
+    "question": "What is SARSA, and what is its primary disadvantage?",
+    "answer": "SARSA (State-Action-Reward-State-Action) is an on-policy TD control algorithm. It updates $Q(s,a)$ based on the action actually selected by the current behavioral policy for the next state.\n\n*Disadvantage:* Because it is on-policy, its convergence to the optimal policy is slower than Q-learning; it safely incorporates exploration penalties (like the randomness in an $\\epsilon$-greedy policy) into its value updates, which can drag down performance during training.",
+    "tags": [
+      "Basic"
+    ]
+  },
+  {
+    "type": "Learning",
+    "id": "Q6",
+    "question": "What is a POMDP, and how is it solved?",
+    "answer": "A Partially Observable Markov Decision Process (POMDP) occurs when an agent cannot perfectly observe the underlying environment state, only receiving observation signals (effects). For instance, real-world mid-air aircraft collision avoidance systems (like ACAS X) are modeled this way.\n\nIt is typically solved by converting it into an MDP where the ``state'' is replaced by a belief state (a probability distribution over all possible true states) or by using recurrent neural networks (RNNs) to compress the entire history of past observations into a hidden state vector.",
+    "tags": [
+      "Deep"
+    ]
+  },
+  {
+    "type": "Learning",
+    "id": "Q7",
+    "question": "What is TRPO, and how did it evolve into PPO?",
+    "answer": "Trust Region Policy Optimization (TRPO) ensures monotonic policy improvement by mathematically constraining the policy update step size. It uses a hard KL-divergence constraint to guarantee the new policy stays within a ``trust region'' of the old policy.\n\nTRPO relies on computationally expensive second-order optimizations (Fisher Information Matrix). Proximal Policy Optimization (PPO) simplifies this by subtracting the constraint penalty directly or, more commonly, using a clipped first-order surrogate objective function that penalizes excessively large updates, achieving similar stability with far less compute.",
+    "tags": [
+      "Basic"
+    ]
+  },
+  {
+    "type": "Learning",
+    "id": "Q8",
+    "question": "How does Soft Actor-Critic (SAC) differ from A2C, and why is it called ``soft''?",
+    "answer": "While A2C is typically an on-policy algorithm, SAC is an off-policy Actor-Critic method.\n\n**Why \"soft\"?** It relies on maximum entropy RL. A temperature-scaled entropy term is added to the reward function. The policy is optimized to maximize both the expected return and the entropy (randomness) of its actions, acting as a ``soft'' maximum that inherently drives stable exploration.",
+    "tags": [
+      "Deep"
+    ]
+  },
+  {
+    "type": "Learning",
+    "id": "Q9",
+    "question": "Why does SAC utilize two Q-value functions?",
+    "answer": "Approximating Q-values in continuous action spaces frequently suffers from overestimation bias. To mitigate this, SAC maintains two separate Q-networks and takes the minimum of their outputs when computing the temporal difference target. This pessimistic bounding strategy was adapted from Double DQN (DDQN).",
+    "tags": [
+      "Deep"
+    ]
+  },
+  {
+    "type": "Learning",
+    "id": "Q10",
+    "question": "What is Hindsight Experience Replay (HER)?",
+    "answer": "HER is a buffer technique designed for sparse-reward environments. If an agent fails to reach its target goal in an episode, HER retrospectively relabels the actual state achieved at the end of the trajectory as a new pseudo-goal. By storing this modified trajectory, the agent receives a positive reward signal and learns from its failures by treating them as successes for alternative objectives.",
+    "tags": [
+      "Deep"
+    ]
+  },
+  {
+    "type": "Learning (Inverse/Preference)",
+    "id": "Q1",
+    "question": "What is inverse RL?",
+    "answer": "Inverse reinforcement learning (IRL) asks the reverse question of RL: instead of being given a reward function and solving for an optimal policy, you observe expert behavior and try to infer a reward function under which that behavior is optimal or near-optimal. The classic formulation is due to Ng and Russell (2000), and Abbeel and Ng (2004) turned this into apprenticeship learning, where the goal is to recover behavior that matches an expert without requiring the expert to hand-design the reward.\n\nThe deep intuition is that demonstrations tell you what the expert prefers, not just what action they took at one state. IRL is useful when writing the reward explicitly is hard, but showing good behavior is easy—for example driving, robotics, or human preference learning.",
+    "tags": [
+      "Basic"
+    ]
+  },
+  {
+    "type": "Learning (Inverse/Preference)",
+    "id": "Q2",
+    "question": "What's the challenge of inverse RL?",
+    "answer": "The central difficulty is that IRL is ill-posed: many different reward functions can rationalize the same observed trajectories. This is not a bug of one algorithm; it is a structural identifiability problem. If all you observe is behavior, then several rewards may induce the same optimal policy, especially up to shaping-like transformations or feature equivalences.\n\nA second challenge is that IRL is effectively a bi-level problem: for each candidate reward, you must solve an RL problem to see what policy it induces, then compare that policy to the expert. So learning the reward and solving control are coupled, which is why IRL can be unstable or expensive.\n\nA third challenge is distribution mismatch. The demonstrations come from the expert’s state-action distribution, but once the learner acts on its own, it visits different states, and small reward misspecification can compound. That is one reason apprenticeship learning focuses on matching feature expectations or occupancy behavior rather than only copying actions locally.",
+    "tags": [
+      "Basic"
+    ]
+  },
+  {
+    "type": "Learning (Inverse/Preference)",
+    "id": "Q3",
+    "question": "How to solve the multiple-reward problem?",
+    "answer": "A standard answer is: add an inductive principle that selects one reward among all rewards consistent with the demonstrations. Different IRL methods differ mainly in that principle.\n\nIn Apprenticeship Learning via IRL, Abbeel and Ng assume the reward is linear in known features and then search for a policy whose feature expectations match the expert’s. This avoids needing to recover the one “true” reward exactly; it is enough to recover a reward-equivalent policy.\n\nIn Maximum Entropy IRL, Ziebart resolves reward ambiguity by choosing, among all trajectory distributions that match the demonstrations, the one with maximum entropy. Intuitively: do not assume extra structure that the data did not justify. This gives a probabilistic model over trajectories and is usually the cleanest interview answer to “why does MaxEnt help?”: it turns an underdetermined inverse problem into a well-posed one by preferring the least-committed explanation.\n\n**In short**\n\n- IRL: infer reward from expert behavior\n- classic papers: Ng–Russell 2000; Abbeel–Ng 2004\n- hard because many rewards explain same demos\n- also hard because each reward guess requires solving RL\n- fix ambiguity with extra principle: feature matching, max margin, maximum entropy",
+    "tags": [
+      "Basic"
+    ]
+  },
+  {
+    "type": "Learning (Inverse/Preference)",
+    "id": "Q4",
+    "question": "What is InstructGPT and what did they use?",
+    "answer": "InstructGPT is not a new base architecture; it is a GPT-3-family model fine-tuned to follow instructions better using human feedback. The key point of the paper is that next-token pretraining alone does not make a model reliably aligned with user intent, so OpenAI added a post-training alignment pipeline.\n\nThe pipeline in the paper has three stages. First, collect demonstrations and do supervised fine-tuning (SFT). Second, collect rankings of multiple model outputs and train a reward model. Third, optimize the policy with RLHF using PPO, with a KL-style penalty to keep the model from drifting too far from the reference policy. The prompts came from both labeler-written tasks and real prompts submitted through the OpenAI API.\n\nThe punchline result is interview-worthy: a 1.3B InstructGPT model was preferred by human raters over the much larger 175B GPT-3 on their prompt distribution. That made the paper influential because it showed that better alignment can dominate brute-force scale on user-perceived usefulness.\n\n**In short**\n\n- InstructGPT = GPT-3 aligned to follow instructions\n- used SFT on demonstrations\n- then reward model on ranked outputs\n- then PPO-based RLHF with KL constraint\n- prompts came from labelers and real API users",
+    "tags": [
+      "Basic"
+    ]
+  },
+  {
+    "type": "Learning (Inverse/Preference)",
+    "id": "Q5",
+    "question": "What is GRPO? will it be unstable from the average? will it take forever to converge?",
+    "answer": "GRPO stands for Group Relative Policy Optimization. It was introduced in DeepSeekMath as a PPO variant that removes the separate critic/value model and instead estimates advantage from group-relative rewards—that is, compare multiple sampled outputs for the same prompt and normalize them relative to the group. The practical motivation in the paper is memory and training-efficiency savings over standard PPO.\n\nSo the answer to “is it unstable because of the average?” is: it can be. The group-average baseline is simple and effective when rewards are clean and mostly relative, especially in verifiable domains like math. But this same simplicity can create optimization bias. Later analyses found that GRPO can introduce length bias, and with richer ordinal rewards its group-average baseline can even assign positive advantage to failed trajectories, reinforcing wrong behavior.\n\nDoes it “take forever to converge”? Not inherently. In practice it can converge well enough to be useful, and DeepSeekMath introduced it precisely because it trains efficiently. But convergence speed depends heavily on verifier quality, reward noise, group size, exploration, and the base model. With noisy verifiers, RLVR-style training can slow down dramatically or even go in the wrong direction if false positives/false negatives are bad enough.\n\nA good oral answer is: GRPO trades the stability of an explicit critic for the simplicity of a relative group baseline. That is often a good trade in LLM reasoning with verifiable rewards, but it is not a free lunch.\n\n**In short**\n\n- GRPO = PPO variant with no separate critic\n- uses within-group relative rewards as baseline\n- attractive because cheaper in memory/implementation\n- can be unstable with noisy or ordinal rewards\n- convergence depends on reward quality and group design, not just on “the average”",
+    "tags": [
+      "Basic"
+    ]
+  },
+  {
+    "type": "Learning (Inverse/Preference)",
+    "id": "Q6",
+    "question": "What is DPO?",
+    "answer": "**DPO** stands for **Direct Preference Optimization**. Its key idea is that, under the standard KL-constrained RLHF setup, you can derive the optimal policy in closed form and train it **directly from preference pairs** with a simple classification-style loss, instead of first fitting an explicit reward model and then running RL. The DPO paper’s slogan is exactly this: the language model is “secretly a reward model.” \n\nSo conceptually, DPO says: if you have pairwise preferences like “response A is better than response B,” you can optimize the policy **offline and directly** rather than doing the usual reward-model-plus-PPO pipeline. That is why DPO is seen as simpler and more stable in many practical settings.",
+    "tags": [
+      "Basic"
+    ]
+  },
+  {
+    "type": "Learning (Inverse/Preference)",
+    "id": "Q7",
+    "question": "What is PPO, and what is the difference between PPO and GRPO?",
+    "answer": "**PPO** stands for **Proximal Policy Optimization**. It is a policy-gradient method that updates a policy using a **clipped surrogate objective**, which limits how far the new policy can move from the old one in a single step. Its appeal is that it keeps some of the practical stability of trust-region ideas while remaining much simpler and first-order. \n\nIn standard PPO, advantage estimation usually depends on a **learned value function / critic**. So PPO is typically an **actor-critic** method: the actor changes the policy, and the critic estimates expected return to reduce variance. \n\n**GRPO** keeps the clipped-policy style but **removes the separate critic**. Instead of estimating value with a learned network, it uses **group-relative normalized rewards** from several samples of the same prompt. So the main difference is:\n\n- **PPO:** advantage from critic/value estimates\n- **GRPO:** advantage from relative performance within a sampled group \n\nThat means PPO is often more classical and general-purpose, while GRPO is more specialized to settings like LLM reasoning where you can cheaply score multiple candidate completions for one prompt. The trade-off is less memory and engineering for GRPO, but more dependence on reward design and group statistics. \n\n**In short**\n\n- PPO: clipped policy-gradient actor-critic\n- GRPO: PPO-like update without a learned critic\n- PPO uses value estimates\n- GRPO uses relative group rewards\n- GRPO is cheaper, but can be more sensitive to reward/group effects",
+    "tags": [
+      "Basic"
+    ]
+  },
+  {
+    "type": "Learning (Inverse/Preference)",
+    "id": "Q8",
+    "question": "What is Jensen–Shannon divergence? Why use it instead of KL divergence?",
+    "answer": "For two distributions $P$ and $Q$, the **Jensen–Shannon divergence** is\n\n$$\n\\mathrm{JSD}(P,Q)\n=\\frac12 \\mathrm{KL}(P\\|M)+\\frac12 \\mathrm{KL}(Q\\|M),\\qquadM=\\frac12(P+Q).\n$$\n\nSo it measures how far each distribution is from their average mixture. It was introduced by Lin as a symmetric Shannon-entropy-based divergence. \n\nThe main intuitive reason to use JSD instead of KL is that **KL is asymmetric and can blow up to infinity** when supports do not overlap, while **JSD is symmetric and bounded**. So JSD is often a more stable notion of “distributional difference” when you do not want one direction to dominate or when support mismatch is common. \n\nAnother useful intuition: JSD compares both distributions to a **shared midpoint** $M$. That makes it a kind of “consensus discrepancy,” whereas KL is directional and answers “how inefficient is it to code $P$ using $Q$?” not “how different are they in a balanced sense?” \n\nWhy do we need it in ML? One famous example is the original GAN theory, where the ideal discriminator game is connected to minimizing a Jensen–Shannon-type divergence between the data distribution and the generator distribution. More broadly, JSD is useful when you want **symmetry, boundedness, or a metric-like comparison**. \n\nIf they ask about **Rényi divergence**: JSD is not the same thing, but it is related historically to the **information radius** viewpoint, and that connects to more general divergence families like Rényi-based radii. \n\n**In short**\n\n- $\\mathrm{JSD}(P,Q)=\\frac12\\mathrm{KL}(P\\|M)+\\frac12\\mathrm{KL}(Q\\|M)$\n- symmetric, unlike KL\n- bounded/finite, unlike KL under support mismatch\n- compares both distributions to their midpoint\n- useful when you want a balanced notion of distance",
+    "tags": [
+      "Deep"
+    ]
+  },
+  {
+    "type": "Learning (Inverse/Preference)",
+    "id": "Q9",
+    "question": "what are the pros and cons of RLVR?",
+    "answer": "**RLVR** means **Reinforcement Learning with Verifiable Rewards**: instead of asking humans to rank outputs, you use an automated verifier—unit tests, exact-answer checking, symbolic equivalence, theorem checking, etc.—to produce the reward. It has become especially important in math and code.",
+    "tags": [
+      "Basic"
+    ]
+  },
+  {
+    "type": "Learning (Inverse/Preference)",
+    "id": "Q10",
+    "question": "What is the difference between PlaNet and Dreamer?",
+    "answer": "Both **PlaNet** and **Dreamer** are **world-model RL** methods from Danijar Hafner and collaborators. Both learn a latent dynamics model from pixels, so both belong to the same family. \n\nThe core difference is in **how they choose actions**. **PlaNet** learns the world model and then does **online planning in latent space**—typically model predictive control over imagined trajectories—at decision time. So it is explicitly a planning-based model-based RL agent. \n\n**Dreamer** keeps the latent world model but replaces online planning with a learned **actor-critic** trained on imagined trajectories. So Dreamer “dreams” future latent rollouts and directly improves a policy and value function in imagination, then executes the learned actor at test time. \n\nThat gives a clean interview contrast:\n\n- **PlaNet:** learn model, then **plan online**\n- **Dreamer:** learn model, then **learn a policy in imagination** \n\nPractically, PlaNet can be more explicitly planning-driven, while Dreamer usually has cheaper action selection at inference because it does not solve a planner from scratch every step. Dreamer’s actor-critic formulation also made it easier to scale to longer-horizon behavior and later versions like DreamerV3. \n\n**In short**\n\n- both are latent world-model RL\n- PlaNet = online planning in latent space\n- Dreamer = actor-critic trained in imagined latent rollouts\n- PlaNet plans every step\n- Dreamer learns a policy, so inference is usually cheaper",
+    "tags": [
+      "Hands-on"
+    ]
+  },
+  {
+    "type": "Theory",
+    "id": "Q1",
+    "question": "What is the Bellman Equation?",
+    "answer": "The Bellman Equation expresses the value of a state recursively — the value of being in a state equals the immediate reward you get from that state plus the discounted value of the next state you end up in. Formally, for a state $s$:\n\n$$V(s) = \\mathbb{E}\\left[r + \\gamma V(s')\\right]$$\n\nwhere $r$ is the immediate reward, $\\gamma \\in [0,1]$ is the discount factor controlling how much future rewards matter, and $s'$ is the next state. The key insight is that you don't need to sum over all future time steps explicitly — the recursive structure lets the value of $s'$ already encode everything beyond it.",
+    "tags": [
+      "Basic"
+    ]
+  },
+  {
+    "type": "Theory",
+    "id": "Q2",
+    "question": "What is a Markov Chain?",
+    "answer": "A Markov Chain is a stochastic process over a set of states where the probability of transitioning to the next state depends *only* on the current state — not on any history of how you got there. This is called the **Markov property**: $P(s_{t+1} \\mid s_t, s_{t-1}, \\ldots) = P(s_{t+1} \\mid s_t)$. There are no actions and no rewards; it is purely a model of how a system evolves over time. This makes it the simplest building block for more complex frameworks like MDPs.",
+    "tags": [
+      "Basic"
+    ]
+  },
+  {
+    "type": "Theory",
+    "id": "Q3",
+    "question": "What is a Markov Decision Process (MDP)?",
+    "answer": "An MDP extends a Markov Chain by introducing an **agent** that takes **actions** and receives **rewards**. It is defined by the tuple $(S, A, P, R, \\gamma)$ — states, actions, transition probabilities, a reward function, and a discount factor. The agent's goal is to find a **policy** $\\pi(a \\mid s)$ that maximizes its expected cumulative discounted reward. The Markov property is retained: the next state and reward depend only on the current state and action, not the full history. This is a deliberate simplification — in practice it's rarely perfectly true, but it makes the problem tractable while still capturing the essential structure of sequential decision-making.",
+    "tags": [
+      "Basic"
+    ]
+  },
+  {
+    "type": "Theory",
+    "id": "Q4",
+    "question": "What is a Q-value vs. a State Value?",
+    "answer": "Both are measures of long-term return, but they condition on different things:\n \n- **State Value** $V^\\pi(s)$: the expected cumulative reward starting from state $s$ and following policy $\\pi$ thereafter. It tells you how good it is to *be* in a state.\n- **Q-value (Action-Value)** $Q^\\pi(s, a)$: the expected cumulative reward starting from state $s$, taking a *specific action* $a$ first, and then following policy $\\pi$. It tells you how good it is to take a particular action in a state.\nThe relationship between them is: $V^\\pi(s) = \\sum_a \\pi(a \\mid s)\\, Q^\\pi(s, a)$ — the state value is simply the Q-values averaged over actions according to the policy. Q-values are more directly useful for control, since comparing $Q(s, a)$ across actions tells you which action to pick.",
+    "tags": [
+      "Basic"
+    ]
+  },
+  {
+    "type": "Theory",
+    "id": "Q5",
+    "question": "Where can we NOT use RL?",
+    "answer": "RL breaks down in **non-stationary environments** — settings where the underlying dynamics or reward structure change over time such that the Markov property no longer holds. If the rules of the environment keep shifting, the value estimates the agent has learned become stale and unreliable, since they were computed under assumptions that no longer apply. More broadly, RL is also impractical when environment interaction is extremely expensive or dangerous, when rewards are completely unobservable, or when the state space is so poorly defined that meaningful generalization is impossible.",
+    "tags": [
+      "Basic"
+    ]
+  },
+  {
+    "type": "Theory",
+    "id": "Q6",
+    "question": "What is the difference between Model-Based and Model-Free RL?",
+    "answer": "The distinction is whether the agent has access to — or explicitly learns — a model of the environment's transition dynamics $P(s' \\mid s, a)$:\n \n- **Model-Based:** The agent uses a known or learned transition model to plan ahead (e.g., by simulating trajectories) before acting. This can be sample-efficient but is vulnerable to model errors — if the learned model is wrong, the policy optimized against it can fail badly in the real environment. Examples include MCTS/AlphaZero, MPC, LQR, and PILCO.\n- **Model-Free:** The agent learns purely from real experience, updating its value function or policy directly from observed transitions without ever explicitly modeling $P(s' \\mid s, a)$. This avoids model bias and scales better to high-dimensional, complex environments, but typically requires far more environment interactions.",
+    "tags": [
+      "Basic"
+    ]
+  },
+  {
+    "type": "Theory",
+    "id": "Q7",
+    "question": "What is the difference between Optimal Control and RL?",
+    "answer": "Both aim to find a policy that maximizes some notion of cumulative reward, but they differ in what they assume is known upfront. **Optimal control** typically takes the mathematical model of the environment (dynamics, cost function) as given and solves for the optimal policy analytically or numerically — no learning from data is required. **RL**, by contrast, assumes the agent does *not* have access to the true model and must discover an effective policy through trial-and-error interaction with the environment. In practice, the boundary has blurred — model-based RL learns a dynamics model and then applies optimal control on top of it — but the conceptual distinction is known vs. unknown environment dynamics.",
+    "tags": [
+      "Basic"
+    ]
+  },
+  {
+    "type": "Theory",
+    "id": "Q8",
+    "question": "What is the difference between On-Policy and Off-Policy learning?",
+    "answer": "The distinction is about *whose* data is being used to update the policy:\n \n- **On-Policy:** The agent can only learn from transitions generated by the policy it is currently trying to improve. Every time the policy updates, old data becomes invalid and must be discarded. SARSA and PPO are canonical examples.\n- **Off-Policy:** The agent can learn from data generated by a *different* (possibly older) policy, or from a replay buffer of past experience. This makes off-policy methods more sample-efficient since data can be reused, but introduces additional complexity (e.g., importance sampling corrections). Q-learning and DQN are canonical examples",
+    "tags": [
+      "Basic"
+    ]
+  },
+  {
+    "type": "Theory",
+    "id": "Q9",
+    "question": "What is the difference between Online and Offline RL?",
+    "answer": "The distinction is about whether the agent can interact with the environment during training:\n \n- **Online RL:** The agent actively collects new experience by interacting with the environment throughout training. It can explore, correct mistakes, and continuously refine its behavior.\n- **Offline RL:** The agent trains entirely on a fixed, pre-collected dataset — there is no live environment interaction. This is critical in domains where data collection is expensive or dangerous (e.g., healthcare, robotics), but introduces the challenge of **distributional shift**: the agent may encounter state-action pairs during training that are poorly represented in the dataset, leading to unreliable value estimates.",
+    "tags": [
+      "Basic"
+    ]
+  },
+  {
+    "type": "Theory",
+    "id": "Q10",
+    "question": "What are the main Types of RL Algorithms?",
+    "answer": "RL algorithms are broadly categorized into three families based on what they learn:\n \n- **Value-Based:** The agent learns a value function ($V$ or $Q$) and derives its policy implicitly by always selecting the highest-valued action. The policy itself is never parameterized directly. Examples: DQN, Q-learning.\n- **Policy Gradient:** The agent directly parameterizes and optimizes the policy $\\pi_\\theta$ using gradient ascent on expected return, without necessarily maintaining an explicit value function. This handles continuous action spaces naturally. Example: PPO, REINFORCE.\n- **Actor-Critic:** A hybrid that combines both. The **Actor** is the policy that selects actions; the **Critic** is a learned value function that evaluates those actions and provides a lower-variance training signal for the actor. Most modern deep RL algorithms (PPO with a value head, SAC, A3C) fall into this category.",
+    "tags": [
+      "Basic"
+    ]
+  },
+  {
+    "type": "Theory",
+    "id": "Q11",
+    "question": "What is the Exploration vs. Exploitation Trade-off?",
+    "answer": "At every step, the agent faces a fundamental dilemma:\n \n- **Exploitation:** Acting greedily with respect to current knowledge — choosing the action believed to yield the highest reward. This maximizes short-term performance but risks getting stuck in a suboptimal policy if the agent's estimates are wrong.\n- **Exploration:** Deliberately trying actions that may not seem optimal in order to gather new information about the environment. This sacrifices immediate reward for the possibility of discovering better long-term strategies.\nBalancing the two is non-trivial. Common strategies include $\\epsilon$-greedy (explore randomly with probability $\\epsilon$), softmax action selection, and principled approaches like UCB (Upper Confidence Bound) or entropy bonuses in policy gradient methods.",
+    "tags": [
+      "Basic"
+    ]
+  },
+  {
+    "type": "Theory",
+    "id": "Q12",
+    "question": "What is the Credit Assignment Problem?",
+    "answer": "When an agent receives a reward, it must determine which of the many actions it took in the past were actually responsible for that outcome. This is the **credit assignment problem**. It is hard for two reasons: (1) actions have delayed consequences, so the reward signal arrives long after the relevant decision was made; and (2) rewards are often **sparse** — the agent may take hundreds of steps before receiving any feedback at all. Temporal Difference methods partially address this by propagating value estimates backward through time, and techniques like **reward shaping** and **hindsight experience replay** are explicitly designed to make credit assignment more tractable.",
+    "tags": [
+      "Deep"
+    ]
+  },
+  {
+    "type": "Theory",
+    "id": "Q13",
+    "question": "What is Generalization in RL?",
+    "answer": "Generalization refers to the agent's ability to apply learned behavior successfully to states it has never encountered during training. This is harder in RL than in supervised learning because the agent's training distribution is determined by its own policy — if the agent never visits certain states, it has no data to learn from them. Poor generalization manifests as agents that perform well on their training environment but fail when the environment is even slightly perturbed (different visual textures, layout variations, etc.). Approaches to improve generalization include domain randomization, data augmentation, and learning compact state representations that abstract away irrelevant details.",
+    "tags": [
+      "Basic"
+    ]
   }
 ]
