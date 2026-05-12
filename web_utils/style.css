@@ -1,8 +1,8 @@
 /* === Base Layout === */
 body {
   background: radial-gradient(circle at 20% 20%, #0f172a, #020617);
-  color: #e2e8f0;
-  font-family: "Inter", system-ui, -apple-system, sans-serif;
+  color: #cbd5e1;
+  font-family: "DM Sans", system-ui, -apple-system, sans-serif;
   margin: 0;
   padding: 2rem 1rem;
   display: flex;
@@ -58,6 +58,7 @@ a.breadcrumb-item:hover {
 
 #home-view h1 {
   text-align: center;
+  font-family: "Outfit", sans-serif;
   font-size: 2.6rem;
   color: #f1f5f9;
   margin-bottom: 0.3rem;
@@ -127,6 +128,7 @@ a.breadcrumb-item:hover {
 }
 
 .card-content h2 {
+  font-family: "Outfit", sans-serif;
   font-size: 1.6rem;
   font-weight: 700;
   color: #f1f5f9;
@@ -156,9 +158,12 @@ a.breadcrumb-item:hover {
 
 #topic-view h1 {
   text-align: center;
+  font-family: "Outfit", sans-serif;
   font-size: 2.2rem;
-  color: #38bdf8;
+  color: #f1f5f9;
   margin-bottom: 1rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
 }
 
 /* === Mode Buttons === */
@@ -171,25 +176,26 @@ a.breadcrumb-item:hover {
 
 .mode-switch button {
   background: #1e293b;
-  color: #e2e8f0;
+  color: #94a3b8;
   border: 1px solid #334155;
   border-radius: 8px;
-  padding: 0.6rem 1.2rem;
-  font-size: 1rem;
+  padding: 0.55rem 1.3rem;
+  font-size: 0.95rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
 .mode-switch button:hover {
-  background: #38bdf8;
-  color: #0f172a;
-  border-color: #38bdf8;
+  color: #f1f5f9;
+  background: #334155;
+  border-color: #475569;
 }
 
 .mode-switch button.active {
   background: #38bdf8;
   color: #0f172a;
+  border-color: #38bdf8;
 }
 
 /* === Topic Tabs === */
@@ -202,26 +208,26 @@ a.breadcrumb-item:hover {
 }
 
 .topic-tab {
-  background: #1e293b;
-  color: #e2e8f0;
+  background: transparent;
+  color: #64748b;
   border: 1px solid #334155;
   border-radius: 20px;
   padding: 0.3rem 0.9rem;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
+  font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
 .topic-tab:hover {
-  background: #38bdf8;
-  color: #0f172a;
-  border-color: #38bdf8;
+  color: #e2e8f0;
+  border-color: #475569;
 }
 
 .topic-tab.active {
-  background: #38bdf8;
-  color: #0f172a;
-  border-color: #38bdf8;
+  background: rgba(56, 189, 248, 0.12);
+  color: #38bdf8;
+  border-color: rgba(56, 189, 248, 0.3);
 }
 
 /* === Q&A Cards === */
@@ -238,31 +244,45 @@ a.breadcrumb-item:hover {
   padding: 1.5rem;
   margin-bottom: 1.5rem;
   box-shadow: 0 4px 10px rgba(56, 189, 248, 0.05);
-  transition: transform 0.2s ease;
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .qa-card:hover {
   transform: translateY(-3px);
+  border-color: #475569;
+  box-shadow: 0 8px 20px rgba(56, 189, 248, 0.08);
 }
 
 .practice-card button,
 .practice-actions button {
-  background: #1e293b;
-  color: #e2e8f0;
+  background: transparent;
+  color: #94a3b8;
   border: 1px solid #334155;
   padding: 0.5rem 1rem;
   border-radius: 8px;
   cursor: pointer;
   font-weight: 600;
+  font-size: 0.9rem;
   transition: all 0.2s ease;
   margin-right: 0.5rem;
 }
 
 .practice-card button:hover,
 .practice-actions button:hover {
-  background: #38bdf8;
-  color: #0f172a;
-  border-color: #38bdf8;
+  color: #e2e8f0;
+  border-color: #475569;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+#verify-btn {
+  color: #38bdf8;
+  border-color: rgba(56, 189, 248, 0.3);
+}
+
+#verify-btn:hover {
+  background: rgba(56, 189, 248, 0.12);
+  color: #38bdf8;
+  border-color: rgba(56, 189, 248, 0.4);
 }
 
 .practice-actions {
@@ -280,12 +300,15 @@ a.breadcrumb-item:hover {
 }
 
 .type-label {
-  font-size: 0.8rem;
-  background: #334155;
+  font-size: 0.75rem;
+  background: rgba(99, 102, 241, 0.15);
   color: #a5b4fc;
-  padding: 3px 8px;
+  padding: 4px 10px;
   border-radius: 6px;
   display: inline-block;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
 }
 
 .tags-container {
@@ -296,66 +319,149 @@ a.breadcrumb-item:hover {
 }
 
 .tag {
-  font-size: 0.75rem;
-  background: #1e3a5f;
+  font-size: 0.7rem;
+  background: rgba(56, 189, 248, 0.1);
   color: #7dd3fc;
-  padding: 4px 10px;
+  padding: 3px 10px;
   border-radius: 12px;
-  border: 1px solid #3b82f6;
+  border: 1px solid rgba(56, 189, 248, 0.25);
   display: inline-block;
   font-weight: 500;
+  letter-spacing: 0.02em;
 }
 
 .question {
   font-weight: 600;
-  font-size: 1.15rem;
+  font-size: 1.1rem;
   margin-bottom: 0.6rem;
   cursor: pointer;
+  color: #f1f5f9;
+  line-height: 1.5;
 }
 
 .toggle-icon {
   float: right;
-  color: #38bdf8;
+  color: #64748b;
   font-weight: bold;
   font-size: 1.2rem;
-  transition: transform 0.2s ease;
+  transition: color 0.2s ease;
+}
+
+.question:hover .toggle-icon {
+  color: #38bdf8;
 }
 
 .answer {
   display: none;
-  line-height: 1.6;
-  color: #cbd5e1;
+  line-height: 1.75;
+  color: #94a3b8;
   margin-top: 0.8rem;
+  padding-top: 0.8rem;
+  border-top: 1px solid #1e293b;
+}
+
+/* === Markdown in Answers === */
+.answer p,
+.answer-box p {
+  margin: 0 0 0.6rem 0;
+  text-align: justify;
+}
+
+.answer p:last-child,
+.answer-box p:last-child {
+  margin-bottom: 0;
+}
+
+.answer ul,
+.answer ol,
+.answer-box ul,
+.answer-box ol {
+  margin: 0.4rem 0 0.6rem 0;
+  padding-left: 1.4rem;
+}
+
+.answer li,
+.answer-box li {
+  margin-bottom: 0.3rem;
+}
+
+.answer strong,
+.answer-box strong {
+  color: #e2e8f0;
+  font-weight: 600;
+}
+
+.answer code,
+.answer-box code {
+  background: rgba(56, 189, 248, 0.08);
+  color: #7dd3fc;
+  padding: 0.15rem 0.4rem;
+  border-radius: 4px;
+  font-size: 0.88em;
+}
+
+.answer pre,
+.answer-box pre {
+  background: #0f172a;
+  border: 1px solid #1e293b;
+  border-radius: 6px;
+  padding: 0.8rem 1rem;
+  overflow-x: auto;
+  margin: 0.6rem 0;
+}
+
+.answer pre code,
+.answer-box pre code {
+  background: none;
+  padding: 0;
+  color: #e2e8f0;
+  font-size: 0.85em;
+}
+
+.math-display {
+  text-align: center;
+  margin: 1rem 0;
 }
 
 /* === Practice Mode === */
 .user-input {
   width: 100%;
   min-height: 80px;
-  border-radius: 6px;
-  border: 1px solid #475569;
-  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #334155;
+  padding: 12px;
   font-size: 1rem;
+  font-family: inherit;
   background: #0f172a;
   color: #e2e8f0;
   margin-bottom: 1rem;
   resize: vertical;
   box-sizing: border-box;
+  transition: border-color 0.2s ease;
+}
+
+.user-input:focus {
+  outline: none;
+  border-color: #38bdf8;
 }
 
 .answer-box {
   margin-top: 1rem;
-  background: #1e293b;
-  border-left: 4px solid #38bdf8;
-  padding: 1rem;
-  border-radius: 8px;
+  background: rgba(30, 41, 59, 0.7);
+  border-left: 3px solid #38bdf8;
+  padding: 1rem 1.2rem;
+  border-radius: 0 8px 8px 0;
   display: none;
+  line-height: 1.75;
+  color: #94a3b8;
 }
 
 .counter {
   text-align: right;
-  color: #94a3b8;
-  font-size: 0.95rem;
+  color: #64748b;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
   margin-bottom: 1rem;
 }
 
@@ -403,9 +509,11 @@ a.breadcrumb-item:hover {
 }
 
 .section-title {
-  color: #38bdf8;
+  color: #e2e8f0;
   font-weight: 600;
-  font-size: 1.1rem;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
   margin-bottom: 8px;
 }
 
@@ -443,7 +551,8 @@ a.breadcrumb-item:hover {
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(2, 6, 23, 0.8);
+  backdrop-filter: blur(4px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -451,12 +560,13 @@ a.breadcrumb-item:hover {
 }
 
 .modal-content {
-  background: #1e293b;
-  border: 1px solid #334155;
-  border-radius: 12px;
+  background: #0f172a;
+  border: 1px solid #1e293b;
+  border-radius: 14px;
   padding: 2rem;
   width: 90%;
   max-width: 440px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
 }
 
 .modal-header {
@@ -464,89 +574,115 @@ a.breadcrumb-item:hover {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #1e293b;
 }
 
 .modal-header h2 {
+  font-family: "Outfit", sans-serif;
   color: #f1f5f9;
-  font-size: 1.4rem;
+  font-size: 1.3rem;
   margin: 0;
+  font-weight: 600;
 }
 
 .modal-close {
   background: none;
   border: none;
-  color: #64748b;
+  color: #475569;
   font-size: 1.5rem;
   cursor: pointer;
   padding: 0;
+  transition: color 0.2s;
 }
 
 .modal-close:hover {
-  color: #f1f5f9;
+  color: #e2e8f0;
 }
 
 .modal-body label {
   display: block;
-  color: #94a3b8;
-  font-size: 0.9rem;
+  color: #e2e8f0;
+  font-size: 0.8rem;
   margin-bottom: 0.5rem;
   font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .modal-body input {
   width: 100%;
   padding: 0.6rem 0.8rem;
-  border-radius: 6px;
-  border: 1px solid #475569;
-  background: #0f172a;
+  border-radius: 8px;
+  border: 1px solid #1e293b;
+  background: rgba(30, 41, 59, 0.5);
   color: #e2e8f0;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
+  font-family: inherit;
   box-sizing: border-box;
+  transition: border-color 0.2s;
+}
+
+.modal-body input:focus {
+  outline: none;
+  border-color: #38bdf8;
 }
 
 .settings-section {
-  margin-bottom: 1.2rem;
+  margin-bottom: 1.4rem;
 }
 
 .settings-hint {
-  color: #64748b;
-  font-size: 0.8rem;
-  margin: 0.5rem 0 0;
+  color: #475569;
+  font-size: 0.78rem;
+  margin: 0.4rem 0 0;
+  line-height: 1.5;
 }
-
 
 .settings-hint a {
   color: #38bdf8;
+  text-decoration: none;
+}
+
+.settings-hint a:hover {
+  text-decoration: underline;
 }
 
 .settings-actions {
   display: flex;
   gap: 0.5rem;
+  margin-top: 0.4rem;
 }
 
 .settings-actions button {
-  background: #334155;
-  color: #e2e8f0;
-  border: 1px solid #475569;
+  background: transparent;
+  color: #94a3b8;
+  border: 1px solid #334155;
   padding: 0.5rem 1.2rem;
-  border-radius: 6px;
+  border-radius: 8px;
   cursor: pointer;
   font-weight: 600;
+  font-size: 0.9rem;
   transition: all 0.2s;
 }
 
 .settings-actions button:first-child {
-  background: #38bdf8;
-  color: #0f172a;
-  border-color: #38bdf8;
+  background: rgba(56, 189, 248, 0.12);
+  color: #38bdf8;
+  border-color: rgba(56, 189, 248, 0.3);
+}
+
+.settings-actions button:first-child:hover {
+  background: rgba(56, 189, 248, 0.2);
 }
 
 .settings-actions button:hover {
-  opacity: 0.85;
+  color: #e2e8f0;
+  border-color: #475569;
 }
 
 .key-status {
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   margin-top: 0.8rem;
   margin-bottom: 0;
 }

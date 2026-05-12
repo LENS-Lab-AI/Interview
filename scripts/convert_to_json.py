@@ -25,13 +25,13 @@ def extract_qa_from_markdown(file_path, verbose=False):
 
     # Pattern 1: ## Question Title\n**T:** tag\n**A:** or **:A** answer (format in theory.md, deployment.md)
     pattern_new = re.compile(
-        r"##\s+([^\n]+)\n\*\*T:\*\*\s*([^\n\*]+?)\s*\n\*\*(:?A:?)\*\*\s*(.*?)(?=\n---|\n##|\Z)",
+        r"(?<!#)##(?!#)\s+([^\n]+)\n\*\*T:\*\*\s*([^\n\*]+?)\s*\n\*\*(:?A:?)\*\*\s*(.*?)(?=\n---|\n##|\Z)",
         re.DOTALL
     )
     
     # Pattern 2: ### Q1. Question\n**T:** tag\n**A:** or **:A** answer (format in model.md, learning.md)
     pattern_old = re.compile(
-        r"###\s*(Q\d+[\.\d]*)[\.:]?\s*([^\n]+)\n\*\*T:\*\*\s*([^\n\*]+?)\s*\n\*\*(:?A:?)\*\*\s*(.*?)(?=\n---|\n###|\n##|\Z)",
+        r"###\s*(Q\d+(?:\.\d+)*)[\.:]?\s*([^\n]+)\n+\*\*T:\*\*\s*([^\n\*]+?)\s*\n+\*\*(:?A:?)\*\*\s*(.*?)(?=\n---|\n###|\n##|\Z)",
         re.DOTALL
     )
 
@@ -127,7 +127,7 @@ def convert_all_markdowns(input_dir, verbose=False):
         print(f"Input directory not found: {input_dir}")
         return
 
-    for filename in os.listdir(input_dir):
+    for filename in sorted(os.listdir(input_dir)):
         if filename.endswith(".md"):
             file_path = os.path.join(input_dir, filename)
             qas = extract_qa_from_markdown(file_path, verbose)

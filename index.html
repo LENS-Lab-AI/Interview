@@ -17,7 +17,11 @@
     };
   </script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" async></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Outfit:wght@500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="web_utils/style.css">
 </head>
 
@@ -124,6 +128,43 @@
     const OPENROUTER_MODEL = "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free";
     const PROXY_URL = "https://interview-qa-proxy.ataparia.workers.dev/";
 
+    function renderMarkdown(text) {
+      if (!text || typeof marked === 'undefined') return text;
+      text = text.replace(/``([^`]*?)''/g, '“$1”');
+      const mathMap = {};
+      let idx = 0;
+      let processed = text.replace(/\$\$([\s\S]*?)\$\$/g, (m) => {
+        const key = `%%DISPLAY_MATH_${idx++}%%`;
+        mathMap[key] = m;
+        return `\n\n${key}\n\n`;
+      });
+      processed = processed.replace(/\\\[([\s\S]*?)\\\]/g, (m) => {
+        const key = `%%DISPLAY_MATH_${idx++}%%`;
+        mathMap[key] = m;
+        return `\n\n${key}\n\n`;
+      });
+      processed = processed.replace(/\$([^$\n]+?)\$/g, (m) => {
+        const key = `%%INLINE_MATH_${idx++}%%`;
+        mathMap[key] = m;
+        return key;
+      });
+      processed = processed.replace(/\\\([\s\S]*?\\\)/g, (m) => {
+        const key = `%%INLINE_MATH_${idx++}%%`;
+        mathMap[key] = m;
+        return key;
+      });
+      let html = marked.parse(processed, { breaks: true });
+      Object.keys(mathMap).forEach(key => {
+        if (key.includes('DISPLAY_MATH')) {
+          html = html.replace(key, `</p><div class="math-display">${mathMap[key]}</div><p>`);
+        } else {
+          html = html.replace(key, mathMap[key]);
+        }
+      });
+      html = html.replace(/<p>\s*<\/p>/g, '');
+      return html;
+    }
+
     const subjects = {
       Transformers: "Transformers",
       Diffusion: "Diffusion",
@@ -183,7 +224,7 @@
 
     function loadQuestionCounts() {
       Object.keys(subjects).forEach(subject => {
-        $.getJSON(`Topics/${subject}/QA.json`, function (data) {
+        $.getJSON(`topics/${subject}/QA.json`, function (data) {
           $(`#count-${subject}`).text(`${data.length} questions`);
         }).fail(() => {
           $(`#count-${subject}`).text("Coming soon");
@@ -305,8 +346,12 @@ IMPORTANT: Return ONLY valid JSON, no additional text before or after.`;
 
     // --- Topic Tabs ---
 
+    const TYPE_ORDER = ["Theory", "Models", "Learning", "Deployment", "Case Studies"];
+    function typeRank(t) { const i = TYPE_ORDER.indexOf(t); return i === -1 ? TYPE_ORDER.length : i; }
+
     function populateTopicTabs() {
-      const topics = [...new Set(qaData.map(q => q.type).filter(Boolean))];
+      const topics = [...new Set(qaData.map(q => q.type).filter(Boolean))]
+        .sort((a, b) => typeRank(a) - typeRank(b));
       const tabContainer = $("#topic-tabs");
       tabContainer.empty();
       tabContainer.append(`<div class="topic-tab active" data-topic="All">All</div>`);
@@ -344,7 +389,7 @@ IMPORTANT: Return ONLY valid JSON, no additional text before or after.`;
               ${tagsHtml}
             </div>
             <div class="question">${q.id}. ${q.question}<span class="toggle-icon">+</span></div>
-            <div class="answer">${q.answer}</div>
+            <div class="answer">${renderMarkdown(q.answer)}</div>
           </div>
         `);
         container.append(card);
@@ -416,7 +461,7 @@ IMPORTANT: Return ONLY valid JSON, no additional text before or after.`;
             <button id="next-btn">Next</button>
           </div>
           <div id="verification-result" class="verification-box" style="display: none;"></div>
-          <div id="correct-answer" class="answer-box">${q.answer}</div>
+          <div id="correct-answer" class="answer-box">${renderMarkdown(q.answer)}</div>
         </div>
       `);
 
@@ -503,8 +548,8 @@ IMPORTANT: Return ONLY valid JSON, no additional text before or after.`;
       order = [];
       visited = [];
       mode = "all";
-      $.getJSON(`Topics/${subject}/QA.json`, function (data) {
-        qaData = data;
+      $.getJSON(`topics/${subject}/QA.json`, function (data) {
+        qaData = data.sort((a, b) => typeRank(a.type) - typeRank(b.type));
         populateTopicTabs();
         setMode(mode);
       }).fail(() => {
