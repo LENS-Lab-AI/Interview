@@ -617,7 +617,7 @@
     "question": "Why does OpenVLA use Huber loss instead of MSE for fine-tuning?",
     "answer": "Huber loss is quadratic for small errors and linear for large errors, offering robustness to outliers and improved training stability. This is crucial for robotics where noisy sensor readings are common.",
     "tags": [
-      "Hands-On"
+      "Hands-on"
     ]
   },
   {
@@ -626,7 +626,7 @@
     "question": "How could one build their own OpenVLA-style model?",
     "answer": "Start with a pretrained Vision-Language Model (e.g., CLIP or SigLIP) and fine-tune it using a curriculum learning pipeline that progressively introduces physical reasoning and action tasks. Ensure stability via Huber loss and action discretization.",
     "tags": [
-      "Hands-On"
+      "Hands-on"
     ]
   },
   {

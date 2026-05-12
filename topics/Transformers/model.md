@@ -147,13 +147,13 @@ Bag-based models ignore order. Sequence models aim to capture temporal structure
 
 ### Q18: Why does OpenVLA use Huber loss instead of MSE for fine-tuning?
 
-**T:** Hands-On
+**T:** Hands-on
 
 **A:** Huber loss is quadratic for small errors and linear for large errors, offering robustness to outliers and improved training stability. This is crucial for robotics where noisy sensor readings are common.
 
 ### Q19: How could one build their own OpenVLA-style model?
 
-**T:** Hands-On
+**T:** Hands-on
 
 **A:** Start with a pretrained Vision-Language Model (e.g., CLIP or SigLIP) and fine-tune it using a curriculum learning pipeline that progressively introduces physical reasoning and action tasks. Ensure stability via Huber loss and action discretization.
 
