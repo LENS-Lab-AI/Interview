@@ -1,4 +1,4 @@
-# Learning (Inverse/Preference) - Xin
+# Learning (Inverse/Preference)
 
 ## What is inverse RL?
 **T:** Basic
