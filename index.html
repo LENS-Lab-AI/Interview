@@ -219,7 +219,7 @@
     function showTopic(subject) {
       updateBreadcrumb(subject);
       $("#home-view").hide();
-      $("#topic-view").show();
+      $("#topic-view").attr("data-theme", subject).show();
       $("#topic-title").text(subjects[subject]);
       loadSubject(subject);
     }
