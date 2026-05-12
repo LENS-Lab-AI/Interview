@@ -2,7 +2,7 @@
   {
     "type": "Foundations of probability",
     "id": "Q1",
-    "question": "What is ELBO? Why we use it?",
+    "question": "What is ELBO? Why do we use it?",
     "answer": "The **ELBO** is the **Evidence Lower BOund** on the marginal log-likelihood $\\log p_\\theta(x)$, typically used in latent-variable models where\n$$\np_\\theta(x)=\\int p_\\theta(x,z)\\,dz\n$$\nis hard to compute exactly.\n\nFor any auxiliary distribution $q_\\phi(z\\mid x)$,\n$$\\log p_\\theta(x)\\;\\ge\\;\\mathbb{E}_{q_\\phi(z\\mid x)}\\left[\\log p_\\theta(x,z)-\\log q_\\phi(z\\mid x)\\right].$$\n\nThis lower bound is the ELBO:\n$$\\mathcal{L}(\\theta,\\phi;x)=\\mathbb{E}_{q_\\phi(z\\mid x)}[\\log p_\\theta(x,z)]-\\mathbb{E}_{q_\\phi(z\\mid x)}[\\log q_\\phi(z\\mid x)].$$\n\nA more interpretable form is\n\n$$\n\\mathcal{L}(\\theta,\\phi;x)\n=\\mathbb{E}_{q_\\phi(z\\mid x)}[\\log p_\\theta(x\\mid z)]\n-\\mathrm{KL}\\!\\left(q_\\phi(z\\mid x)\\,\\|\\,p_\\theta(z)\\right).\n$$\n\nSo ELBO has two terms:\n\n- a **data-fit / reconstruction term**: make $z$ explain $x$,\n- a **regularization term**: keep the approximate posterior close to the prior.\n\nWhy use it? Because exact Bayesian learning or exact MLE in latent-variable models often requires the posterior\n$$\np_\\theta(z\\mid x)=\\frac{p_\\theta(x,z)}{p_\\theta(x)},\n$$\nand both the denominator $p_\\theta(x)$ and the posterior are intractable. The ELBO converts the problem into an optimization problem over a tractable surrogate.\n\nCrucially,\n$$\n\\log p_\\theta(x)=\\mathcal{L}(\\theta,\\phi;x)+\\mathrm{KL}\\!\\left(q_\\phi(z\\mid x)\\,\\|\\,p_\\theta(z\\mid x)\\right).\n$$\nSo maximizing the ELBO does two things at once:\n\n1. it increases a lower bound on the true log-evidence,\n2. it makes $q_\\phi(z\\mid x)$ closer to the true posterior.\n\nThis is why ELBO is central in **variational inference**, **VAEs**, and many Bayesian latent-variable models.\n\n**In short**\n\n- ELBO = tractable lower bound on $\\log p_\\theta(x)$\n- used when exact marginalization/posterior inference is intractable\n- maximization = approximate inference + approximate learning",
     "tags": [
       "Basic"
@@ -11,7 +11,7 @@
   {
     "type": "Foundations of probability",
     "id": "Q2",
-    "question": "Why we cannot maximize MLE directly?",
+    "question": "Why can we not maximize MLE directly?",
     "answer": "The careful answer is: **sometimes we can**. In simple fully observed models, direct MLE is straightforward.\n\nWe **cannot maximize MLE directly** when the likelihood itself or its gradient is intractable. This happens most often in:",
     "tags": [
       "Deep"
@@ -20,7 +20,7 @@
   {
     "type": "Foundations of probability",
     "id": "Q3",
-    "question": "How to proof/derive the ELBO",
+    "question": "How to prove / derive the ELBO?",
     "answer": "There are two standard derivations.",
     "tags": [
       "Deep"
@@ -29,7 +29,7 @@
   {
     "type": "Foundations of probability",
     "id": "Q4",
-    "question": "What is EBM? why we need this when we have MLE, KL divergence:",
+    "question": "What is EBM? Why do we need this when we have MLE / KL divergence?",
     "answer": "An **Energy-Based Model** defines\n$$\np_\\theta(x)=\\frac{e^{-E_\\theta(x)}}{Z_\\theta}.\n$$\nThe model assigns lower energy to more plausible states.\n\nMLE and KL divergence are **training principles**. An EBM is a **model class**. We need EBMs because in many problems it is much easier to define a scalar compatibility score than a tractable normalized likelihood.",
     "tags": [
       "Basic"
@@ -47,7 +47,7 @@
   {
     "type": "Foundations of probability",
     "id": "Q6",
-    "question": "Get 6 out of 7 probability out of a 6-side dice",
+    "question": "Get 6/7 probability out of a 6-side dice",
     "answer": "Assuming the question means: construct an event with exact probability $6/7$ using repeated fair die rolls.\n\nRoll the die twice. That gives $36$ equally likely ordered outcomes. Reject one outcome, say $(6,6)$, and reroll whenever it happens. Then the remaining $35$ accepted outcomes are equally likely.\n\nNow label $30$ of those $35$ outcomes as “success” and the other $5$ as “failure”. Then\n$$\n\\mathbb{P}(\\text{success})=\\frac{30}{35}=\\frac67.\n$$",
     "tags": [
       "Hands-on"
@@ -56,7 +56,7 @@
   {
     "type": "Foundations of probability",
     "id": "Q7",
-    "question": "What is Ornstein–Uhlenbeck process? what it is Brownian motion? what's the difference between these?",
+    "question": "What is Ornstein-Uhlenbeck process? What is Brownian motion? What’s the difference?",
     "answer": "### Brownian motion\n\nA standard Brownian motion $(W_t)$ satisfies:\n\n- $W_0=0$,\n- continuous paths,\n- independent increments,\n- $W_t-W_s\\sim \\mathcal N(0,t-s)$.\n\nIt solves\n$$\ndX_t=dW_t.\n$$",
     "tags": [
       "Deep"
@@ -65,7 +65,7 @@
   {
     "type": "Foundations of probability",
     "id": "Q8",
-    "question": "What is markov property? how to model a non markov process as a Markov process",
+    "question": "What is Markov property? How to model a non-Markov process as a Markov process?",
     "answer": "A process is **Markov** if the future depends on the past only through the present:\n\n$$\n\\mathbb{P}(X_{t+1}\\in A\\mid X_t,X_{t-1},\\dots)\n=\\mathbb{P}(X_{t+1}\\in A\\mid X_t).\n$$",
     "tags": [
       "Basic"
@@ -83,57 +83,73 @@
   {
     "type": "Learning",
     "id": "Q1",
-    "question": "What is DDIM and what is difference from DDPM?",
+    "question": "Q. What is DDIM and what is difference from DDPM?",
     "answer": "Denoising Diffusion Probabilistic Models (DDPM) rely on a Markov chain to iteratively add and remove noise, which requires hundreds of sequential steps for generation. \n\nDenoising Diffusion Implicit Models (DDIM) generalize this by formulating a non-Markovian forward process that yields the same objective function. This allows DDIM to skip steps during inference, resulting in a deterministic sampling process that dramatically accelerates generation without retraining the model.",
-    "tags": []
+    "tags": [
+      "Basic"
+    ]
   },
   {
     "type": "Learning",
     "id": "Q2",
-    "question": "How are few-step diffusion models trained while maintaining consistency?",
+    "question": "Q: How are few-step diffusion models trained while maintaining consistency?",
     "answer": "Few-step diffusion models try to reduce the number of denoising steps without destroying sample quality. This can be achieved in different ways:\n\n* Consistency model:\nThe core idea is to learn a function $f_{\\theta}$ that maps any point on a probability flow ODE trajectory directly to its origin (the clean sample). This enforces a self-consistency property: $f_{\\theta}(x_t, t) = f_{\\theta}(x_{t'}, t')$ for any two points on the same trajectory. Training can be done via consistency distillation (using a pre-trained diffusion model to generate ODE pairs) or consistency training (directly from data, no teacher needed). At inference, you can generate in as few as 1–2 steps.\n* Logit-based Distillation: : A student model is trained to match the output distributions (scores/logits) of a multi-step teacher model but is constrained to do so over much larger timestep intervals, effectively compressing the teacher's schedule.",
-    "tags": []
+    "tags": [
+      "Deep"
+    ]
   },
   {
     "type": "Learning",
     "id": "Q3",
-    "question": "Difference between distillation and sampler (or scheduler)?",
+    "question": "Q: Difference between distillation and sampler (or scheduler)?",
     "answer": "A sampler or scheduler changes how you run inference on the same trained diffusion model. It decides the timestep sequence and numerical update rule used to go from noise to sample. For example: DDIM sampler, Euler sampler, DPM-Solver, etc.\n\nDistillation, in contrast, trains a new model so that fewer denoising steps are needed. It changes the model itself, not just the inference procedure.",
-    "tags": []
+    "tags": [
+      "Basic"
+    ]
   },
   {
     "type": "Learning",
     "id": "Q4",
-    "question": "How is self-attention and cross-attention utilized in diffusion architectures?",
+    "question": "Q: How is self-attention and cross-attention utilized in diffusion architectures?",
     "answer": "In diffusion architectures, Self-Attention processes the image latents to capture global spatial dependencies, typically applied after convolution blocks to relate distant patches of the image. \n\nCross-Attention is the mechanism for conditioning; it maps external modalities (like CLIP text embeddings) into the spatial features, dictating how the prompt guides the image generation.\n\n**Note:** In DiT-style architectures, conditioning is done via adaptive layer norm (adaLN) instead of cross-attention, where the text/timestep embedding modulates the scale and shift of normalization layers. This is cheaper and has been shown to work comparably well.",
-    "tags": []
+    "tags": [
+      "Basic"
+    ]
   },
   {
     "type": "Learning",
     "id": "Q5",
-    "question": "What is the start-up problem in multi-step solvers, and how is it addressed?",
+    "question": "Q: What is the start-up problem in multi-step solvers, and how is it addressed?",
     "answer": "Multi-step numerical solvers (like Adams-Bashforth) require a history of previous timesteps ($x_t, x_{t+1}, \\dots$) to predict the next step $x_{t-1}$. At $t=T$ (the beginning of generation), there is no history. \n\nTo solve this, single-step solvers like Runge-Kutta or Euler are used to bootstrap the first $k$ steps. Once a sufficient history buffer is built, the solver switches to the more efficient multi-step method.",
-    "tags": []
+    "tags": [
+      "Deep"
+    ]
   },
   {
     "type": "Learning",
     "id": "Q6",
-    "question": "Can we do KV caching in diffusion?",
+    "question": "Q: Can we do KV caching in diffusion?",
     "answer": "In standard autoregressive LLMs, KV caching works well because previous tokens do not change, so the cached keys and values remain valid. In diffusion, hiowever, this is harder because the entire latent/image representation changes at every denoising step. That means cached activations or attention states from one step may become stale at the next step.\n\nThat said, while not standard in continuous spatial diffusion, it is used in Diffusion LLMs. Methods like dKV-Cache exploit the high representational similarity across adjacent diffusion noise levels. By caching intermediate attention keys and values, the model avoids redundant computations across timesteps.",
-    "tags": []
+    "tags": [
+      "Deep"
+    ]
   },
   {
     "type": "Learning",
     "id": "Q7",
-    "question": "How can forward passes be reused to accelerate diffusion?",
+    "question": "Q: How can forward passes be reused to accelerate diffusion?",
     "answer": "The core observation is that adjacent denoising steps often produce very similar intermediate features, making full recomputation redundant. Key approaches include:\n\n* Block/Layer Caching: Cache the outputs of certain U-Net or DiT blocks from timestep t and reuse them at timestep t-1 instead of recomputing. Typically, the earlier (encoder) blocks change more slowly across steps than the decoder blocks, so caching is most effective there. DeepCache and Block Caching follow this pattern.\n* Attention Reuse: Reuse the self-attention maps from a previous step, since spatial attention patterns tend to be stable across nearby timesteps. This avoids the expensive $QK^T$ computation.",
-    "tags": []
+    "tags": [
+      "Deep"
+    ]
   },
   {
     "type": "Learning",
     "id": "Q8",
-    "question": "How can diffusion be interpreted in an RL setting?",
+    "question": "Q: How can diffusion be interpreted in an RL setting?",
     "answer": "The reverse diffusion process can be formulated as a sequential decision-making problem where the denoiser acts as a stochastic policy. The state is the noisy data $x_t$, the action is the denoised prediction, and the environment dictates the transition to $x_{t-1}$. This allows RL algorithms (like PPO) to fine-tune diffusion models by treating aesthetic scores, prompt alignment, or task success as reward signals to maximize.",
-    "tags": []
+    "tags": [
+      "Deep"
+    ]
   }
 ]
