@@ -40,11 +40,9 @@
       </div>
       <div class="modal-body">
         <div class="settings-section">
-          <label for="model-select">LLM Model</label>
-          <select id="model-select">
-            <option value="meta-llama/llama-3.3-70b-instruct:free">molmo-2-8b (Free)</option>
-          </select>
-          <p class="settings-hint">Model used for answer verification. Free models are listed first.</p>
+          <label for="model-input">LLM Model</label>
+          <input type="text" id="model-input" placeholder="nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free">
+          <p class="settings-hint">OpenRouter model ID for answer verification. Browse models at <a href="https://openrouter.ai/models" target="_blank">openrouter.ai/models</a>.</p>
         </div>
         <div class="settings-section">
           <label for="api-key-input">OpenRouter API Key</label>
@@ -123,7 +121,7 @@
     let currentSubject = "";
 
     const OPENROUTER_API_URL = "https://openrouter.ai/api/v1/chat/completions";
-    const OPENROUTER_MODEL = "meta-llama/llama-3.3-70b-instruct:free";
+    const OPENROUTER_MODEL = "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free";
     const PROXY_URL = "https://interview-qa-proxy.ataparia.workers.dev/";
 
     const subjects = {
@@ -191,49 +189,6 @@
           $(`#count-${subject}`).text("Coming soon");
         });
       });
-    }
-
-    // --- Model List ---
-
-    async function loadModels() {
-      const cached = sessionStorage.getItem('openrouter_models');
-      if (cached) {
-        populateModelSelect(JSON.parse(cached));
-        return;
-      }
-      try {
-        const res = await fetch('https://openrouter.ai/api/v1/models');
-        const data = await res.json();
-        const models = data.data
-          .filter(m => m.architecture && m.architecture.output_modalities && m.architecture.output_modalities.includes('text'))
-          .map(m => ({
-            id: m.id,
-            name: m.name,
-            free: m.pricing && m.pricing.prompt === '0' && m.pricing.completion === '0'
-          }))
-          .sort((a, b) => {
-            if (a.free !== b.free) return a.free ? -1 : 1;
-            return a.name.localeCompare(b.name);
-          });
-        sessionStorage.setItem('openrouter_models', JSON.stringify(models));
-        populateModelSelect(models);
-      } catch (e) {}
-    }
-
-    function populateModelSelect(models) {
-      const select = $('#model-select');
-      const saved = localStorage.getItem('openrouter_model') || OPENROUTER_MODEL;
-      select.empty();
-      let foundSaved = false;
-      models.forEach(m => {
-        if (m.id === saved) foundSaved = true;
-        const label = m.free ? `${m.name} (Free)` : m.name;
-        select.append($('<option>', { value: m.id, text: label }));
-      });
-      if (!foundSaved) {
-        select.prepend($('<option>', { value: saved, text: saved }));
-      }
-      select.val(saved);
     }
 
     // --- LLM Verification ---
@@ -332,12 +287,13 @@ IMPORTANT: Return ONLY valid JSON, no additional text before or after.`;
           }
 
           const parsed = JSON.parse(jsonStr);
+          const str = v => Array.isArray(v) ? v.join('\n') : (typeof v === 'object' && v ? JSON.stringify(v) : String(v || ''));
           return {
             success: true,
             score: typeof parsed.score === 'number' ? parsed.score : null,
-            analysis: parsed.analysis || '',
-            keyPoints: parsed.keyPoints || parsed.key_points || '',
-            feedback: parsed.feedback || ''
+            analysis: str(parsed.analysis),
+            keyPoints: str(parsed.keyPoints || parsed.key_points),
+            feedback: str(parsed.feedback)
           };
         } catch (parseError) {
           return { success: true, score: null, analysis: llmResponse, keyPoints: "", feedback: llmResponse };
@@ -474,42 +430,47 @@ IMPORTANT: Return ONLY valid JSON, no additional text before or after.`;
         const resultDiv = $("#verification-result");
         resultDiv.html("<p>Verifying your answer with LLM...</p>").slideDown(300);
 
-        const verification = await verifyAnswerWithLLM(userAnswer, q.answer, q.question);
+        try {
+          const verification = await verifyAnswerWithLLM(userAnswer, q.answer, q.question);
 
-        if (!verification.success) {
-          resultDiv.html(`<div class="verification-error"><p><strong>Error:</strong> ${verification.error}</p></div>`);
-        } else {
-          const score = (verification.score !== null && verification.score !== undefined) ? verification.score : "N/A";
-          let scoreColor = "#64748b";
-          if (typeof score === 'number') {
-            if (score >= 80) scoreColor = "#4CAF50";
-            else if (score >= 60) scoreColor = "#FF9800";
-            else scoreColor = "#F44336";
-          }
+          if (!verification.success) {
+            resultDiv.html(`<div class="verification-error"><p><strong>Error:</strong> ${verification.error}</p></div>`);
+          } else {
+            const score = (verification.score !== null && verification.score !== undefined) ? verification.score : "N/A";
+            let scoreColor = "#64748b";
+            if (typeof score === 'number') {
+              if (score >= 80) scoreColor = "#4CAF50";
+              else if (score >= 60) scoreColor = "#FF9800";
+              else scoreColor = "#F44336";
+            }
 
-          let htmlContent = `<div class="verification-content">
-            <div class="score-display" style="background: ${scoreColor}; color: white; padding: 10px; border-radius: 5px; margin-bottom: 15px; text-align: center;">
-              <h3>Score: ${score}${typeof score === 'number' ? '/100' : ''}</h3>
-            </div><div class="verification-details">`;
+            let htmlContent = `<div class="verification-content">
+              <div class="score-display" style="background: ${scoreColor}; color: white; padding: 10px; border-radius: 5px; margin-bottom: 15px; text-align: center;">
+                <h3>Score: ${score}${typeof score === 'number' ? '/100' : ''}</h3>
+              </div><div class="verification-details">`;
 
-          if (verification.analysis && verification.analysis.trim()) {
-            const escaped = $('<div>').text(verification.analysis).html();
-            htmlContent += `<div class="verification-section"><p class="section-title">Analysis:</p><p class="section-content">${escaped.replace(/\n/g, '<br>')}</p></div>`;
+            const s = v => String(v || '');
+            if (s(verification.analysis).trim()) {
+              const escaped = $('<div>').text(s(verification.analysis)).html();
+              htmlContent += `<div class="verification-section"><p class="section-title">Analysis:</p><p class="section-content">${escaped.replace(/\n/g, '<br>')}</p></div>`;
+            }
+            if (s(verification.keyPoints).trim()) {
+              const escaped = $('<div>').text(s(verification.keyPoints)).html();
+              htmlContent += `<div class="verification-section"><p class="section-title">Key Points:</p><p class="section-content">${escaped.replace(/\n/g, '<br>')}</p></div>`;
+            }
+            if (s(verification.feedback).trim() && s(verification.feedback) !== s(verification.analysis)) {
+              const escaped = $('<div>').text(s(verification.feedback)).html();
+              htmlContent += `<div class="verification-section"><p class="section-title">Feedback:</p><p class="section-content">${escaped.replace(/\n/g, '<br>')}</p></div>`;
+            }
+            htmlContent += `</div></div>`;
+            resultDiv.html(htmlContent);
           }
-          if (verification.keyPoints && verification.keyPoints.trim()) {
-            const escaped = $('<div>').text(verification.keyPoints).html();
-            htmlContent += `<div class="verification-section"><p class="section-title">Key Points:</p><p class="section-content">${escaped.replace(/\n/g, '<br>')}</p></div>`;
-          }
-          if (verification.feedback && verification.feedback.trim() && verification.feedback !== verification.analysis) {
-            const escaped = $('<div>').text(verification.feedback).html();
-            htmlContent += `<div class="verification-section"><p class="section-title">Feedback:</p><p class="section-content">${escaped.replace(/\n/g, '<br>')}</p></div>`;
-          }
-          htmlContent += `</div></div>`;
-          resultDiv.html(htmlContent);
+        } catch (err) {
+          resultDiv.html(`<div class="verification-error"><p><strong>Error:</strong> ${err.message}</p></div>`);
+        } finally {
+          $("#verify-btn").prop("disabled", false).text("Verify with LLM");
+          if (window.MathJax) MathJax.typesetPromise();
         }
-
-        $("#verify-btn").prop("disabled", false).text("Verify with LLM");
-        if (window.MathJax) MathJax.typesetPromise();
       });
 
       $("#check-btn").on("click", () => $("#correct-answer").slideDown(300));
@@ -566,9 +527,9 @@ IMPORTANT: Return ONLY valid JSON, no additional text before or after.`;
 
       // Settings modal
       $("#settings-btn").on("click", () => {
+        $("#model-input").val(localStorage.getItem('openrouter_model') || OPENROUTER_MODEL);
         $("#api-key-input").val(localStorage.getItem('openrouter_api_key') || '');
         $("#settings-status").text('');
-        loadModels();
         $("#settings-modal").fadeIn(200);
       });
       $("#modal-close").on("click", () => $("#settings-modal").fadeOut(200));
@@ -577,7 +538,7 @@ IMPORTANT: Return ONLY valid JSON, no additional text before or after.`;
       });
       $("#save-settings-btn").on("click", () => {
         const key = $("#api-key-input").val().trim();
-        const model = $("#model-select").val();
+        const model = $("#model-input").val().trim();
         if (key) localStorage.setItem('openrouter_api_key', key);
         if (model) localStorage.setItem('openrouter_model', model);
         $("#settings-status").text("Settings saved").css("color", "#4CAF50");
@@ -586,7 +547,7 @@ IMPORTANT: Return ONLY valid JSON, no additional text before or after.`;
         localStorage.removeItem('openrouter_api_key');
         localStorage.removeItem('openrouter_model');
         $("#api-key-input").val('');
-        $("#model-select").val(OPENROUTER_MODEL);
+        $("#model-input").val(OPENROUTER_MODEL);
         $("#settings-status").text("Settings cleared").css("color", "#94a3b8");
       });
 
