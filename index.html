@@ -282,14 +282,20 @@ IMPORTANT: Return ONLY valid JSON, no additional text before or after.`;
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify(requestBody)
             });
+            if (!response.ok) {
+              const errBody = await response.text().catch(() => '');
+              console.warn(`Proxy error ${response.status}: ${errBody}`);
+              response = null;
+            }
           } catch (e) {
+            console.warn('Proxy fetch failed:', e.message);
             response = null;
           }
         }
 
-        if (!response || !response.ok) {
+        if (!response) {
           if (!apiKey) {
-            return { success: false, error: useProxy ? "Proxy unavailable and no local API key set." : "No API key configured. Click the gear icon to add your OpenRouter key." };
+            return { success: false, error: "No API key configured. Click the gear icon to add your OpenRouter key." };
           }
           response = await fetch(OPENROUTER_API_URL, {
             method: "POST",
