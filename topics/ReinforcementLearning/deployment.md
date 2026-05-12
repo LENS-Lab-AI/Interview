@@ -1,4 +1,4 @@
-# Deployment/Applications - Eren
+# Deployment
 
 
 ## What is Curriculum Learning?
