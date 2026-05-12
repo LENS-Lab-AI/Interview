@@ -11,11 +11,11 @@ Live site: https://lens-lab-ai.github.io/Interview/
 ## Key Commands
 
 ```bash
-# Convert all markdown sources to QA.json (run after editing any .md files in Topics/)
+# Convert all markdown sources to QA.json (run after editing any .md files in topics/)
 bash update.sh
 
 # Convert a single topic
-python scripts/convert_to_json.py --input-dir Topics/Transformers -v
+python scripts/convert_to_json.py --input-dir topics/Transformers -v
 
 # Local dev server (serves on port 8080)
 python serve.py
@@ -25,7 +25,7 @@ There is no build step, test suite, or linter.
 
 ## Content Pipeline
 
-Markdown files in `Topics/<Subject>/` → `scripts/convert_to_json.py` → `Topics/<Subject>/QA.json` → fetched at runtime by `index.html`.
+Markdown files in `topics/<Subject>/` → `scripts/convert_to_json.py` → `topics/<Subject>/QA.json` → fetched at runtime by `index.html`.
 
 The converter supports four Q&A markdown formats (detected by regex in priority order):
 1. `## Question Title` + `**T:** tag` + `**A:** answer` (Transformers theory/deployment style)
@@ -51,7 +51,7 @@ The deploy workflow (`.github/workflows/deploy.yml`) also auto-converts markdown
 
 ## Adding a New Topic
 
-1. Create `Topics/<NewTopic>/` with markdown files following one of the supported formats
+1. Create `topics/<NewTopic>/` with markdown files following one of the supported formats
 2. Add the conversion command to `update.sh`
 3. Add a topic card in `index.html` (inside `.cards-grid`) and an entry in the `subjects` JS object
 4. Run `bash update.sh` to generate `QA.json`

@@ -6,14 +6,14 @@ A structured collection of interview preparation materials organized by topic.
 
 ## Topics
 
-- **[Transformers](Topics/Transformers/)** — Theory, model architecture, deployment, case studies, and Q&A
-- **[Diffusion](Topics/Diffusion/)**
-- **[Reinforcement Learning](Topics/ReinforcementLearning/)**
+- **[Transformers](topics/Transformers/)** — Theory, model architecture, deployment, case studies, and Q&A
+- **[Diffusion](topics/Diffusion/)**
+- **[Reinforcement Learning](topics/ReinforcementLearning/)**
 
 ## Structure
 
 ```
-Topics/
+topics/
   Transformers/
     theory.md
     model.md

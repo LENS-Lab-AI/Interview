@@ -24,7 +24,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add Topics/*/QA.json
+          git add topics/*/QA.json
           git diff --staged --quiet || (git commit -m "Auto-update QA.json files" && git push)
 
       - name: Inject proxy URL
