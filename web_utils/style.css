@@ -514,17 +514,6 @@ a.breadcrumb-item:hover {
   margin: 0.5rem 0 0;
 }
 
-.modal-body select {
-  width: 100%;
-  padding: 0.6rem 0.8rem;
-  border-radius: 6px;
-  border: 1px solid #475569;
-  background: #0f172a;
-  color: #e2e8f0;
-  font-size: 0.95rem;
-  box-sizing: border-box;
-  cursor: pointer;
-}
 
 .settings-hint a {
   color: #38bdf8;
