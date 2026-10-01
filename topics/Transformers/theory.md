@@ -305,7 +305,7 @@ During **inference**, tokens are generated sequentially — each step reuses cac
 ---
 
 
-## wha'ts pre-mid-post- training in LLMs? Why do we need these stages?
+## What are pre-training, mid-training, and post-training in LLMs, and why is each stage needed?
 **T:** Deep
 
 **A:** Large language models are trained in multiple stages to progressively acquire general language understanding, specialized capabilities, and safe, useful behavior.
