@@ -2,7 +2,7 @@
 
 ---
 
-### Q1. What is AdamW? How is it differ from Adam?
+### Q1. What is AdamW? How does it differ from Adam?
 **T:** Basic
 
 **A:** **AdamW** is a variant of the **Adam optimizer** that fixes how **weight decay** is applied. 
@@ -29,7 +29,7 @@ This decoupling makes AdamW the **default optimizer** for most modern deep learn
 
 - **Learning-rate Warmup & Annealing:**
     - Start with a small LR, ramp up linearly (Warmup), and then slowly decay it, often using cosine or linear schedules (Annealing).
-    - **Intuition:** At the very beginning, model parameters are random, so the gradients are massive and noisy. If taking a full step immediately, the model might be destabilized and have possible early divergence. Warmup lets the model find a reasonable starting direction safely. Later, annealing reduces the step size so the model can settle into a minima instead of bouncing around the edges.
+    - **Intuition:** At the very beginning, model parameters are random, so the gradients are massive and noisy. If taking a full step immediately, the model might be destabilized and have possible early divergence. Warmup lets the model find a reasonable starting direction safely. Later, annealing reduces the step size so the model can settle into a minimum instead of bouncing around the edges.
 - **Batch Size Scaling:**
     - Gradually increasing the batch size over time to maintain stability in SGD in LLM training.
     - **Intuition:** Increasing batch size reduces the noise in the gradient estimation (lowering the variance). This mimics the effect of learning rate decay (increasing the “signal-to-noise” ratio of the updates) without slowing down the effective training speed, often helping the model escape sharp minima in favor of flatter, more robust ones.
@@ -213,7 +213,7 @@ This loss penalizes the model if it routes too many tokens to specific experts, 
 While LoRA is the default, newer methods try to fix its specific weaknesses.
 - **DoRA (Weight-Decomposed LoRA):** LoRA updates weights in a way that forces the direction and magnitude of the change to be coupled. In full fine-tuning, these often change independently. DoRA splits the weight matrix into two parts: **Magnitude** (how strong the weight is) and **Direction** (where it points).
   $$W = m \cdot \frac{V}{\|V\|}$$
-  It applies LoRA only to the Direction ($V$) and trains the Magnitude ($m$) directly. It mimics full fine-tuning behavior much closer than LoRA, often yielding higher accuracy and better robustnes, with no extra inference cost.
+  It applies LoRA only to the Direction ($V$) and trains the Magnitude ($m$) directly. It mimics full fine-tuning behavior much closer than LoRA, often yielding higher accuracy and better robustness, with no extra inference cost.
 - **AdaLoRA (Adaptive LoRA):** Not all layers are equally important. Standard LoRA uses the same rank for every single layer. AdaLoRA figures out which layers need more capacity and which don't, dynamically allocating the rank budget to the most critical layers during training.
 - **Text-to-LoRA (Cutting Edge):** Instead of training an adapter on a dataset, can you just ask for one? This method uses a **Hypernetwork**—a small model trained to generate the LoRA weights ($A$ and $B$ matrices) directly from a text description of a task (e.g., “Make the model speak like a pirate”). It allows for instant, zero-shot adaptation without standard training.
 - **Llama-Adapter / Prefix Tuning:** Instead of adding weights inside the layers, these methods add “soft prompts” (learnable vectors) to the input or specific attention layers. They are generally less stable and perform worse than LoRA for complex reasoning, but are highly parameter-efficient.
@@ -259,7 +259,7 @@ It minimizes a loss derived from the same Bradley–Terry preference model, with
 - RLHF → reward model + PPO optimization
 - DPO → direct, simpler preference learning (no reward model training)
 
-DPO achieves alignment comparable to that of that of RLHF wicomputation computation and fewer moving parts.
+DPO achieves alignment comparable to that of RLHF with less computation and fewer moving parts.
 
 ---
 

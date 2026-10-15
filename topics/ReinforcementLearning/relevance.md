@@ -1,6 +1,6 @@
 # RL Related
 
-## What is thomspon sampling?
+## What is Thompson sampling?
 
 **T:** Basic
 
@@ -13,12 +13,12 @@
 **A:** UCB, or Upper Confidence Bound, is another bandit algorithm that chooses actions according to an optimistic estimate of their value. Instead of using only the empirical mean reward, it adds an uncertainty bonus, so the action score is roughly “mean plus uncertainty.” This encourages the algorithm to try actions that are either known to be good or still uncertain. The main difference from Thompson Sampling is that UCB is deterministic once the estimates are fixed and explicitly builds in optimism through confidence intervals, while Thompson Sampling is randomized and explores by sampling from a posterior distribution over rewards.
 
 
-## Why is UCB and Thompson used commonly?
+## Why are UCB and Thompson sampling commonly used?
 
 **T:** Hands-on
 **A:** They are widely used because they are simple, principled, and effective ways to trade off exploration and exploitation. More importantly, both come with strong theoretical regret guarantees, which makes them attractive in settings where we want both practical performance and mathematical justification.
 
-## What theoretical guarantees you can provide with UCB and Thompson samplimg?
+## What theoretical guarantees you can provide with UCB and Thompson sampling?
 
 **T:** Deep
 
@@ -37,7 +37,7 @@
 
 **A:** Problems - gaussian is expensive  use RL when n is high
 
-## What is Krigging?
+## What is Kriging?
 
 **T:** Basic
 

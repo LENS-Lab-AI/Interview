@@ -5,7 +5,7 @@
 
 **A:** Learning a probability distribution directly requires knowing how probable every possible input is, which means you need everything to sum to 1. Computing that normalization constant is intractable in high dimensions. The score function the gradient of the log density tells you which direction to move to find more likely samples, and it never requires that normalization. You get the useful information (where to go) without the intractable part (how much everything weighs).
 
-he score function is defined as $\nabla_x \log p(x)$ — the gradient of the log density with respect to the input.
+The score function is defined as $\nabla_x \log p(x)$ — the gradient of the log density with respect to the input.
  
 Any explicit density model has the form:
  

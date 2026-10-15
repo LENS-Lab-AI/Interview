@@ -29,7 +29,7 @@
 ## What is residual RL?
 **T:** Basic
 
-**A:** Classical controllers(PID, MPC, etc.) are strong and fast for solving predefined problems by solving the issues deterministically. However, they are weak at handling the unseen situations. For RL, it solves the problems slower but it has a high adaptibility. To combine those advantages, Residual RL has emerged. In here, a traditional controller controls the agent, while there is additional RL that is doing the learning and adapting.
+**A:** Classical controllers(PID, MPC, etc.) are strong and fast for solving predefined problems by solving the issues deterministically. However, they are weak at handling the unseen situations. For RL, it solves the problems slower but it has a high adaptability. To combine those advantages, Residual RL has emerged. In here, a traditional controller controls the agent, while there is additional RL that is doing the learning and adapting.
 
 ## For Safe RL, how control barrier keep it safe?
 **T:** Hands-on

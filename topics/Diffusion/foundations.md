@@ -353,7 +353,7 @@ The main issue is variance: if $q$ misses important regions, weights explode and
 - works well only with a good proposal
 ---
 
-## Get 6/7 probability out of a 6-side dice
+## Get 6/7 probability out of a six-sided die
 **T:** Hands-on
 
 **A:** 
