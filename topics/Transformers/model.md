@@ -30,7 +30,7 @@ But, it ignores word order (syntax), context and polysemy, and semantics. Thus, 
 
 **T:** Basic
 
-**A:** TF-IDF (Term Frequency–Inverse Document Frequency) improves over BoW by downweights common words and highlights distinctive ones by assigning higher weights to rarer but informative words. It captures some notion of word importance across documents. 
+**A:** TF-IDF (Term Frequency–Inverse Document Frequency) improves over BoW by downweighting common words and highlighting distinctive ones by assigning higher weights to rarer but informative words. It captures some notion of word importance across documents.
 
 Limitation of TF-IDF is, it is still sparse, context-free, and no semantic similarity is considered.
 
@@ -189,7 +189,7 @@ Bag-based models ignore order. Sequence models aim to capture temporal structure
 
 **A:** ABF methods are techniques used to extend the context window of models that use RoPE (Rotary Positional Embeddings).
 
-* **The Problem:** RoPE encodes position by rotating the embedding vector. If a model encounters a sequence longer than what it was trained on (extrapolation), the rotation angles go "out of distribution," confusing the model.The
+* **The Problem:** RoPE encodes position by rotating the embedding vector. If a model encounters a sequence longer than what it was trained on (extrapolation), the rotation angles go "out of distribution," confusing the model.
 * **Solution (ABF):** ABF modifies the base frequency ($\theta$, typically 10,000) of the rotation. By increasing this base frequency (e.g., to 500k or 1M), the method "stretches" the wavelengths of the positional encodings.
 * **Result:** This maps the new, longer positions back into the range of values the model saw during training. It allows models (like CodeLlama or Llama 2 Long) to handle significantly longer contexts (e.g., 100k tokens) with minimal fine-tuning.
 
@@ -234,7 +234,7 @@ Bag-based models ignore order. Sequence models aim to capture temporal structure
 ---
 
 
-### Q27: How is the token budget calculate (theoretically and empirically) in an LLM?
+### Q27: How is the token budget calculated (theoretically and empirically) in an LLM?
 
 **T:** 
 

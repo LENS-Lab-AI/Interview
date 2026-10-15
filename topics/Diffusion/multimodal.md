@@ -4,9 +4,9 @@
 
 **T:** Basic
 
-**A:** ext diffusion is a way of generating text using a diffusion-style denoising process instead of generating one token at a time like an autoregressive language model. In image diffusion, the model starts from random noise and gradually denoises it into an image. For text, the idea is similar, but the “noise” is usually applied to discrete tokens or latent text representations. For example, a model may start with a sequence of masked or corrupted tokens and iteratively refine them into coherent text.
+**A:** Text diffusion is a way of generating text using a diffusion-style denoising process instead of generating one token at a time like an autoregressive language model. In image diffusion, the model starts from random noise and gradually denoises it into an image. For text, the idea is similar, but the “noise” is usually applied to discrete tokens or latent text representations. For example, a model may start with a sequence of masked or corrupted tokens and iteratively refine them into coherent text.
 
-## How are longer context genrated
+## How are longer contexts generated?
 
 **T:** Hands-on
 
@@ -47,7 +47,7 @@ Audio is challenging because it has both temporal structure and frequency struct
 
 **T:** Basic
 
-**A:** In diffusion language models, masking can be used as the noising process. Instead of adding Gaussian noise to tokens, the model randomly replaces some tokens with a special [MASK] token or another corrupted symbol. The model then learns to reconstruct the original tokens from the partially masked sequence.During generation, the model may start with a mostly or fully masked sequence and gradually fill in tokens over multiple denoising steps. At each step, it predicts likely tokens for masked positions, then keeps high-confidence predictions and continues refining uncertain positions.
+**A:** In diffusion language models, masking can be used as the noising process. Instead of adding Gaussian noise to tokens, the model randomly replaces some tokens with a special [MASK] token or another corrupted symbol. The model then learns to reconstruct the original tokens from the partially masked sequence. During generation, the model may start with a mostly or fully masked sequence and gradually fill in tokens over multiple denoising steps. At each step, it predicts likely tokens for masked positions, then keeps high-confidence predictions and continues refining uncertain positions.
 	
 ## Why diffusion leads to smooth movements in robots
 
@@ -63,7 +63,7 @@ Diffusion models also learn from demonstration trajectories, which are often smo
 
 **A:** In world models, the agent learns a predictive model of the environment, often in a latent representation. Instead of planning directly in raw pixels or raw sensor space, the world model encodes observations into latent states and predicts how those latent states evolve under different actions. Actions can be selected by imagining possible futures. The agent tries candidate action sequences in the learned latent dynamics model, predicts the resulting future states and rewards, and chooses the action sequence that looks best. Usually, only the first action is executed, then the agent observes the real next state and replans. In some systems, actions are optimized directly using planning methods such as MPC, CEM, MPPI, or gradient-based optimization. In others, a policy is trained inside the learned world model. The core idea is that the model predicts: current latent state plus action gives next latent state, reward, or future observation. The policy or planner then uses those predictions to select actions.
 	
-## What are the pros and cons of diffusion and auto regressive models
+## What are the pros and cons of diffusion and autoregressive models
 
 **T:** Deep
 

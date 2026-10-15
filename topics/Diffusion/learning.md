@@ -13,7 +13,7 @@ Denoising Diffusion Implicit Models (DDIM) generalize this by formulating a non-
 
 * Consistency model:
 The core idea is to learn a function $f_{\theta}$ that maps any point on a probability flow ODE trajectory directly to its origin (the clean sample). This enforces a self-consistency property: $f_{\theta}(x_t, t) = f_{\theta}(x_{t'}, t')$ for any two points on the same trajectory. Training can be done via consistency distillation (using a pre-trained diffusion model to generate ODE pairs) or consistency training (directly from data, no teacher needed). At inference, you can generate in as few as 1–2 steps.
-* Logit-based Distillation: : A student model is trained to match the output distributions (scores/logits) of a multi-step teacher model but is constrained to do so over much larger timestep intervals, effectively compressing the teacher's schedule. 
+* Logit-based Distillation: A student model is trained to match the output distributions (scores/logits) of a multi-step teacher model but is constrained to do so over much larger timestep intervals, effectively compressing the teacher's schedule.
 
 ## Difference between distillation and sampler (or scheduler)?
 **T:** Basic
@@ -41,7 +41,7 @@ To solve this, single-step solvers like Runge-Kutta or Euler are used to bootstr
 ## Can we do KV caching in diffusion?
 **T:** Deep
 
-**A:** In standard autoregressive LLMs, KV caching works well because previous tokens do not change, so the cached keys and values remain valid. In diffusion, hiowever, this is harder because the entire latent/image representation changes at every denoising step. That means cached activations or attention states from one step may become stale at the next step.
+**A:** In standard autoregressive LLMs, KV caching works well because previous tokens do not change, so the cached keys and values remain valid. In diffusion, however, this is harder because the entire latent/image representation changes at every denoising step. That means cached activations or attention states from one step may become stale at the next step.
 
 That said, while not standard in continuous spatial diffusion, it is used in Diffusion LLMs. Methods like dKV-Cache exploit the high representational similarity across adjacent diffusion noise levels. By caching intermediate attention keys and values, the model avoids redundant computations across timesteps.
 

@@ -48,7 +48,7 @@
     "type": "Deployment",
     "id": "Q6",
     "question": "What is residual RL?",
-    "answer": "Classical controllers(PID, MPC, etc.) are strong and fast for solving predefined problems by solving the issues deterministically. However, they are weak at handling the unseen situations. For RL, it solves the problems slower but it has a high adaptibility. To combine those advantages, Residual RL has emerged. In here, a traditional controller controls the agent, while there is additional RL that is doing the learning and adapting.",
+    "answer": "Classical controllers(PID, MPC, etc.) are strong and fast for solving predefined problems by solving the issues deterministically. However, they are weak at handling the unseen situations. For RL, it solves the problems slower but it has a high adaptability. To combine those advantages, Residual RL has emerged. In here, a traditional controller controls the agent, while there is additional RL that is doing the learning and adapting.",
     "tags": [
       "Basic"
     ]
@@ -299,7 +299,7 @@
   {
     "type": "RL Related",
     "id": "Q1",
-    "question": "What is thomspon sampling?",
+    "question": "What is Thompson sampling?",
     "answer": "one with best mean (bandit algorithm that samples a reward model from the posterior and picks the action that looks best under that sample.)",
     "tags": [
       "Basic"
@@ -317,7 +317,7 @@
   {
     "type": "RL Related",
     "id": "Q3",
-    "question": "Why is UCB and Thompson used commonly?",
+    "question": "Why are UCB and Thompson sampling commonly used?",
     "answer": "They are widely used because they are simple, principled, and effective ways to trade off exploration and exploitation. More importantly, both come with strong theoretical regret guarantees, which makes them attractive in settings where we want both practical performance and mathematical justification.",
     "tags": [
       "Hands-on"
@@ -326,7 +326,7 @@
   {
     "type": "RL Related",
     "id": "Q4",
-    "question": "What theoretical guarantees you can provide with UCB and Thompson samplimg?",
+    "question": "What theoretical guarantees you can provide with UCB and Thompson sampling?",
     "answer": "The main theoretical guarantee for both UCB and Thompson Sampling is that their regret grows sublinearly with the number of rounds. Regret measures how much reward is lost compared with always choosing the optimal action. If regret is sublinear, then the average regret per round goes to zero as the number of rounds increases, which means the algorithm asymptotically learns to act optimally.",
     "tags": [
       "Deep"
@@ -353,7 +353,7 @@
   {
     "type": "RL Related",
     "id": "Q7",
-    "question": "What is Krigging?",
+    "question": "What is Kriging?",
     "answer": "Kriging is a statistical interpolation method originally developed in geostatistics, and it is closely related to Gaussian process regression. The basic idea is to predict the value of an unknown function at a new point by using nearby observed data points together with an explicit model of spatial or functional correlation. In machine learning and optimization, Kriging is often used as a surrogate model because it provides not only a mean prediction but also an uncertainty estimate, which is very useful for deciding where to sample next. In fact, classical Bayesian Optimization with Gaussian processes can be viewed as using a Kriging-style predictive model.",
     "tags": [
       "Basic"

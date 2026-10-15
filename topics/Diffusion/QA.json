@@ -47,7 +47,7 @@
   {
     "type": "Foundations of probability",
     "id": "Q6",
-    "question": "Get 6/7 probability out of a 6-side dice",
+    "question": "Get 6/7 probability out of a six-sided die",
     "answer": "Assuming the question means: construct an event with exact probability $6/7$ using repeated fair die rolls.\n\nRoll the die twice. That gives $36$ equally likely ordered outcomes. Reject one outcome, say $(6,6)$, and reroll whenever it happens. Then the remaining $35$ accepted outcomes are equally likely.\n\nNow label $30$ of those $35$ outcomes as “success” and the other $5$ as “failure”. Then\n$$\n\\mathbb{P}(\\text{success})=\\frac{30}{35}=\\frac67.\n$$\n\n**What to emphasize:**\n\nThis is an exact construction using rejection sampling.\n\n**Likely follow-up:**\n\n**Why not do it in one roll?**\n Because a single fair die only gives probabilities that are multiples of $1/6$, and $6/7$ is not one of them.\n\n**In short:**\n\n- one roll cannot realize $6/7$\n- two rolls give $36$ outcomes\n- reject one outcome to get $35$ equiprobable states\n- choose 30 successes: $30/35=6/7$",
     "tags": [
       "Hands-on"
@@ -93,7 +93,7 @@
     "type": "Learning",
     "id": "Q2",
     "question": "How are few-step diffusion models trained while maintaining consistency?",
-    "answer": "Few-step diffusion models try to reduce the number of denoising steps without destroying sample quality. This can be achieved in different ways:\n\n* Consistency model:\nThe core idea is to learn a function $f_{\\theta}$ that maps any point on a probability flow ODE trajectory directly to its origin (the clean sample). This enforces a self-consistency property: $f_{\\theta}(x_t, t) = f_{\\theta}(x_{t'}, t')$ for any two points on the same trajectory. Training can be done via consistency distillation (using a pre-trained diffusion model to generate ODE pairs) or consistency training (directly from data, no teacher needed). At inference, you can generate in as few as 1–2 steps.\n* Logit-based Distillation: : A student model is trained to match the output distributions (scores/logits) of a multi-step teacher model but is constrained to do so over much larger timestep intervals, effectively compressing the teacher's schedule.",
+    "answer": "Few-step diffusion models try to reduce the number of denoising steps without destroying sample quality. This can be achieved in different ways:\n\n* Consistency model:\nThe core idea is to learn a function $f_{\\theta}$ that maps any point on a probability flow ODE trajectory directly to its origin (the clean sample). This enforces a self-consistency property: $f_{\\theta}(x_t, t) = f_{\\theta}(x_{t'}, t')$ for any two points on the same trajectory. Training can be done via consistency distillation (using a pre-trained diffusion model to generate ODE pairs) or consistency training (directly from data, no teacher needed). At inference, you can generate in as few as 1–2 steps.\n* Logit-based Distillation: A student model is trained to match the output distributions (scores/logits) of a multi-step teacher model but is constrained to do so over much larger timestep intervals, effectively compressing the teacher's schedule.",
     "tags": [
       "Deep"
     ]
@@ -129,7 +129,7 @@
     "type": "Learning",
     "id": "Q6",
     "question": "Can we do KV caching in diffusion?",
-    "answer": "In standard autoregressive LLMs, KV caching works well because previous tokens do not change, so the cached keys and values remain valid. In diffusion, hiowever, this is harder because the entire latent/image representation changes at every denoising step. That means cached activations or attention states from one step may become stale at the next step.\n\nThat said, while not standard in continuous spatial diffusion, it is used in Diffusion LLMs. Methods like dKV-Cache exploit the high representational similarity across adjacent diffusion noise levels. By caching intermediate attention keys and values, the model avoids redundant computations across timesteps.",
+    "answer": "In standard autoregressive LLMs, KV caching works well because previous tokens do not change, so the cached keys and values remain valid. In diffusion, however, this is harder because the entire latent/image representation changes at every denoising step. That means cached activations or attention states from one step may become stale at the next step.\n\nThat said, while not standard in continuous spatial diffusion, it is used in Diffusion LLMs. Methods like dKV-Cache exploit the high representational similarity across adjacent diffusion noise levels. By caching intermediate attention keys and values, the model avoids redundant computations across timesteps.",
     "tags": [
       "Deep"
     ]
@@ -156,7 +156,7 @@
     "type": "Multimodal Diffusion Models",
     "id": "Q1",
     "question": "What is text diffusion",
-    "answer": "ext diffusion is a way of generating text using a diffusion-style denoising process instead of generating one token at a time like an autoregressive language model. In image diffusion, the model starts from random noise and gradually denoises it into an image. For text, the idea is similar, but the “noise” is usually applied to discrete tokens or latent text representations. For example, a model may start with a sequence of masked or corrupted tokens and iteratively refine them into coherent text.",
+    "answer": "Text diffusion is a way of generating text using a diffusion-style denoising process instead of generating one token at a time like an autoregressive language model. In image diffusion, the model starts from random noise and gradually denoises it into an image. For text, the idea is similar, but the “noise” is usually applied to discrete tokens or latent text representations. For example, a model may start with a sequence of masked or corrupted tokens and iteratively refine them into coherent text.",
     "tags": [
       "Basic"
     ]
@@ -164,7 +164,7 @@
   {
     "type": "Multimodal Diffusion Models",
     "id": "Q2",
-    "question": "How are longer context genrated",
+    "question": "How are longer contexts generated?",
     "answer": "Longer contexts can be generated by denoising a longer sequence of tokens or latent representations at once. Instead of predicting only the next token, the model predicts or refines many positions in the sequence over multiple denoising steps. In practice, long-context generation can be handled in a few ways. One approach is to initialize a long sequence with masked or noisy tokens and iteratively fill in the whole sequence. Another approach is chunk-based generation, where the model generates or refines overlapping blocks of text so that local coherence is preserved while still maintaining broader context. Some systems also use hierarchical generation, where the model first creates a high-level plan or structure and then fills in details.",
     "tags": [
       "Hands-on"
@@ -210,7 +210,7 @@
     "type": "Multimodal Diffusion Models",
     "id": "Q7",
     "question": "How is masking done in diffusion llms?",
-    "answer": "In diffusion language models, masking can be used as the noising process. Instead of adding Gaussian noise to tokens, the model randomly replaces some tokens with a special [MASK] token or another corrupted symbol. The model then learns to reconstruct the original tokens from the partially masked sequence.During generation, the model may start with a mostly or fully masked sequence and gradually fill in tokens over multiple denoising steps. At each step, it predicts likely tokens for masked positions, then keeps high-confidence predictions and continues refining uncertain positions.",
+    "answer": "In diffusion language models, masking can be used as the noising process. Instead of adding Gaussian noise to tokens, the model randomly replaces some tokens with a special [MASK] token or another corrupted symbol. The model then learns to reconstruct the original tokens from the partially masked sequence. During generation, the model may start with a mostly or fully masked sequence and gradually fill in tokens over multiple denoising steps. At each step, it predicts likely tokens for masked positions, then keeps high-confidence predictions and continues refining uncertain positions.",
     "tags": [
       "Basic"
     ]
@@ -236,7 +236,7 @@
   {
     "type": "Multimodal Diffusion Models",
     "id": "Q10",
-    "question": "What are the pros and cons of diffusion and auto regressive models",
+    "question": "What are the pros and cons of diffusion and autoregressive models",
     "answer": "Autoregressive models generate outputs sequentially, one token or action at a time. This works very well for language because text naturally has a left-to-right structure. They are usually simple to train, highly scalable, and very strong at fluent generation. However, once an autoregressive model generates a token, it usually cannot revise it unless special editing mechanisms are used. Generation can also be slow for long outputs because tokens are produced one by one.\n\nDiffusion models generate by iterative refinement. They start from noise or a corrupted sequence and gradually denoise it into a final output. This allows them to model complex multimodal distributions and revise many parts of the output together. In robotics, this is useful because there may be many valid action trajectories. In images and audio, it is useful because global structure can be refined over many steps.\n\nThe main downside of diffusion is computational cost. Generation often requires many denoising steps, which can be slower than a single forward pass or a short autoregressive rollout. For text, diffusion is also harder because tokens are discrete, so the noising process is less natural than in images or continuous control.",
     "tags": [
       "Deep"
@@ -246,7 +246,7 @@
     "type": "Theory",
     "id": "Q1",
     "question": "Why use score functions instead of directly learning the data distribution?",
-    "answer": "Learning a probability distribution directly requires knowing how probable every possible input is, which means you need everything to sum to 1. Computing that normalization constant is intractable in high dimensions. The score function the gradient of the log density tells you which direction to move to find more likely samples, and it never requires that normalization. You get the useful information (where to go) without the intractable part (how much everything weighs).\n\nhe score function is defined as $\\nabla_x \\log p(x)$ — the gradient of the log density with respect to the input.\n \nAny explicit density model has the form:\n \n$$p_\\theta(x) = \\frac{e^{-E_\\theta(x)}}{Z_\\theta}$$\n \nwhere $Z_\\theta = \\int e^{-E_\\theta(x)} dx$ is the normalization constant. In high dimensions this integral is intractable.\n \nTaking the log and then the gradient with respect to $x$:\n \n$$\\nabla_x \\log p_\\theta(x) = -\\nabla_x E_\\theta(x) - \\nabla_x \\log Z_\\theta$$\n \nSince $Z_\\theta$ does not depend on $x$, its gradient is zero. So:\n \n$$\\nabla_x \\log p_\\theta(x) = -\\nabla_x E_\\theta(x)$$\n \n$Z_\\theta$ disappears entirely. You can compute and train on the score without ever evaluating the normalization constant.\n \nSampling then works via Langevin dynamics — follow the score, add a little noise, repeat:\n \n$$x_{t+1} = x_t + \\frac{\\eta}{2} \\nabla_x \\log p_\\theta(x_t) + \\sqrt{\\eta}\\, \\epsilon, \\quad \\epsilon \\sim \\mathcal{N}(0, I)$$\n \nIn diffusion models, the denoiser is exactly a score estimator. At each noise level $t$, it predicts the direction back toward clean data. This is equivalent to predicting the added noise $\\epsilon$, up to a scaling factor — which is why diffusion training reduces to simple noise prediction.",
+    "answer": "Learning a probability distribution directly requires knowing how probable every possible input is, which means you need everything to sum to 1. Computing that normalization constant is intractable in high dimensions. The score function the gradient of the log density tells you which direction to move to find more likely samples, and it never requires that normalization. You get the useful information (where to go) without the intractable part (how much everything weighs).\n\nThe score function is defined as $\\nabla_x \\log p(x)$ — the gradient of the log density with respect to the input.\n \nAny explicit density model has the form:\n \n$$p_\\theta(x) = \\frac{e^{-E_\\theta(x)}}{Z_\\theta}$$\n \nwhere $Z_\\theta = \\int e^{-E_\\theta(x)} dx$ is the normalization constant. In high dimensions this integral is intractable.\n \nTaking the log and then the gradient with respect to $x$:\n \n$$\\nabla_x \\log p_\\theta(x) = -\\nabla_x E_\\theta(x) - \\nabla_x \\log Z_\\theta$$\n \nSince $Z_\\theta$ does not depend on $x$, its gradient is zero. So:\n \n$$\\nabla_x \\log p_\\theta(x) = -\\nabla_x E_\\theta(x)$$\n \n$Z_\\theta$ disappears entirely. You can compute and train on the score without ever evaluating the normalization constant.\n \nSampling then works via Langevin dynamics — follow the score, add a little noise, repeat:\n \n$$x_{t+1} = x_t + \\frac{\\eta}{2} \\nabla_x \\log p_\\theta(x_t) + \\sqrt{\\eta}\\, \\epsilon, \\quad \\epsilon \\sim \\mathcal{N}(0, I)$$\n \nIn diffusion models, the denoiser is exactly a score estimator. At each noise level $t$, it predicts the direction back toward clean data. This is equivalent to predicting the added noise $\\epsilon$, up to a scaling factor — which is why diffusion training reduces to simple noise prediction.",
     "tags": [
       "Deep"
     ]
